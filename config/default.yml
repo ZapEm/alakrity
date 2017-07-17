@@ -1,0 +1,17 @@
+---
+buildDirectory: build
+rethinkdbdash:
+  password: ZworpWorpSchnodderaDorp
+  servers:
+  - host: localhost
+    port: 28015
+    db: alakrity_db
+express:
+  host: localhost
+  port: 3000
+  api: /api/0/
+auth:
+  jwtExpiresIn: 4h
+  jwtSecret: MuchSecretSuchWow
+client: # The settings below are send to the client and are therefore not secure!
+  apiUrl: https://localhost:3000/api/0/

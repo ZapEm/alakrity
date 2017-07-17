@@ -1,0 +1,19 @@
+version: '2'
+services:
+  rethinkdb:
+    container_name: rethinkdb
+    image: rethinkdb:2.3.5
+    ports:
+      - "8080:8080"
+      - "28015:28015"
+      - "29015:29015"
+  alakrity:
+    depends_on:
+      - rethinkdb
+    container_name: alakrity
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+    command: "npm run start-prod"

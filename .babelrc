@@ -1,0 +1,14 @@
+{
+  "presets": [
+    "nodejs6",
+    "stage-0",
+    "react"
+  ],
+  "plugins": [
+    "lodash",
+    "transform-decorators-legacy",
+    "transform-class-properties",
+    "transform-object-rest-spread",
+    "transform-es2015-parameters"
+  ]
+}

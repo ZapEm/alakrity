@@ -1,0 +1,212 @@
+@import './w3_v4.css';
+@import './theme-colors.styl';
+@import './layout.styl';
+@import './timetable.styl';
+@import './projects.styl';
+@import './misc.styl';
+@import './react-tabs.styl';
+
+
+color-working = #ffd449
+color-idle = #90ee90
+color-error = #ff645d
+
+color-button-warning = #ffd449
+color-button-safe = #90ee90
+color-button-danger = #ff645d
+
+color-task-bg = #79e7ff
+
+color-sidebar-bg = #ffb17c
+
+html, body
+  //height 100%
+  margin 0
+  padding 0
+
+body
+  font-family 'Roboto', sans-serif
+  background-color #a4cde8
+  //#app-index
+  //  height 100%
+  //  & > :first-child
+  //    height 100%
+
+ul
+  list-style none
+  padding 0
+  margin 0
+
+.debug
+  position fixed
+  top 0
+
+
+.navbar-message
+  padding 8px 16px
+  width 100%
+
+.custom-drag-layer
+  position absolute
+  pointer-events none
+  z-index 100
+  left 0
+  top 0
+  //max-width 1200px
+  //width 1200px
+
+.drag-placeholder
+  position fixed
+  pointer-events none
+  & *
+    pointer-events none
+
+.drag-offset
+  position relative
+  display none
+
+.Alakrity-isWorking-working
+  background-color color-working
+
+.Alakrity-isWorking-idle
+  background-color color-idle
+
+.alakrity-spinner
+  display inline-block
+  margin 6.5px 6.5px 0 6.5px
+  height 2rem
+  width 2rem
+  background-color saturate(lighten($theme-color-4, 20%), -20%)
+  border-radius 50%
+  box-shadow 0 0 0 1px $theme-dark
+
+
+.alakrity-spinner-error
+  background-color $theme-color-1
+
+.alakrity-spinner-warning
+  background-color $theme-color-2
+
+.alakrity-spinner-animate
+  border 6px solid
+  border-top-color $theme-color-2
+  border-right-color $theme-color-3
+  border-bottom-color $theme-color-4
+  border-left-color $theme-color-1
+  -webkit-animation spin 2s ease infinite
+  animation spin 2s ease infinite
+
+@-webkit-keyframes spin
+  0%
+    transform rotate(0deg)
+    background-color $theme-color-2
+  25%
+    transform rotate(90deg)
+    background-color $theme-color-1
+  50%
+    transform rotate(180deg)
+    background-color $theme-color-4
+  75%
+    transform rotate(270deg)
+    background-color $theme-color-3
+  100%
+    transform rotate(360deg)
+    background-color $theme-color-2
+
+@keyframes spin
+  0%
+    transform rotate(0deg)
+    background-color $theme-color-2
+  25%
+    transform rotate(90deg)
+    background-color $theme-color-1
+  50%
+    transform rotate(180deg)
+    background-color $theme-color-4
+  75%
+    transform rotate(270deg)
+    background-color $theme-color-3
+  100%
+    transform rotate(0deg)
+    background-color $theme-color-2
+
+.task-list
+  margin 8px 0
+  list-style none
+  overflow visible
+
+
+.task-list-item
+  display flex
+  margin-bottom 4px
+
+
+.task-item
+  height 100%
+  width 108px
+  background-color white
+  text-align center
+  .task-item-buttons
+    position absolute
+    top 0
+    right 0
+
+.task-item-edit
+  margin 0
+  min-height 2rem
+  border-left-width 2px !important
+  border-right-width 2px !important
+  border-top-width 2px !important
+
+.task-item-title-edit
+  margin 6px 2px 1px 2px
+  height 22px
+  background-color none
+  line-height 22px
+  width auto
+  text-align center
+
+.task-item-info
+  position relative
+  box-sizing border-box
+  display -ms-flexbox
+  display flex
+  -ms-flex-direction column
+  flex-direction column
+  justify-content center
+  max-height 100%
+  min-height 100%
+  overflow hidden
+  p
+    margin 1px
+    &.duration
+      font-size small
+      font-style italic
+
+.task-item-handle
+  width 108px
+  height 15px
+  line-height 10px
+  bottom -13px
+  color lighten($theme, 70%)
+  //background-color rgba(255, 0, 0, 0.3)
+  cursor ns-resize
+
+.task-form
+  margin-bottom 4px
+  padding-top 4px
+
+.icon-button
+  display inline-block
+  padding 0
+  margin 4px
+  background none
+  border none
+  text-align center
+  text-decoration none
+  cursor pointer
+  -webkit-appearance none
+  &:not(.icon-button-disabled):hover
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12)!important
+
+//.icon-button-disabled

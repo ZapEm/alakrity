@@ -1,0 +1,92 @@
+@startuml
+!define table(x) class x << (T,#FFAAAA) >>
+!define primary_key(x) -<b>x</b>
+!define secondary_key(x) #<i>x</i>
+hide methods
+hide stereotypes
+
+
+title Alakrity: Database Tables
+
+
+table(Users) {
+    primary_key(id) : str
+    + password : hash
+    + permission : int
+}
+
+together {
+
+    table(Timetables) {
+        primary_key(id) : str
+        secondary_key(userID) : str
+        + title : str
+        + start : int
+        + end : int
+        + steps : int
+        + workPeriods : { colors, selection }
+        ~ .colors : str[]
+        ~ .selection : int[ [], [], ... ]
+        + created : datetime
+        + lastEdited : datetime
+    }
+
+
+    table(Projects) {
+        primary_key(id)
+        secondary_key(userID)
+        + type : str[work, chore, personal, sport, break]
+        + title : str
+        + color : hex
+        + created : datetime
+        + lastEdited : datetime
+    }
+
+    table(Tasks) {
+        primary_key(id) : str
+        secondary_key(userID) : str
+        secondary_key(projectID) : str
+        + duration : int
+        + start : datetime
+        + text : str
+        + created : datetime
+        + lastEdited : datetime
+    }
+
+}
+
+together {
+
+    table(Statistics) {
+        .. placeholder ..
+        primary_key(id) : str
+        secondary_key(userID) : str
+        + week : date
+        + achievements : str[]
+        + ...
+    }
+
+    table(Achievements) {
+        .. placeholder ..
+        primary_key(id) : str
+        secondary_key(userID) : str
+        + title : str
+        + description : str
+        + requirements : obj
+    }
+
+}
+
+
+Users *-- "0..*" Tasks
+Users *-- "1..*" Projects
+Users *-- "1..*" Timetables
+Users *-- "0..*" Statistics
+
+Tasks "0..*" ..* Projects
+
+Timetables o.. "0..*" Projects
+
+Statistics o.. "0..*" Achievements
+
+@enduml
