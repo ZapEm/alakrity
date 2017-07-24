@@ -2,7 +2,7 @@ import moment from 'moment'
 import React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import MomentPropTypes from 'react-moment-proptypes'
-import TaskItem from './TaskItem'
+import TaskItem from './Task'
 
 
 export default class TasksList extends React.Component {

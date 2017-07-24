@@ -21,10 +21,14 @@ export default class IconButton extends React.Component {
                 'disabled': 'w3-text-gray'
             }
 
+        //
+        style.backgroundColor = 'rgba(255,255,255,0.8)'
+        style.border = '1px solid'
         if (disabled){
             style.cursor = 'help'
-            //style.backgroundColor = 'rgb(84, 84, 84)'
         }
+
+
 
         return (
             <button

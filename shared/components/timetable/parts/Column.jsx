@@ -2,7 +2,7 @@ import moment from 'moment'
 import * as React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import momentPropTypes from 'react-moment-proptypes'
-import TaskItem from '../../tasks/TaskItem'
+import TaskItem from '../../tasks/Task'
 import Timeslot from './Timeslot'
 
 

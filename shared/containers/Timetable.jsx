@@ -13,6 +13,7 @@ import TimetableView from '../components/timetable/TimetableView'
 import Toolbar from '../components/timetable/Toolbar'
 import * as TaskActions from '../modules/tasks'
 import * as TimetableActions from '../modules/timetables'
+import { PROJECT_COLORS } from '../utils/constants'
 
 
 @connect(state => ({
@@ -44,8 +45,7 @@ export default class Timetable extends React.Component {
                 steps: 2,
                 workPeriods: {
                     selection: [[], [], [], [], [], [], []],
-                    colors: ['none', '#FF6F6F', '#FFE66F', '#6D58B0', '#59CC59', '#FFC16F', '#DEF66B', '#A648A6',
-                             '#4D7FA4']
+                    colors: PROJECT_COLORS
                 },
                 created: moment()
             }

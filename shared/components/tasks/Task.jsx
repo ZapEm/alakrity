@@ -45,7 +45,7 @@ const dragSource = {
     connectDragPreview: connect.dragPreview(),
     isDragging: monitor.isDragging()
 }))
-export default class TaskItem extends React.Component {
+export default class Task extends React.Component {
 
     static propTypes = {
         task: ImmutablePropTypes.map.isRequired,

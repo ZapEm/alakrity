@@ -5,6 +5,7 @@ import tinycolor from 'tinycolor2'
 import { PROJECT_COLORS } from '../../utils/constants'
 import Project from './Project'
 import ProjectFrom from './ProjectForm'
+import ProjectsList from './ProjectsList'
 
 export default class ProjectsView extends React.Component {
 
@@ -20,7 +21,7 @@ export default class ProjectsView extends React.Component {
         this.state = { tabIndex: 0 }
     }
 
-    handleOnTapClick(tabIndex) {
+    handleOnTabClick(tabIndex) {
         this.setState({ tabIndex })
         // if ( !content.props.isSelected ) {
         //     this.props.projectActions.setCurrentProject(content.props.project.get('id'))
@@ -29,7 +30,7 @@ export default class ProjectsView extends React.Component {
 
 
     render() {
-        const { projects, tasks, projectList, taskActions, projectActions: { createProject } } = this.props
+        const { projects, tasks, taskActions, projectActions: { createProject } } = this.props
 
         let titleTabs = []
         let projectTabPanels = []
@@ -37,7 +38,7 @@ export default class ProjectsView extends React.Component {
         for ( let project of projects.get('projectList') ) {
             const projectTaskList = tasks.get('taskList').filter(task => (task.get('projectID') === project.get('id')))
             const bgStyle = {
-                backgroundColor: tinycolor(PROJECT_COLORS[project.get('color') || 0]).lighten(10)
+                backgroundColor: tinycolor(PROJECT_COLORS[project.get('color') || 0]).lighten(8).brighten(8)
             }
             titleTabs.push(
                 <Tab
@@ -69,16 +70,21 @@ export default class ProjectsView extends React.Component {
                     onSubmit={createProject}
                     colors={PROJECT_COLORS}
                 />
-                <Tabs
-                    selectedTabPanelClassName="react-tabs__tab-panel--selected w3-card-4"
-                    selectedIndex={this.state.tabIndex}
-                    onSelect={::this.handleOnTapClick}
-                >
-                    <TabList>
-                        {titleTabs}
-                    </TabList>
-                    {projectTabPanels}
-                </Tabs>
+
+                <ProjectsList
+                    projectList={projects.get('projectList')}
+                />
+
+                {/*<Tabs*/}
+                    {/*selectedTabPanelClassName="react-tabs__tab-panel--selected w3-card-4"*/}
+                    {/*selectedIndex={this.state.tabIndex}*/}
+                    {/*onSelect={::this.handleOnTabClick}*/}
+                {/*>*/}
+                    {/*<TabList>*/}
+                        {/*{titleTabs}*/}
+                    {/*</TabList>*/}
+                    {/*{projectTabPanels}*/}
+                {/*</Tabs>*/}
             </div>
         )
 

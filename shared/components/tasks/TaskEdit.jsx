@@ -1,4 +1,3 @@
-import { merge as _merge } from 'lodash/object'
 import * as React from 'react'
 
 import { DragLayer, DragSource } from 'react-dnd'
@@ -42,7 +41,8 @@ export default class TaskEdit extends React.Component {
         isDragging: React.PropTypes.bool,
         monitor: React.PropTypes.func,
         item: React.PropTypes.object,
-        itemType: React.PropTypes.string
+        itemType: React.PropTypes.string,
+        bgStyle: React.PropTypes.object
     }
 
     static contextTypes = {
@@ -93,7 +93,6 @@ export default class TaskEdit extends React.Component {
 
     handleSubmit(e) {
         e.preventDefault()
-        console.log('SAVEEE!!!')
         this.props.onSubmit(this.state)
     }
 
@@ -102,7 +101,7 @@ export default class TaskEdit extends React.Component {
     }
 
     render() {
-        const { connectDragSource, isDragging } = this.props
+        const { connectDragSource, isDragging, bgStyle } = this.props
 
         const durationCutoff = this.state.duration >= 90
 
@@ -110,7 +109,12 @@ export default class TaskEdit extends React.Component {
             <form
                 onSubmit={::this.handleSubmit}
                 className="task-item task-item-edit w3-card-2 w3-round-large w3-border w3-border-theme w3-round-large w3-bottombar w3-border-theme w3-display-container"
-                style={{ height: this.state.duration / 20 + 'rem' }}
+                style={
+                    {
+                        height: this.state.duration / 20 + 'rem',
+                        backgroundColor: bgStyle.backgroundColor
+                    }
+                }
             >
                 <div className="task-item-info">
                     <div
@@ -129,12 +133,12 @@ export default class TaskEdit extends React.Component {
                         iconName={'save'}
                     />
                 </div>
-                { connectDragSource(<div
+                {connectDragSource(<div
                     className="material-icons task-item-handle w3-display-bottommiddle"
-                    style={ isDragging ?
+                    style={isDragging ?
                         {
                             pointerEvents: 'none'
-                        } : {} }
+                        } : {}}
                 >{'more_horiz'}</div>)
                 }
             </form>

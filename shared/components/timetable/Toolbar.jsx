@@ -1,6 +1,7 @@
 import * as React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 
+
 export default class Toolbar extends React.Component {
 
     static propTypes = {

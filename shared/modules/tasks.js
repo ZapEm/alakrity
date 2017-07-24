@@ -4,9 +4,10 @@ import moment from 'moment'
 import xss from 'xss'
 import { REJECTED_NAME as FAILURE, RESOLVED_NAME as SUCCESS } from '../utils/constants'
 import fetch from '../utils/fetcher'
-import { generateTempIDfromDate as tempID } from '../utils/tempID'
+//import { generateTempIDfromDate as tempID } from '../utils/tempID'
 
 import { LOGIN, LOGOUT } from './auth'
+import newId from '../utils/newId'
 
 // action types:
 const LOAD = 'alakrity/tasks/LOAD'
@@ -33,7 +34,7 @@ export function createTask(taskInput) {
 
     return {
         type: CREATE,
-        payload: _merge({ id: tempID(taskInput.created) }, taskInput),
+        payload: _merge({ id: newId('TEMP_ID_') /*tempID(taskInput.created)*/ }, taskInput),
         meta: {
             promise: fetch.post('tasks', { data: taskInput }),
             optimist: true

@@ -7,6 +7,8 @@ import fetch from '../utils/fetcher'
 import { generateTempIDfromDate as tempID } from '../utils/tempID'
 
 import { LOGIN, LOGOUT } from './auth'
+import newId from '../utils/newId'
+
 
 // action types:
 const LOAD = 'alakrity/projects/LOAD'
@@ -33,7 +35,7 @@ export function createProject(projectInput) {
 
     return {
         type: CREATE,
-        payload: _merge({}, projectInput, { id: tempID(projectInput.created) }),
+        payload: _merge({}, projectInput, { id: newId('TmpProjectID_') /*tempID(projectInput.created)*/ }),
         meta: {
             promise: fetch.post('projects', { data: projectInput }),
             optimist: true

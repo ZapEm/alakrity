@@ -3,7 +3,7 @@ import * as React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import Timetable from './Timetable'
 
-// import TaskItem from '../tasks/TaskItem';
+// import Task from '../tasks/Task';
 
 
 export default class TimetableView extends React.Component {

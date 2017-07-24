@@ -35,13 +35,13 @@ export default class TaskForm extends React.Component {
     }
 
     handleSubmit(e) {
-        let errors
         e.preventDefault()
+        let errors = []
 
         // console.log(e, this.state);
 
         if ( this.state.text.length === 0 ) {
-            errors = ['You have not entered a task name!']
+            errors.push('You have not entered a task name!')
         }
 
         if ( errors && errors.length > 0 ) {

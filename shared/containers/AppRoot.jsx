@@ -7,7 +7,6 @@ import { bindActionCreators } from 'redux'
 import Navbar from '../components/misc/Navbar'
 import { logout } from '../modules/auth'
 import { checkWorking } from '../utils/stateChecks'
-import CustomDragLayer from '../components/dnd/TimetableDragLayer'
 
 
 @connect(state => ({
