@@ -6,6 +6,7 @@ import ImmutablePropTypes from 'react-immutable-proptypes'
 import { DndTypes } from '../../utils/constants'
 import { getDurationDelta } from '../dnd/dndFunctions'
 import IconButton from '../misc/IconButton'
+import * as _ from 'lodash/object'
 
 
 const dragSource = {
@@ -42,7 +43,7 @@ export default class TaskEdit extends React.Component {
         monitor: React.PropTypes.func,
         item: React.PropTypes.object,
         itemType: React.PropTypes.string,
-        bgStyle: React.PropTypes.object
+        colorStyle: React.PropTypes.object
     }
 
     static contextTypes = {
@@ -101,19 +102,18 @@ export default class TaskEdit extends React.Component {
     }
 
     render() {
-        const { connectDragSource, isDragging, bgStyle } = this.props
+        const { connectDragSource, isDragging, colorStyle } = this.props
 
         const durationCutoff = this.state.duration >= 90
 
         return <div className="task-list-item">
             <form
                 onSubmit={::this.handleSubmit}
-                className="task-item task-item-edit w3-card-2 w3-round-large w3-border w3-border-theme w3-round-large w3-bottombar w3-border-theme w3-display-container"
+                className="task-item task-item-edit w3-card-2 w3-round-large w3-display-container"
                 style={
-                    {
-                        height: this.state.duration / 20 + 'rem',
-                        backgroundColor: bgStyle.backgroundColor
-                    }
+                    _.merge({}, colorStyle, {
+                        height: this.state.duration / 20 + 'rem'
+                    })
                 }
             >
                 <div className="task-item-info">
@@ -128,7 +128,7 @@ export default class TaskEdit extends React.Component {
                     </div>
                     {durationCutoff && <p className="task-item-info duration">{this.state.duration / 60} hours</p>}
                 </div>
-                <div className="task-item-buttons Xw3-display-hover w3-display-bottomright">
+                <div className="task-item-buttons w3-display-bottomright">
                     <IconButton
                         iconName={'save'}
                     />
@@ -137,8 +137,9 @@ export default class TaskEdit extends React.Component {
                     className="material-icons task-item-handle w3-display-bottommiddle"
                     style={isDragging ?
                         {
-                            pointerEvents: 'none'
-                        } : {}}
+                            pointerEvents: 'none',
+                            color: colorStyle.backgroundColor
+                        } : { color: colorStyle.backgroundColor} }
                 >{'more_horiz'}</div>)
                 }
             </form>

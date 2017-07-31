@@ -45,7 +45,7 @@ export default class Column extends React.Component {
             timeslots.push(<div key={'group_' + hour} className="tt-timeslot-group"> { slots } </div>)
         }
 
-        let taskItems = [], k2 = 0
+        let taskItems = [], k2=0
         for ( let task of dayTasks ) {
             const momentTaskStart = moment(task.get('start'))
             const positionStyle = {

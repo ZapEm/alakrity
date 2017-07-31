@@ -13,7 +13,6 @@ import TimetableView from '../components/timetable/TimetableView'
 import Toolbar from '../components/timetable/Toolbar'
 import * as TaskActions from '../modules/tasks'
 import * as TimetableActions from '../modules/timetables'
-import { PROJECT_COLORS } from '../utils/constants'
 
 
 @connect(state => ({
@@ -36,26 +35,27 @@ export default class Timetable extends React.Component {
     }
 
     componentDidMount() {
-        if ( !this.props.timetables.get('timetable').size ) {
-
-            const timetable = {
-                title: 'New Timetable',
-                start: 7,
-                end: 22,
-                steps: 2,
-                workPeriods: {
-                    selection: [[], [], [], [], [], [], []],
-                    colors: PROJECT_COLORS
-                },
-                created: moment()
-            }
-            //this.timetable = Immutable.fromJS(timetable);
+        if ( !this.props.timetables.get('timetableList').size ) {
             if ( typeof window !== 'undefined' ) {
-                console.log('No timetable found. Creating new timetable!')
-                this.props.dispatch(TimetableActions.createTimetable(timetable))
+                this.createNewTimetable()
             }
-
         }
+    }
+
+    createNewTimetable(tableNr = 0) {
+        const timetable = {
+            title: 'New Timetable' + (tableNr > 0 ? ` (${tableNr})` : ''),
+            start: 7,
+            end: 22,
+            steps: 2,
+            projectPeriods: {
+                selection: [[], [], [], [], [], [], []]
+            },
+            created: moment()
+        }
+
+        console.log('No timetable found. Creating new timetable!')
+        this.props.dispatch(TimetableActions.createTimetable(timetable))
     }
 
     render() {
@@ -76,8 +76,10 @@ export default class Timetable extends React.Component {
                 <Toolbar
                     editMode={editMode}
                     timetables={timetables}
+                    projectList={projectList}
+                    onNewTimetable={() => this.createNewTimetable(this.props.timetables.get('timetableList').size + 2)}
                     loadTimetable={bindActionCreators(TimetableActions.loadTimetable, dispatch)}
-                    setProjectNr={bindActionCreators(TimetableActions.setProjectNr, dispatch)}
+                    setCurrentProject={bindActionCreators(TimetableActions.setCurrentProject, dispatch)}
                 />
                 <div className="row">
                     <div className="col px900">

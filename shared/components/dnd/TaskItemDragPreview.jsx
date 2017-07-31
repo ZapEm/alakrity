@@ -1,6 +1,6 @@
 import * as React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
-import { PROJECT_COLORS } from '../../utils/constants'
+import tinycolor from 'tinycolor2'
 
 export default class TaskItemDragPreview extends React.Component {
 
@@ -9,11 +9,16 @@ export default class TaskItemDragPreview extends React.Component {
         projectList: ImmutablePropTypes.list.isRequired
     }
 
-    getProjectColor() {
+    constructor(props) {
+        super(props)
+
         const project = this.props.projectList.find(
             p => p.get('id') === this.props.task.projectID
         )
-        return PROJECT_COLORS[(project) ? project.get('color') : 0]
+
+        this.state = {
+            color: project ? project.get('color') : '#fff'
+        }
     }
 
     render() {
@@ -31,8 +36,13 @@ export default class TaskItemDragPreview extends React.Component {
                         pointerEvents: 'none'
                     }
                 }>
-                <div className="task-item w3-card-4 w3-round-large w3-border w3-border-theme"
-                     style={ { backgroundColor: this.getProjectColor() } }>
+                <div className="task-item w3-card-4 w3-round-large"
+                     style={
+                         {
+                             backgroundColor: this.state.color,
+                             borderColor: tinycolor(this.state.color).brighten(-35)
+                         }
+                     }>
                     <div className="task-item-info">
                         <p className="task-item-info title">{task.text}</p>
                         {durationCutoff &&

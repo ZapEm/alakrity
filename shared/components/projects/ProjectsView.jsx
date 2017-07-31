@@ -30,49 +30,52 @@ export default class ProjectsView extends React.Component {
 
 
     render() {
-        const { projects, tasks, taskActions, projectActions: { createProject } } = this.props
+        const { projects, tasks, taskActions, projectActions } = this.props
 
-        let titleTabs = []
-        let projectTabPanels = []
-        let k = 0
-        for ( let project of projects.get('projectList') ) {
-            const projectTaskList = tasks.get('taskList').filter(task => (task.get('projectID') === project.get('id')))
-            const bgStyle = {
-                backgroundColor: tinycolor(PROJECT_COLORS[project.get('color') || 0]).lighten(8).brighten(8)
-            }
-            titleTabs.push(
-                <Tab
-                    key={'prj_panel_' + k++}
-                    style={bgStyle}
-                >
-                    {project.get('title')}
-                </Tab>
-            )
-
-            projectTabPanels.push(
-                <TabPanel
-                    key={'prj_panel_' + k++}
-                    style={bgStyle}
-                >
-                    <Project
-                        colors={PROJECT_COLORS}
-                        project={project}
-                        taskList={projectTaskList}
-                        projectList={projects.get('projectList')}
-                        taskActions={taskActions}
-                    />
-                </TabPanel>
-            )
-        }
+        //TabPanels
+        // let titleTabs = []
+        // let projectTabPanels = []
+        // let k = 0
+        // for ( let project of projects.get('projectList') ) {
+        //     const projectTaskList = tasks.get('taskList').filter(task => (task.get('projectID') === project.get('id')))
+        //     const bgStyle = {
+        //         backgroundColor: tinycolor(PROJECT_COLORS[project.get('color') || 0]).lighten(8).brighten(8)
+        //     }
+        //     titleTabs.push(
+        //         <Tab
+        //             key={'prj_panel_' + k++}
+        //             style={bgStyle}
+        //         >
+        //             {project.get('title')}
+        //         </Tab>
+        //     )
+        //
+        //     projectTabPanels.push(
+        //         <TabPanel
+        //             key={'prj_panel_' + k++}
+        //             style={bgStyle}
+        //         >
+        //             <Project
+        //
+        //                 //colors={PROJECT_COLORS}
+        //                 project={project}
+        //                 //taskList={projectTaskList}
+        //                 //projectList={projects.get('projectList')}
+        //                 //taskActions={taskActions}
+        //             />
+        //         </TabPanel>
+        //     )
+        // }
         return (
             <div className="projects-view">
                 <ProjectFrom
-                    onSubmit={createProject}
+                    onSubmit={projectActions.createProject}
                     colors={PROJECT_COLORS}
                 />
 
                 <ProjectsList
                     projectList={projects.get('projectList')}
+                    projectActions={projectActions}
                 />
 
                 {/*<Tabs*/}

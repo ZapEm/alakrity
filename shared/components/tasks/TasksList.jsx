@@ -36,10 +36,10 @@ export default class TasksList extends React.Component {
         let taskItems
 
         if ( taskList.size > 0 ) {
-            taskItems = taskList.map((task) =>
+            taskItems = taskList.map((task, index) =>
                 (!filterByMoment || !task.get('start') || filterByMoment.isoWeek() !== moment(task.get('start')).isoWeek()) ?
                 <TaskItem
-                    key={task.get('id')}
+                    key={'task_li_' + index}
                     task={task}
                     projectList={projectList}
                     taskActions={taskActions}
@@ -55,7 +55,7 @@ export default class TasksList extends React.Component {
                     : null
             )
         } else {
-            taskItems = <li key={'noTasksTile'}>
+            taskItems = <li key={'task_li_none'}>
                 {'No tasks!'}
             </li>
         }

@@ -5,24 +5,25 @@ import Project from './Project'
 export default class ProjectsList extends React.Component {
 
     static propTypes = {
-        projectList: ImmutablePropTypes.list.isRequired
+        projectList: ImmutablePropTypes.list.isRequired,
+        projectActions: React.PropTypes.objectOf(React.PropTypes.func)
     }
 
     render() {
-        const { projectList } = this.props
+        const { projectList, projectActions } = this.props
 
         let projectElements
-
         if ( projectList.size > 0 ) {
-            projectElements = projectList.map((project) =>
+            projectElements = projectList.map((project, index) =>
                 <li
-                    key={project.get('id')}
-                    className={'project-list-item'}
+                    key={'pjt_li_' + index}
+                    className={'project-list-item' + ((index+1) % 3 === 0 ? ' project-list-item-3rd' : '')}
                 >
                     <Project
-                        // key={project.get('id')}
+                        value={project.get('id')}
                         project={project}
                         editable={true}
+                        projectActions={projectActions}
                     />
                 </li>
             )

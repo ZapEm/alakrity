@@ -9,8 +9,8 @@ import { LOGIN, LOGOUT } from './auth'
 // action types:
 const EDIT_MODE = 'alakrity/timetable/EDIT_MODE'
 const CHANGE_TABLE = 'alakrity/timetable/CHANGE'
-const CHANGE_SLOT_PROJECT_NR = 'alakrity/timetable/CHANGE_SLOT_PROJECT_NR'
-const SET_PROJECT_NR = 'alakrity/timetable/SET_PROJECT_NR'
+const CHANGE_SLOT_PROJECT_ID = 'alakrity/timetable/CHANGE_SLOT_PROJECT_ID'
+const SET_CURRENT_PROJECT = 'alakrity/timetable/SET_CURRENT_PROJECT'
 
 const LIST = 'alakrity/timetable/LIST'
 const LOAD = 'alakrity/timetable/LOAD'
@@ -30,9 +30,9 @@ export function changeTimetable(timetableInput = {}) {
         payload: timetableInput
     }
 }
-export function changeSlotProjectNr(slotInput) {
+export function changeSlotProjectID(slotInput) {
     return {
-        type: CHANGE_SLOT_PROJECT_NR,
+        type: CHANGE_SLOT_PROJECT_ID,
         payload: slotInput
     }
 }
@@ -43,10 +43,10 @@ export function enterEditMode() {
     }
 }
 
-export function setProjectNr(projectNr = 0) {
+export function setCurrentProject(projectID = '') {
     return {
-        type: SET_PROJECT_NR,
-        payload: Number(projectNr)
+        type: SET_CURRENT_PROJECT,
+        payload: projectID
     }
 }
 
@@ -113,7 +113,7 @@ const initialState = Immutable.Map({
     isWorking: false,
     isSaved: true,
     editMode: false,
-    projectNr: 0,
+    currentProject: '',
     timetableList: Immutable.List(),
     timetable: Immutable.Map()
 })
@@ -127,15 +127,15 @@ export default function reducer(state = initialState, action) {
                 }
             )
 
-        case CHANGE_SLOT_PROJECT_NR:
+        case CHANGE_SLOT_PROJECT_ID:
             return state.setIn(['timetable', 'workPeriods', 'selection', action.payload.day, action.payload.slot],
-                action.payload.projectNr)
+                action.payload.projectID)
 
         case EDIT_MODE:
             return state.set('editMode', !state.get('editMode')) //TODO: remove toggling!
 
-        case SET_PROJECT_NR:
-            return state.set('projectNr', action.payload)
+        case SET_CURRENT_PROJECT:
+            return state.set('currentProject', action.payload)
 
         case LIST:
         case LOAD:

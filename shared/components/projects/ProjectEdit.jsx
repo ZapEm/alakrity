@@ -4,22 +4,14 @@ import * as React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import newId from '../../utils/newId'
 import ProjectColorPicker from './ProjectColorPicker'
+import { PROJECT_COLORS } from '../../utils/constants'
 
-export default class ProjectForm extends React.Component {
+export default class ProjectEdit extends React.Component {
 
     static propTypes = {
         onSubmit: React.PropTypes.func.isRequired,
-        project: ImmutablePropTypes.map,
-        colors: React.PropTypes.array.isRequired
-    }
-
-    static defaultProps = {
-        project: Immutable.fromJS(
-            {
-                title: '',
-                color: '#FFFFFF'
-            }
-        )
+        project: ImmutablePropTypes.map.isRequired,
+        style: React.PropTypes.object
     }
 
     constructor(props) {
@@ -31,7 +23,7 @@ export default class ProjectForm extends React.Component {
     }
 
     componentWillMount() {
-        this.id = newId('project-form_')
+        this.id = newId('pjt-edit_')
     }
 
     handleSubmit(e) {
@@ -40,13 +32,14 @@ export default class ProjectForm extends React.Component {
         if ( this.state.project.title.length === 0 ) {
             errors.push('You have not entered a project name!')
         }
+
         if ( errors.length > 0 ) {
             this.setState(_.merge({}, this.state, { errors: errors }))
         } else {
             this.props.onSubmit(this.state.project)
             this.setState({
                 errors: [],
-                project: this.props.project.toJSON()
+                //project: this.props.project.toJSON()
             })
         }
     }
@@ -70,11 +63,13 @@ export default class ProjectForm extends React.Component {
     }
 
     render() {
-        const { project, colors } = this.props
+        const { style } = this.props
 
         return <form
-            className="project-formtask-form w3-container w3-card-2 w3-round-large w3-border w3-border-theme w3-leftbar w3-rightbar"
-            onSubmit={::this.handleSubmit}>
+            className="project-formtask-form project w3-card-2 w3-display-container w3-card-2 w3-round-large"
+            onSubmit={::this.handleSubmit}
+            style={style}
+        >
 
             <label htmlFor={this.id + '_title'}>Name</label>
 
@@ -90,10 +85,10 @@ export default class ProjectForm extends React.Component {
             <ProjectColorPicker
                 label={'Color'}
                 setColor={(c) => this.setState(_.merge({}, this.state, { project: { color: c } }))}
-                colors={colors}
+                colors={PROJECT_COLORS}
             />
             <button className="w3-btn-floating">
-                {project ? 'Create' : 'Save'}
+                {'Save'}
             </button>
             {this.displayErrors(this.state.errors)}
         </form>

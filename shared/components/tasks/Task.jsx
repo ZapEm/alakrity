@@ -7,6 +7,7 @@ import ImmutablePropTypes from 'react-immutable-proptypes'
 import { DndTypes, PROJECT_COLORS } from '../../utils/constants'
 import IconButton from '../misc/IconButton'
 import TaskEdit from './TaskEdit'
+import tinycolor from 'tinycolor2'
 
 const dragSource = {
     canDrag(props) {
@@ -77,12 +78,18 @@ export default class Task extends React.Component {
 
     constructor(props, context) {
         super(props, context)
+
+        const project = this.props.projectList.find(
+            p => p.get('id') === this.props.task.get('projectID')
+        )
+
         this.state = {
-            editing: false
+            editing: false,
+            color: project ? project.get('color') : '#fff'
         }
     }
 
-    handleClick() {
+    handleEditClick() {
         if ( this.props.editable ) {
             this.setState({ editing: true })
         }
@@ -98,12 +105,12 @@ export default class Task extends React.Component {
         this.setState({ editing: false })
     }
 
-    getProjectColor() {
-        const project = this.props.projectList.find(
-            p => p.get('id') === this.props.task.get('projectID')
-        )
-        return PROJECT_COLORS[(project) ? project.get('color') : 0]
-    }
+    // getProjectColor() {
+    //     const project = this.props.projectList.find(
+    //         p => p.get('id') === this.props.task.get('projectID')
+    //     )
+    //     return project ? project.get('color') : '#fff'
+    // }
 
     render() {
         const { task, taskActions: { removeTask }, editable, draggable, connectDragSource, isDragging, liWrapper } = this.props
@@ -113,7 +120,10 @@ export default class Task extends React.Component {
 
         const durationCutoff = task.get('duration') >= 90
 
-        const bgStyle = { backgroundColor: this.getProjectColor() }
+        const colorStyle = {
+            backgroundColor: this.state.color,
+            borderColor: tinycolor(this.state.color).brighten(-35)
+        }
         const dragStyle = draggable ?
             {
                 cursor: 'move'
@@ -122,15 +132,15 @@ export default class Task extends React.Component {
 
         if ( this.state.editing ) {
             element = <TaskEdit
-                bgStyle={bgStyle}
+                colorStyle={colorStyle}
                 task={task}
                 onSubmit={ (task) => this.handleSave(task) }
             />
         } else {
             element =
                 <div
-                    className="task-item w3-card-2 w3-round-large w3-border w3-border-theme w3-display-container"
-                    style={_merge(bgStyle, dragStyle, isDragging ?
+                    className="task-item w3-card-2 w3-round-large w3-display-container"
+                    style={_merge(colorStyle, dragStyle, isDragging ?
                         {
                             pointerEvents: 'none',
                             opacity: 0.6,
@@ -146,7 +156,7 @@ export default class Task extends React.Component {
                         { editable &&
                         <IconButton
                             iconName={'edit'}
-                            onClick={::this.handleClick}
+                            onClick={::this.handleEditClick}
                         />
                         }
                         { editable &&

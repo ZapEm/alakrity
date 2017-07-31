@@ -20,13 +20,39 @@ export default class Timetable extends React.Component {
         timetables: ImmutablePropTypes.map.isRequired
     }
 
+    /**
+     * Maps the 2-dimensional (Day, Slot) projectPeriods list, to a similar array with the project colors
+     */
+    mapProjectPeriodColors() {
+        const projectPeriods = this.props.timetables.get('timetable').get('projectPeriods')
+        const projectList = this.props.projectList
+
+        const mappedPeriods = projectPeriods.map(dayColumn => dayColumn.map(slotValue => {
+            const project = projectList.find(project => project.get('id') === slotValue)
+            if ( project ) {
+                return { id: project.get('id'), color: project.get('color') }
+            } else {
+                return { id: '', color: '#FFFFFF' }
+            }
+        }))
+        return mappedPeriods.toJS()
+    }
+
+    createColorMap(projectList) {
+        let colorMap = {}
+        projectList.forEach(project=>{
+            colorMap[project.get('id')] = project.get('color')
+        })
+        return
+    }
+
     render() {
         const { date, tasks, projectList, taskActions, editMode, timetableActions, timetables } = this.props
         const momentDate = moment.isMoment(date) ? date : moment(date)
 
         return (
-            <div className={ editMode ? 'tt-timetable w3-border-theme w3-card-4 tt-edit-mode' :
-                             'tt-timetable w3-border-theme w3-card-4' }>
+            <div className={editMode ? 'tt-timetable w3-border-theme w3-card-4 tt-edit-mode' :
+                            'tt-timetable w3-border-theme w3-card-4'}>
                 <HeaderRow
                     momentDate={momentDate}
                     enterEditMode={timetableActions.enterEditMode}
@@ -38,6 +64,7 @@ export default class Timetable extends React.Component {
                     <ContentDnD
                         editMode={editMode}
                         timetables={timetables}
+                        projectPeriodsColors={this.mapProjectPeriodColors()}
                         momentDate={momentDate}
                         tasks={tasks}
                         projectList={projectList}
