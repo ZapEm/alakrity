@@ -1,6 +1,7 @@
+import * as Immutable from 'immutable'
 import * as React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
-import * as Immutable from 'immutable'
+import tinycolor from 'tinycolor2'
 
 export default class ProjectSelector extends React.Component {
 
@@ -13,14 +14,15 @@ export default class ProjectSelector extends React.Component {
         super(props)
         this.state = {
             isActive: false,
-            currentProject: this.props.projectList.first() ? this.props.projectList.first() : Immutable.fromJS({color: '#FFFFFF'})
+            currentProject: this.props.projectList.first() ? this.props.projectList.first() :
+                            Immutable.fromJS({ color: '#FFFFFF' })
         }
     }
 
-    handleSelectProject(e){
+    handleSelectProject(e) {
         e.preventDefault()
-        const currentProject = this.props.projectList.get(+e.target.value)
-        this.setState({currentProject: currentProject})
+        const currentProject = this.props.projectList.get(e.target.value)
+        this.setState({ currentProject: currentProject })
         this.props.selectProject(currentProject)
     }
 
@@ -33,9 +35,11 @@ export default class ProjectSelector extends React.Component {
             let i = 0
             for ( let project of projectList ) {
                 projectSelectOptions.push(
-                    <option key={project.get('id')}
-                            value={i++}
-                            style={{ backgroundColor: project.get('color') }}
+                    <option
+                        className="project-selector-option"
+                        key={project.get('id')}
+                        value={i++}
+                        style={{ backgroundColor: tinycolor(project.get('color')).brighten(10) }}
                     >{project.get('title')}</option>
                 )
             }
@@ -50,11 +54,11 @@ export default class ProjectSelector extends React.Component {
 
         return <select
             onChange={::this.handleSelectProject}
-            className={'w3-select w3-right' + (disabled ? ' w3-text-gray' : '')}
+            className={'project-selector w3-select w3-right' + (disabled ? ' w3-text-gray' : '')}
             name="option"
             style={{
                 padding: '8px 4px',
-                backgroundColor: this.state.currentProject ? this.state.currentProject.get('color') : 'none'
+                backgroundColor: this.state.currentProject ? tinycolor(this.state.currentProject.get('color')).brighten(10) : 'none'
             }}
             disabled={disabled}
         >

@@ -1,0 +1,22 @@
+import tinycolor from 'tinycolor2'
+import * as Immutable from 'immutable'
+
+/**
+ * Extract and adjust the project colors then return as immutable map
+ * with projectID keys and 'normal', 'light' and 'dark' sub keys.
+ * @param projectList - immutable list
+ * @returns {any} - immutable map with normal, light and dark colors per projectID.
+ */
+export function getProjectColorMap(projectList) {
+    let colorMap = {}
+    projectList.forEach(project => {
+            const color = project.get('color')
+            colorMap[project.get('id')] = {
+                normal: color,
+                light: tinycolor(color).brighten(10).toHexString(),
+                dark: tinycolor(color).brighten(-35).toHexString()
+            }
+        }
+    )
+    return Immutable.fromJS(colorMap)
+}

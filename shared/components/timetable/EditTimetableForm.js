@@ -1,7 +1,7 @@
 import React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import IconButton from '../misc/IconButton'
-
+import * as _ from 'lodash/object'
 
 export default class EditTimetableForm extends React.Component {
     static propTypes = {
@@ -14,12 +14,14 @@ export default class EditTimetableForm extends React.Component {
 
     constructor(props) {
         super(props)
-        this.state = props.timetables.get('timetable').toJSON()
+        //this.state = props.timetables.get('timetable').toJSON()
+        this.state = {}
     }
+
 
     handleSubmit(e) {
         e.preventDefault()
-        this.props.onSave(this.state)
+        this.props.onSave(this.props.timetables.get('timetable').merge(this.state))
     }
 
     handleTitleChange(e) {

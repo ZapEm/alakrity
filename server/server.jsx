@@ -82,7 +82,8 @@ app.use((req, res) => {
         console.log('##', message)
     }
 
-    serverGetInitial(userID).then(response => { // response = [ currentTimetable, [timetableList...], [tasks...] ]
+    serverGetInitial(userID).then(response => {
+        // response = [ currentTimetable, [timetableList...], [tasks...], [projects...] ]
                                 // console.log(response);
                                 const prelimState = {
                                     auth: Immutable.fromJS(
@@ -104,7 +105,7 @@ app.use((req, res) => {
                                             isWorking: false,
                                             isSaved: true,
                                             editMode: false,
-                                            projectNr: 0,
+                                            currentProjectID: '',
                                             timetableList: response[1] || [],
                                             timetable: response[0] || {}
                                         }

@@ -23,9 +23,11 @@ export default class TimetableView extends React.Component {
         const { taskActions, tasks, projectList, timetables, timetableActions, editMode, userSettings } = this.props
         const taskList = tasks.get('taskList')
 
+        const date = moment()
+
         return (
             <Timetable
-                date={moment()}
+                date={date}
                 tasks={taskList}
                 projectList={projectList}
                 taskActions={taskActions}

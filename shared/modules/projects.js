@@ -15,7 +15,7 @@ const LOAD = 'alakrity/projects/LOAD'
 const CREATE = 'alakrity/projects/CREATE'
 const EDIT = 'alakrity/projects/EDIT'
 const REMOVE = 'alakrity/projects/REMOVE'
-const SET_CURRENT = 'alakrity/projects/SET_CURRENT'
+const SET_CURRENT_ID = 'alakrity/projects/SET_CURRENT_ID'
 
 // action creators:
 
@@ -84,9 +84,9 @@ export function removeProject(id) {
     }
 }
 
-export function setCurrentProject(id) {
+export function setCurrentProjectID(id) {
     return {
-        type: SET_CURRENT,
+        type: SET_CURRENT_ID,
         payload: id
     }
 }
@@ -95,7 +95,7 @@ export function setCurrentProject(id) {
 // REDUCER:
 const initialState = Immutable.fromJS({
     isWorking: false,
-    currentProjectId: '',
+    currentProjectID: '',
     projectList: []
 })
 
@@ -117,8 +117,8 @@ export default function reducer(state = initialState, action) {
             return state.set('projectList', state.get('projectList').filterNot(project => project.get('id') === action.payload))
                         .set('isWorking', true)
 
-        case SET_CURRENT:
-            return state.set('currentProjectId', action.payload)
+        case SET_CURRENT_ID:
+            return state.set('currentProjectID', action.payload)
 
         case LOAD + SUCCESS:
             return state.set('projectList', Immutable.fromJS((action.payload.data !== '') ? action.payload.data : []))

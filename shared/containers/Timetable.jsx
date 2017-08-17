@@ -77,7 +77,7 @@ export default class Timetable extends React.Component {
                     editMode={editMode}
                     timetables={timetables}
                     projectList={projectList}
-                    onNewTimetable={() => this.createNewTimetable(this.props.timetables.get('timetableList').size + 2)}
+                    onNewTimetable={() => this.createNewTimetable(this.props.timetables.get('timetableList').size + 1)}
                     loadTimetable={bindActionCreators(TimetableActions.loadTimetable, dispatch)}
                     setCurrentProject={bindActionCreators(TimetableActions.setCurrentProject, dispatch)}
                 />

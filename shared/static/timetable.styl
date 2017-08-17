@@ -7,6 +7,7 @@
   box-shadow 0 0 15px 5px $theme !important
 
 .tt-header-row
+  border-top solid 2px #777
   border-bottom solid 1px #777
   .tt-header-corner
     display inline-block
@@ -97,9 +98,24 @@
   height 22px
   border solid 1px $theme
 
+.tt-toolbar-no-project-option::after
+  position relative
+  margin auto
+  color $theme
+  content 'X'
+
+
 .tt-tco-selected
-  border solid 2px $theme-d2
-  box-shadow  0 0 0 1px $theme !important
+  border solid 1px $theme-d2
+  box-shadow  0 0 0 1.5px $theme !important
+
+.tt-controls
+ height 35px
+
+
+.tt-controls-text
+  display inline-block
+  transform translateY(-7px)
 
 //.tt-input-number
 //  display inline-block !important

@@ -21,9 +21,9 @@ const REMOVE = 'alakrity/timetable/REMOVE'
 
 // action creators:
 
-export function changeTimetable(timetableInput = {}) {
-    if ( timetableInput.title ) {
-        timetableInput.title = xss(timetableInput.title)
+export function changeTimetable(timetableInput) {
+    if ( timetableInput.get('title') ) {
+        timetableInput.set('title', xss(timetableInput.get('title')))
     }
     return {
         type: CHANGE_TABLE,
@@ -84,14 +84,15 @@ export function createTimetable(timetableInput) {
 }
 
 export function saveTimetable(timetableInput) {
-    timetableInput.title = xss(timetableInput.title)
-    timetableInput.lastEdited = moment()
+    if ( timetableInput.get('title') ) {
+        timetableInput.set('title', xss(timetableInput.get('title')))
+    }
 
     return {
         type: SAVE,
         payload: timetableInput,
         meta: {
-            promise: fetch.post('timetables', { id: timetableInput.id, data: timetableInput }),
+            promise: fetch.post('timetables', { id: timetableInput.get('id'), data: timetableInput.toJSON() }),
             optimist: true
         }
     }
@@ -113,7 +114,7 @@ const initialState = Immutable.Map({
     isWorking: false,
     isSaved: true,
     editMode: false,
-    currentProject: '',
+    currentProjectID: '',
     timetableList: Immutable.List(),
     timetable: Immutable.Map()
 })
@@ -128,14 +129,14 @@ export default function reducer(state = initialState, action) {
             )
 
         case CHANGE_SLOT_PROJECT_ID:
-            return state.setIn(['timetable', 'workPeriods', 'selection', action.payload.day, action.payload.slot],
+            return state.setIn(['timetable', 'projectPeriods', 'selection', action.payload.day, action.payload.slot],
                 action.payload.projectID)
 
         case EDIT_MODE:
             return state.set('editMode', !state.get('editMode')) //TODO: remove toggling!
 
         case SET_CURRENT_PROJECT:
-            return state.set('currentProject', action.payload)
+            return state.set('currentProjectID', action.payload)
 
         case LIST:
         case LOAD:

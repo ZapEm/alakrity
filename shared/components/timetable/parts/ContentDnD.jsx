@@ -4,8 +4,8 @@ import { DropTarget } from 'react-dnd'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import momentPropTypes from 'react-moment-proptypes'
 import { DndTypes } from '../../../utils/constants'
-import CustomDragLayer from '../../dnd/TimetableDragLayer'
 import { getTargetDate } from '../../dnd/dndFunctions'
+import CustomDragLayer from '../../dnd/TimetableDragLayer'
 import Column from './Column'
 
 
@@ -31,9 +31,9 @@ export default class ContentDnD extends React.Component {
         timetables: ImmutablePropTypes.map.isRequired,
         momentDate: momentPropTypes.momentObj.isRequired,
         tasks: ImmutablePropTypes.list,
-        projectList: ImmutablePropTypes.list.isRequired,
+        projectColorMap: ImmutablePropTypes.map.isRequired,
         taskActions: React.PropTypes.objectOf(React.PropTypes.func).isRequired,
-        changeSlotProjectNr: React.PropTypes.func.isRequired,
+        changeSlotProjectID: React.PropTypes.func.isRequired,
         connectDropTarget: React.PropTypes.func
     }
 
@@ -42,7 +42,10 @@ export default class ContentDnD extends React.Component {
     }
 
     render() {
-        const { editMode, momentDate, timetables, tasks, projectList, taskActions, connectDropTarget, changeSlotProjectNr } = this.props
+        const {
+            editMode, momentDate, timetables, tasks, taskActions, connectDropTarget,
+            changeSlotProjectID, projectColorMap
+        } = this.props
 
         let momentDayDate = momentDate.clone().isoWeekday(1) // calculate this weeks mondays date from any day of the week.
         let columns = []
@@ -52,11 +55,10 @@ export default class ContentDnD extends React.Component {
                                  editMode={editMode}
                                  timetables={timetables}
                                  momentDayDate={momentDayDate.clone()}
-                //steps={steps}
                                  dayTasks={dayTasks}
-                                 projectList={projectList}
+                                 projectColorMap={projectColorMap}
                                  taskActions={taskActions}
-                                 changeSlotProjectNr={changeSlotProjectNr}
+                                 changeSlotProjectID={changeSlotProjectID}
             />)
             momentDayDate.add(1, 'days')
         }
@@ -67,9 +69,9 @@ export default class ContentDnD extends React.Component {
                 id="tt-content-dnd">
                 <CustomDragLayer
                     snapToGrid={true}
-                    projectList={projectList}
+                    projectColorMap={projectColorMap}
                 />
-                { columns }
+                {columns}
             </div>
         )
     }

@@ -23,7 +23,7 @@ export default class CustomDragLayer extends Component {
         itemType: PropTypes.string,
         isDragging: PropTypes.bool,
         snapToGrid: PropTypes.bool.isRequired,
-        projectList: ImmutablePropTypes.list.isRequired,
+        projectColorMap: ImmutablePropTypes.map.isRequired,
         monitor: PropTypes.object
     }
 
@@ -110,7 +110,7 @@ export default class CustomDragLayer extends Component {
 
     renderItem(type, item) {
         const elements = {
-            [DndTypes.TASK]: <TaskItemDragPreview task={item} projectList={this.props.projectList}/>
+            [DndTypes.TASK]: <TaskItemDragPreview task={item} projectColorMap={this.props.projectColorMap}/>
         }
         return (elements[type] || null )
     }

@@ -4,10 +4,10 @@ import * as React from 'react'
 import { DragSource } from 'react-dnd'
 import { getEmptyImage } from 'react-dnd-html5-backend'
 import ImmutablePropTypes from 'react-immutable-proptypes'
-import { DndTypes, PROJECT_COLORS } from '../../utils/constants'
+import tinycolor from 'tinycolor2'
+import { DndTypes } from '../../utils/constants'
 import IconButton from '../misc/IconButton'
 import TaskEdit from './TaskEdit'
-import tinycolor from 'tinycolor2'
 
 const dragSource = {
     canDrag(props) {
@@ -50,7 +50,7 @@ export default class Task extends React.Component {
 
     static propTypes = {
         task: ImmutablePropTypes.map.isRequired,
-        projectList: ImmutablePropTypes.list.isRequired,
+        projectColorMap: ImmutablePropTypes.map.isRequired,
         taskActions: React.PropTypes.objectOf(React.PropTypes.func).isRequired,
         editable: React.PropTypes.bool,
         draggable: React.PropTypes.bool,
@@ -65,6 +65,14 @@ export default class Task extends React.Component {
         dragDropManager: React.PropTypes.object
     }
 
+    constructor(props, context) {
+        super(props, context)
+
+        this.state = {
+            editing: false
+        }
+    }
+
     componentDidMount() {
         // Use empty image as a drag preview so browsers don't draw it
         // and we can draw whatever we want on the custom drag layer instead.
@@ -75,19 +83,6 @@ export default class Task extends React.Component {
         })
     }
 
-
-    constructor(props, context) {
-        super(props, context)
-
-        const project = this.props.projectList.find(
-            p => p.get('id') === this.props.task.get('projectID')
-        )
-
-        this.state = {
-            editing: false,
-            color: project ? project.get('color') : '#fff'
-        }
-    }
 
     handleEditClick() {
         if ( this.props.editable ) {
@@ -105,15 +100,13 @@ export default class Task extends React.Component {
         this.setState({ editing: false })
     }
 
-    // getProjectColor() {
-    //     const project = this.props.projectList.find(
-    //         p => p.get('id') === this.props.task.get('projectID')
-    //     )
-    //     return project ? project.get('color') : '#fff'
-    // }
 
     render() {
-        const { task, taskActions: { removeTask }, editable, draggable, connectDragSource, isDragging, liWrapper } = this.props
+        const {
+            task, taskActions: { removeTask }, editable, draggable, connectDragSource, isDragging, liWrapper,
+            projectColorMap
+        } = this.props
+
         if ( isDragging ) {
             return null
         }
@@ -121,8 +114,8 @@ export default class Task extends React.Component {
         const durationCutoff = task.get('duration') >= 90
 
         const colorStyle = {
-            backgroundColor: this.state.color,
-            borderColor: tinycolor(this.state.color).brighten(-35)
+            backgroundColor: projectColorMap.getIn([task.get('projectID'), 'normal']),
+            borderColor: projectColorMap.getIn([task.get('projectID'),'dark'])
         }
         const dragStyle = draggable ?
             {
@@ -134,13 +127,13 @@ export default class Task extends React.Component {
             element = <TaskEdit
                 colorStyle={colorStyle}
                 task={task}
-                onSubmit={ (task) => this.handleSave(task) }
+                onSubmit={(task) => this.handleSave(task)}
             />
         } else {
             element =
                 <div
                     className="task-item w3-card-2 w3-round-large w3-display-container"
-                    style={_merge(colorStyle, dragStyle, isDragging ?
+                    style={_merge({}, colorStyle, dragStyle, isDragging ?
                         {
                             pointerEvents: 'none',
                             opacity: 0.6,
@@ -153,13 +146,13 @@ export default class Task extends React.Component {
                         {durationCutoff && <p className="duration">{task.get('duration') / 60} hours</p>}
                     </div>
                     <div className="task-item-buttons w3-display-hover w3-display-topright">
-                        { editable &&
+                        {editable &&
                         <IconButton
                             iconName={'edit'}
                             onClick={::this.handleEditClick}
                         />
                         }
-                        { editable &&
+                        {editable &&
                         <IconButton
                             iconName={'delete_forever'}
                             onClick={() => removeTask(task.get('id'))}

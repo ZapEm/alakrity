@@ -2,7 +2,7 @@ import moment from 'moment'
 import * as React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import momentPropTypes from 'react-moment-proptypes'
-import TaskItem from '../../tasks/Task'
+import Task from '../../tasks/Task'
 import Timeslot from './Timeslot'
 
 
@@ -12,14 +12,14 @@ export default class Column extends React.Component {
         timetables: ImmutablePropTypes.map.isRequired,
         momentDayDate: momentPropTypes.momentObj.isRequired,
         dayTasks: ImmutablePropTypes.list,
-        projectList: ImmutablePropTypes.list.isRequired,
+        projectColorMap: ImmutablePropTypes.map.isRequired,
         taskActions: React.PropTypes.objectOf(React.PropTypes.func).isRequired,
-        changeSlotProjectNr: React.PropTypes.func.isRequired
+        changeSlotProjectID: React.PropTypes.func.isRequired
     }
 
 
     render() {
-        const { editMode, timetables, dayTasks, projectList, taskActions, changeSlotProjectNr, momentDayDate } = this.props
+        const { editMode, timetables, dayTasks, taskActions, changeSlotProjectID, momentDayDate, projectColorMap } = this.props
 
         const timetable = timetables.get('timetable')
         const dayNr = momentDayDate.isoWeekday() - 1
@@ -37,9 +37,10 @@ export default class Column extends React.Component {
                     editMode={editMode}
                     dateTime={startOfDay.clone().add({ hours: hour, minutes: step * 60 / steps })}
                     position={{ day: dayNr, slot: hour * steps + step, steps: steps }}
-                    workPeriods={timetable.get('workPeriods')}
-                    newProjectNr={timetables.get('projectNr')}
-                    changeSlotProjectNr={changeSlotProjectNr}
+                    workPeriods={timetable.get('projectPeriods')}
+                    projectColorMap={projectColorMap}
+                    currentProjectID={timetables.get('currentProjectID')}
+                    changeSlotProjectID={changeSlotProjectID}
                 />)
             }
             timeslots.push(<div key={'group_' + hour} className="tt-timeslot-group"> { slots } </div>)
@@ -54,10 +55,10 @@ export default class Column extends React.Component {
                 width: '112px'
             }
             taskItems.push(
-                <TaskItem
+                <Task
                     key={'task_' + k2++}
                     task={task}
-                    projectList={projectList}
+                    projectColorMap={projectColorMap}
                     draggable={true}
                     taskActions={taskActions}
                     liWrapper={

@@ -5,6 +5,8 @@ import momentPropTypes from 'react-moment-proptypes'
 import ContentDnD from './parts/ContentDnD'
 import HeaderRow from './parts/HeaderRow'
 import TimeColumn from './parts/TimeColumn'
+import { getProjectColorMap } from '../../utils/helpers'
+import TimetableControls from './TimetableControls'
 
 
 export default class Timetable extends React.Component {
@@ -20,39 +22,28 @@ export default class Timetable extends React.Component {
         timetables: ImmutablePropTypes.map.isRequired
     }
 
-    /**
-     * Maps the 2-dimensional (Day, Slot) projectPeriods list, to a similar array with the project colors
-     */
-    mapProjectPeriodColors() {
-        const projectPeriods = this.props.timetables.get('timetable').get('projectPeriods')
-        const projectList = this.props.projectList
-
-        const mappedPeriods = projectPeriods.map(dayColumn => dayColumn.map(slotValue => {
-            const project = projectList.find(project => project.get('id') === slotValue)
-            if ( project ) {
-                return { id: project.get('id'), color: project.get('color') }
-            } else {
-                return { id: '', color: '#FFFFFF' }
-            }
-        }))
-        return mappedPeriods.toJS()
+    constructor(props) {
+        super(props)
+        this.state = { projectColorMap: undefined }
     }
 
-    createColorMap(projectList) {
-        let colorMap = {}
-        projectList.forEach(project=>{
-            colorMap[project.get('id')] = project.get('color')
-        })
-        return
+    componentWillMount() {
+        this.setState({ projectColorMap: getProjectColorMap(this.props.projectList) })
     }
+
 
     render() {
-        const { date, tasks, projectList, taskActions, editMode, timetableActions, timetables } = this.props
+        const { date, tasks, taskActions, editMode, timetableActions, timetables } = this.props
         const momentDate = moment.isMoment(date) ? date : moment(date)
 
         return (
             <div className={editMode ? 'tt-timetable w3-border-theme w3-card-4 tt-edit-mode' :
                             'tt-timetable w3-border-theme w3-card-4'}>
+
+                <TimetableControls
+                    timetableActions={timetableActions}
+                    momentDate={momentDate}
+                />
                 <HeaderRow
                     momentDate={momentDate}
                     enterEditMode={timetableActions.enterEditMode}
@@ -64,12 +55,11 @@ export default class Timetable extends React.Component {
                     <ContentDnD
                         editMode={editMode}
                         timetables={timetables}
-                        projectPeriodsColors={this.mapProjectPeriodColors()}
+                        projectColorMap={this.state.projectColorMap}
                         momentDate={momentDate}
                         tasks={tasks}
-                        projectList={projectList}
                         taskActions={taskActions}
-                        changeSlotProjectNr={timetableActions.changeSlotProjectNr}
+                        changeSlotProjectID={timetableActions.changeSlotProjectID}
                     />
                 </div>
             </div>

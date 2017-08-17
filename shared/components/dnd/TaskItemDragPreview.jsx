@@ -1,28 +1,15 @@
 import * as React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
-import tinycolor from 'tinycolor2'
 
 export default class TaskItemDragPreview extends React.Component {
 
     static propTypes = {
         task: React.PropTypes.object.isRequired,
-        projectList: ImmutablePropTypes.list.isRequired
-    }
-
-    constructor(props) {
-        super(props)
-
-        const project = this.props.projectList.find(
-            p => p.get('id') === this.props.task.projectID
-        )
-
-        this.state = {
-            color: project ? project.get('color') : '#fff'
-        }
+        projectColorMap: ImmutablePropTypes.map.isRequired
     }
 
     render() {
-        const { task } = this.props
+        const { task, projectColorMap } = this.props
         const durationCutoff = task.duration >= 90
 
         return (
@@ -39,8 +26,8 @@ export default class TaskItemDragPreview extends React.Component {
                 <div className="task-item w3-card-4 w3-round-large"
                      style={
                          {
-                             backgroundColor: this.state.color,
-                             borderColor: tinycolor(this.state.color).brighten(-35)
+                             backgroundColor: projectColorMap.getIn([task.projectID, 'normal']),
+                             borderColor: projectColorMap.getIn([task.projectID, 'dark'])
                          }
                      }>
                     <div className="task-item-info">

@@ -14,37 +14,38 @@ export default class Timeslot extends React.Component {
         }),
         editMode: React.PropTypes.bool.isRequired,
         workPeriods: ImmutablePropTypes.map.isRequired,
-        newProjectNr: React.PropTypes.number,
-        changeSlotProjectNr: React.PropTypes.func.isRequired
+        projectColorMap: ImmutablePropTypes.map.isRequired,
+        currentProjectID: React.PropTypes.string,
+        changeSlotProjectID: React.PropTypes.func.isRequired
     }
 
     static defaultProps = {
-        newProjectNr: 0
+        currentProjectID: ''
     }
 
 
     handleClick(e) {
-        if ( this.props.editMode && Number(e.target.getAttribute('value')) !== this.props.newProjectNr ) {
-            this.props.changeSlotProjectNr({
+        if ( this.props.editMode && e.target.getAttribute('value') !== this.props.currentProjectID ) {
+            this.props.changeSlotProjectID({
                     day: this.props.position.day,
                     slot: this.props.position.slot,
-                    projectNr: this.props.newProjectNr
+                    projectID: this.props.currentProjectID
                 }
             )
         }
     }
 
     render() {
-        const { dateTime, position, workPeriods } = this.props
-        const colors = workPeriods.get('colors')
-        const projectNr = workPeriods.getIn(['selection', position.day, position.slot])
+        const { dateTime, position, workPeriods, projectColorMap } = this.props
+
+        const projectID = workPeriods.getIn(['selection', position.day, position.slot])
 
         return <div
             className="tt-timeslot"
-            value={projectNr}
-            style={projectNr ?
+            value={projectID}
+            style={projectID ?
                 {
-                    backgroundColor: colors.get(projectNr),
+                    backgroundColor: projectColorMap.getIn([projectID, 'light']),
                     height: 3 / position.steps + 'rem'
                 } :
                 {

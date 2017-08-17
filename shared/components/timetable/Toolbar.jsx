@@ -29,17 +29,30 @@ export default class Toolbar extends React.Component {
     render() {
         const { editMode, timetables, projectList, onNewTimetable } = this.props
         //const colors = timetables.getIn(['timetable', 'workPeriods', 'colors'])
-        const selectedProject = timetables.get('currentProject')
+        const selectedProject = timetables.get('currentProjectID')
 
         const visibleClass = (editMode) ? ' tt-toolbar-visible' : ''
 
+        const sortedTimetableList = timetables.get('timetableList').sort((a, b) => a.get('title').localeCompare(b.get('title')), { numeric: true })
         let dropdownOptions = []
         let k = 0
-        for ( let tt of timetables.get('timetableList') ) {
+        for ( let tt of sortedTimetableList ) {
             dropdownOptions.push(<option key={k++} value={tt.get('id')}>{tt.get('title')}</option>)
         }
 
         let projectButtons = []
+        projectButtons.push(<button
+            key={'_noPrjct'}
+            className={'w3-btn w3-round tt-toolbar-color-option tt-toolbar-no-project-option' + (!selectedProject ?
+                                                                                                 ' tt-tco-selected' :
+                                                                                                 '')}
+            value={''}
+            onClick={::this.handleColorClick}
+            style={
+                {
+                    backgroundColor: '#fff'
+                }
+            }/>)
         if ( projectList ) {
             projectList.forEach((project, index) => projectButtons.push(
                 <button
@@ -66,10 +79,15 @@ export default class Toolbar extends React.Component {
                  <div className="tt-toolbar-color-picker">
                      {projectButtons}
                  </div>
+                 <IconButton
+                     iconName="note_add"
+                     className="w3-right"
+                     onClick={onNewTimetable}
+                 />
                  <select
                      onChange={::this.handleSelectTimetable}
-                     className="w3-select w3-right" style={
-                     {
+                     className="w3-select w3-right"
+                     style={{
                          padding: 0,
                          margin: '4px',
                          width: 'initial'
@@ -78,11 +96,7 @@ export default class Toolbar extends React.Component {
                  >
                      {dropdownOptions}
                  </select>
-                 <IconButton
-                    iconName="note_add"
-                    className="w3-right"
-                    onClick={onNewTimetable()}
-                 />
+
                  <div className="w3-clear"/>
              </div> : <div className={'tt-toolbar' + visibleClass}/>
             }
