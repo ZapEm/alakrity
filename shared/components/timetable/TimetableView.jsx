@@ -23,7 +23,7 @@ export default class TimetableView extends React.Component {
         const { taskActions, tasks, projectList, timetables, timetableActions, editMode, userSettings } = this.props
         const taskList = tasks.get('taskList')
 
-        const date = moment()
+        const date = timetables.get('currentWeek') || moment()
 
         return (
             <Timetable

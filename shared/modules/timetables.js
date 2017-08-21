@@ -7,10 +7,13 @@ import fetch from '../utils/fetcher'
 import { LOGIN, LOGOUT } from './auth'
 
 // action types:
+
 const EDIT_MODE = 'alakrity/timetable/EDIT_MODE'
 const CHANGE_TABLE = 'alakrity/timetable/CHANGE'
 const CHANGE_SLOT_PROJECT_ID = 'alakrity/timetable/CHANGE_SLOT_PROJECT_ID'
 const SET_CURRENT_PROJECT = 'alakrity/timetable/SET_CURRENT_PROJECT'
+
+const SET_CURRENT_WEEK = 'alakrity/timetable/SET_CURRENT_WEEK'
 
 const LIST = 'alakrity/timetable/LIST'
 const LOAD = 'alakrity/timetable/LOAD'
@@ -49,6 +52,14 @@ export function setCurrentProject(projectID = '') {
         payload: projectID
     }
 }
+
+export function setCurrentWeek(date) {
+    return {
+        type: SET_CURRENT_WEEK,
+        payload: date
+    }
+}
+
 
 export function listTimetables() {
     return {
@@ -115,6 +126,7 @@ const initialState = Immutable.Map({
     isSaved: true,
     editMode: false,
     currentProjectID: '',
+    currentWeek: moment(),
     timetableList: Immutable.List(),
     timetable: Immutable.Map()
 })
@@ -137,6 +149,9 @@ export default function reducer(state = initialState, action) {
 
         case SET_CURRENT_PROJECT:
             return state.set('currentProjectID', action.payload)
+
+        case SET_CURRENT_WEEK:
+            return state.set('currentWeek', action.payload)
 
         case LIST:
         case LOAD:

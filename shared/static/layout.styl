@@ -9,15 +9,22 @@
   padding-top 43px
 
 .row
-  box-sizing border-box
+  display table
+  position relative
   vertical-align top
   padding 8px
+  background-color #fff
   .col
-    display inline-block
+    display table-cell
+    position relative
     vertical-align top
-    box-sizing border-box
     padding 8px
     &.px300
       width 292px
     &.px900
       width 892px
+
+.row:before, .row:after
+  content ""
+  display table
+  clear both

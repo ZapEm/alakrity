@@ -54,7 +54,7 @@ export default class ProjectSelector extends React.Component {
 
         return <select
             onChange={::this.handleSelectProject}
-            className={'project-selector w3-select w3-right' + (disabled ? ' w3-text-gray' : '')}
+            className={'project-selector w3-border w3-border-theme w3-round w3-select w3-right' + (disabled ? ' w3-text-gray' : '')}
             name="option"
             style={{
                 padding: '8px 4px',

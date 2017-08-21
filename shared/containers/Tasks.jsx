@@ -36,16 +36,7 @@ export default class Tasks extends React.Component {
             <div className="react-container">
                 <div className="row">
                     <div className="col px900">
-                        <ProjectPicker
-                            projectList={projectList}
-                            selectProject={this.handleSelectProject}
-                        />
-                        <TaskForm
-                            onSubmit={bindActionCreators(TaskActions.createTask, dispatch)}
-                            textLabel="Enter new task name"
-                            editing={false}
-                            projectList={projectList}
-                        />
+
                         {/*<ProjectsView
                             tasks={tasks}
                             projects={projects}
@@ -61,7 +52,17 @@ export default class Tasks extends React.Component {
                         />
 
                     </div>
-                    <div className="col px900">
+                    <div className="col px300">
+                        {/*<ProjectPicker*/}
+                            {/*projectList={projectList}*/}
+                            {/*selectProject={this.handleSelectProject}*/}
+                        {/*/>*/}
+                        <TaskForm
+                            onSubmit={bindActionCreators(TaskActions.createTask, dispatch)}
+                            textLabel="Enter new task name"
+                            editing={false}
+                            projectList={projectList}
+                        />
                     </div>
                 </div>
             </div>

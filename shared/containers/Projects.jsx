@@ -38,7 +38,7 @@ export default class Projects extends React.Component {
                         />
 
                     </div>
-                    <div className="col px900">
+                    <div className="col px300">
                     </div>
                 </div>
             </div>

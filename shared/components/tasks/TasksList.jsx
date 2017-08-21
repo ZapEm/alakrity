@@ -2,8 +2,10 @@ import moment from 'moment'
 import React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import MomentPropTypes from 'react-moment-proptypes'
-import Task from './Task'
+import { TaskListFilter } from '../../utils/enums'
 import { getProjectColorMap } from '../../utils/helpers'
+import ProjectSelector from '../projects/ProjectSelector'
+import Task from './Task'
 
 
 export default class TasksList extends React.Component {
@@ -13,41 +15,58 @@ export default class TasksList extends React.Component {
         projectList: ImmutablePropTypes.list.isRequired,
         taskActions: React.PropTypes.objectOf(React.PropTypes.func).isRequired,
         draggable: React.PropTypes.bool,
-        filterByMoment: MomentPropTypes.momentObj
+        filterByMoment: MomentPropTypes.momentObj,
+        sidebar: React.PropTypes.bool
     }
 
-    constructor(props){
+    constructor(props) {
         super(props)
-        this.state = { projectColorMap: undefined }
+        this.state = {
+            projectColorMap: undefined,
+            project: this.props.projectList.first(),
+            filterRadioSelection: TaskListFilter.UNASSIGNED
+        }
     }
 
     componentWillMount() {
         this.setState({ projectColorMap: getProjectColorMap(this.props.projectList) })
     }
 
-
-    handleRemove = (e) => {
-        const listIndex = Number(e.target.dataset.id)
-
-        this.props.taskActions.removeTask(this.props.taskList.getIn([listIndex, 'id']))
+    handleFilterChange(e) {
+        this.setState({ filterRadioSelection: TaskListFilter.enumValueOf(e.target.value) })
     }
 
-    handleEdit = (e) => {
-        const listIndex = Number(e.target.dataset.id)
-        const task = this.props.taskList.get(listIndex)
+    changeProject(project) {
+        this.setState({ project: project })
+    }
 
-        // For cutting edge UX
-        let newVal = window.prompt('', task.get('text'))
-        this.props.taskActions.editTask(task.get('id'), newVal, 1)
+    getFilter(selection) {
+        const projectID = this.state.project.get('id')
+        switch (selection) {
+            case TaskListFilter.UNASSIGNED:
+                return (task) => ( task.get('projectID') === projectID && !task.get('start') )
+
+            case TaskListFilter.NOT_THIS_WEEK:
+                return (task) => ( task.get('projectID') === projectID
+                    && ( !this.props.filterByMoment
+                        || !task.get('start')
+                        || this.props.filterByMoment.isoWeek() !== moment(task.get('start')).isoWeek()) )
+
+            case TaskListFilter.ALL:
+            default:
+                return (task) => ( task.get('projectID') === projectID )
+        }
     }
 
     render() {
-        const { draggable, taskActions, filterByMoment, taskList } = this.props
+        const { draggable, taskActions, taskList, projectList, sidebar = false } = this.props
         let taskItems
+
+        const filter = this.getFilter(this.state.filterRadioSelection)
 
         if ( taskList.size > 0 ) {
             taskItems = taskList.map((task, index) =>
-                (!filterByMoment || !task.get('start') || filterByMoment.isoWeek() !== moment(task.get('start')).isoWeek()) ?
+                filter(task) ?
                 <Task
                     key={'task_li_' + index}
                     task={task}
@@ -71,10 +90,45 @@ export default class TasksList extends React.Component {
         }
 
         return (
-            <div id="task-list-view">
-                <ul className="task-list">
-                    { taskItems }
-                </ul>
+            <div className={(sidebar ? 'task-list-view-sidebar' :
+                             'task-list-view') + ' w3-card w3-padding w3-border w3-border-theme w3-round-large'}>
+                <ProjectSelector
+                    projectList={projectList}
+                    selectProject={::this.changeProject}
+                />
+                <form
+                    className="w3-border-bottom w3-border-theme w3-center"
+                    onChange={::this.handleFilterChange}
+                >
+                    <span>Filter:</span>
+                    <label className="task-list-filter-label">
+                        <input
+                            className="task-list-filter-radio"
+                            type="radio"
+                            name="tasklist_filter"
+                            value={TaskListFilter.UNASSIGNED.name}
+                            checked={this.state.filterRadioSelection === TaskListFilter.UNASSIGNED}
+                            readOnly
+                        />
+                        {'Unassigned'}
+                    </label>
+                    <label className="task-list-filter-label">
+                        <input
+                            className="task-list-filter-radio"
+                            type="radio"
+                            name="tasklist_filter"
+                            value={TaskListFilter.ALL.name}
+                            checked={this.state.filterRadioSelection === TaskListFilter.ALL}
+                            readOnly
+                        />
+                        {'All'}
+                    </label>
+                </form>
+                <div className="task-list-container">
+                    <ul className={'task-list' + (sidebar ? ' task-list-sidebar' : '')}>
+                        {taskItems}
+                    </ul>
+                </div>
             </div>
         )
     }

@@ -95,18 +95,19 @@ export default class Timetable extends React.Component {
                     </div>
                     {(!editMode) ?
                      <div className="col px300">
-                         <TaskForm
-                             onSubmit={bindActionCreators(TaskActions.createTask, dispatch)}
-                             textLabel="Enter new task name"
-                             editing={false}
-                             projectList={projectList}
-                         />
+                         {/*<TaskForm*/}
+                             {/*onSubmit={bindActionCreators(TaskActions.createTask, dispatch)}*/}
+                             {/*textLabel="Enter new task name"*/}
+                             {/*editing={false}*/}
+                             {/*projectList={projectList}*/}
+                         {/*/>*/}
                          <TasksList
                              taskList={tasks.get('taskList')}
                              projectList={projectList}
                              draggable={true}
-                             filterByMoment={moment()}
+                             filterByMoment={timetables.get('currentWeek')}
                              taskActions={bindActionCreators(TaskActions, dispatch)}
+                             sidebar={true}
                          />
                      </div>
                         :
