@@ -36,7 +36,6 @@
     "config": "^1.21.0",
     "dom-helpers": "^2.3.0",
     "ejs": "^2.5.2",
-    "enumify": "^1.0.4",
     "express": "^4.14.0",
     "history": "^4.3.0",
     "immutable": "^3.8.1",

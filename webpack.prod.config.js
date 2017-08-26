@@ -33,7 +33,7 @@ module.exports = {
     ],
     resolve: {
         modulesDirectories: ['node_modules', 'shared'],
-        extensions: ['', '.js', '.jsx', '.styl', '.css', '.ico']
+        extensions: ['', '.js', '.jsx', '.styl', '.css', '.ico', '.svg']
     },
     output: {
         path: path.join(__dirname, 'dist'),
@@ -53,7 +53,7 @@ module.exports = {
                 loader: ExtractTextPlugin.extract('style-loader', 'css-loader!stylus-loader')
             },
             {
-                test: /\.(jpg|jpeg|gif|png|ico)$/,
+                test: /\.(jpg|jpeg|gif|png|ico|svg)$/,
                 exclude: /node_modules/,
                 loader: 'file-loader?name=[name].[ext]'
             }

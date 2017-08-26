@@ -3,11 +3,10 @@ import * as React from 'react'
 import { DropTarget } from 'react-dnd'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import momentPropTypes from 'react-moment-proptypes'
-import { DndTypes } from '../../../utils/constants'
+import { DndTypes } from '../../../utils/enums'
 import { getTargetDate } from '../../dnd/dndFunctions'
 import CustomDragLayer from '../../dnd/TimetableDragLayer'
 import Column from './Column'
-
 
 let contentTarget = {
     drop(props, monitor) {
@@ -66,6 +65,7 @@ export default class ContentDnD extends React.Component {
         return connectDropTarget(
             <div
                 className="tt-content-dnd"
+                style={editMode ? {cursor: 'pointer'} : null}
                 id="tt-content-dnd">
                 <CustomDragLayer
                     snapToGrid={true}

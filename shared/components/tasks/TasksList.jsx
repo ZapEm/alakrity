@@ -2,7 +2,7 @@ import moment from 'moment'
 import React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import MomentPropTypes from 'react-moment-proptypes'
-import { TaskListFilter } from '../../utils/enums'
+import { TaskListFilters } from '../../utils/enums'
 import { getProjectColorMap } from '../../utils/helpers'
 import ProjectSelector from '../projects/ProjectSelector'
 import Task from './Task'
@@ -19,21 +19,29 @@ export default class TasksList extends React.Component {
         sidebar: React.PropTypes.bool
     }
 
+    static defaultProps = {
+        sidebar: false
+    }
+
     constructor(props) {
         super(props)
         this.state = {
             projectColorMap: undefined,
-            project: this.props.projectList.first(),
-            filterRadioSelection: TaskListFilter.UNASSIGNED
+            filterRadioSelection: undefined,
+            project: this.props.projectList.first()
         }
     }
 
     componentWillMount() {
-        this.setState({ projectColorMap: getProjectColorMap(this.props.projectList) })
+        this.setState({
+            projectColorMap: getProjectColorMap(this.props.projectList),
+            filterRadioSelection: this.props.sidebar ? TaskListFilters.UNASSIGNED : TaskListFilters.ALL
+        })
     }
 
     handleFilterChange(e) {
-        this.setState({ filterRadioSelection: TaskListFilter.enumValueOf(e.target.value) })
+        this.setState({ filterRadioSelection: e.target.value })
+        console.log(e.target.value)
     }
 
     changeProject(project) {
@@ -43,16 +51,16 @@ export default class TasksList extends React.Component {
     getFilter(selection) {
         const projectID = this.state.project.get('id')
         switch (selection) {
-            case TaskListFilter.UNASSIGNED:
+            case TaskListFilters.UNASSIGNED:
                 return (task) => ( task.get('projectID') === projectID && !task.get('start') )
 
-            case TaskListFilter.NOT_THIS_WEEK:
+            case TaskListFilters.NOT_THIS_WEEK:
                 return (task) => ( task.get('projectID') === projectID
                     && ( !this.props.filterByMoment
                         || !task.get('start')
                         || this.props.filterByMoment.isoWeek() !== moment(task.get('start')).isoWeek()) )
 
-            case TaskListFilter.ALL:
+            case TaskListFilters.ALL:
             default:
                 return (task) => ( task.get('projectID') === projectID )
         }
@@ -91,7 +99,7 @@ export default class TasksList extends React.Component {
 
         return (
             <div className={(sidebar ? 'task-list-view-sidebar' :
-                             'task-list-view') + ' w3-card w3-padding w3-border w3-border-theme w3-round-large'}>
+                             'task-list-view') + ' w3-card-4 w3-padding w3-border w3-border-theme w3-round-large'}>
                 <ProjectSelector
                     projectList={projectList}
                     selectProject={::this.changeProject}
@@ -106,8 +114,8 @@ export default class TasksList extends React.Component {
                             className="task-list-filter-radio"
                             type="radio"
                             name="tasklist_filter"
-                            value={TaskListFilter.UNASSIGNED.name}
-                            checked={this.state.filterRadioSelection === TaskListFilter.UNASSIGNED}
+                            value={TaskListFilters.UNASSIGNED}
+                            checked={this.state.filterRadioSelection === TaskListFilters.UNASSIGNED}
                             readOnly
                         />
                         {'Unassigned'}
@@ -117,8 +125,8 @@ export default class TasksList extends React.Component {
                             className="task-list-filter-radio"
                             type="radio"
                             name="tasklist_filter"
-                            value={TaskListFilter.ALL.name}
-                            checked={this.state.filterRadioSelection === TaskListFilter.ALL}
+                            value={TaskListFilters.ALL}
+                            checked={this.state.filterRadioSelection === TaskListFilters.ALL}
                             readOnly
                         />
                         {'All'}

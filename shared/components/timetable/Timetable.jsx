@@ -37,16 +37,16 @@ export default class Timetable extends React.Component {
         const momentDate = moment.isMoment(date) ? date : moment(date)
 
         return (
-            <div className={editMode ? 'tt-timetable w3-border-theme w3-card-4 tt-edit-mode' :
-                            'tt-timetable w3-border-theme w3-card-4'}>
-
+            <div className={(editMode ? 'tt-edit-mode ' : '') + 'tt-timetable w3-border-theme w3-card-4'}
+            >
                 <TimetableControls
                     timetableActions={timetableActions}
                     momentDate={momentDate}
+                    editMode={editMode}
+                    timetableTitle={timetables.getIn(['timetable', 'title'])}
                 />
                 <HeaderRow
                     momentDate={momentDate}
-                    enterEditMode={timetableActions.enterEditMode}
                 />
                 <div className="tt-body">
                     <TimeColumn

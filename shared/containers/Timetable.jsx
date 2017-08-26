@@ -73,6 +73,7 @@ export default class Timetable extends React.Component {
 
         return (
             <div className="react-container">
+                {/*
                 <Toolbar
                     editMode={editMode}
                     timetables={timetables}
@@ -81,6 +82,7 @@ export default class Timetable extends React.Component {
                     loadTimetable={bindActionCreators(TimetableActions.loadTimetable, dispatch)}
                     setCurrentProject={bindActionCreators(TimetableActions.setCurrentProject, dispatch)}
                 />
+                */}
                 <div className="row">
                     <div className="col px900">
                         <TimetableView
@@ -95,12 +97,6 @@ export default class Timetable extends React.Component {
                     </div>
                     {(!editMode) ?
                      <div className="col px300">
-                         {/*<TaskForm*/}
-                             {/*onSubmit={bindActionCreators(TaskActions.createTask, dispatch)}*/}
-                             {/*textLabel="Enter new task name"*/}
-                             {/*editing={false}*/}
-                             {/*projectList={projectList}*/}
-                         {/*/>*/}
                          <TasksList
                              taskList={tasks.get('taskList')}
                              projectList={projectList}
@@ -115,9 +111,10 @@ export default class Timetable extends React.Component {
                          <EditTimetableForm
                              onSave={bindActionCreators(TimetableActions.saveTimetable, dispatch)}
                              onRemove={bindActionCreators(TimetableActions.removeTimetable, dispatch)}
-                             timetableChange={bindActionCreators(TimetableActions.changeTimetable, dispatch)}
+                             timetableActions={bindActionCreators(TimetableActions, dispatch)}
                              textLabel={'Enter Timetable Name...'}
                              timetables={timetables}
+                             projectList={projectList}
                          />
                      </div>
                     }

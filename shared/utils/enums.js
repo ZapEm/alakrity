@@ -1,4 +1,10 @@
-import {Enum} from 'enumify'
+export const DndTypes = Object.freeze({
+    TASK: 'DND_TASK',
+    HANDLE: 'DND_HANDLE'
+})
 
-export class TaskListFilter extends Enum {}
-TaskListFilter.initEnum(['UNASSIGNED', 'ALL', 'NOT_THIS_WEEK'])
+export const TaskListFilters = Object.freeze({
+    UNASSIGNED: 'unassigned',
+    ALL: 'all',
+    NOT_THIS_WEEK: 'not_this_week'
+})

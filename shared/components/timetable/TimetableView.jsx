@@ -2,6 +2,7 @@ import moment from 'moment'
 import * as React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import Timetable from './Timetable'
+import * as Immutable from 'immutable'
 
 // import Task from '../tasks/Task';
 
@@ -21,7 +22,7 @@ export default class TimetableView extends React.Component {
     render() {
 
         const { taskActions, tasks, projectList, timetables, timetableActions, editMode, userSettings } = this.props
-        const taskList = tasks.get('taskList')
+        const taskList = !editMode ? tasks.get('taskList') : Immutable.List()
 
         const date = timetables.get('currentWeek') || moment()
 

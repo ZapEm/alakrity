@@ -1,5 +1,5 @@
 import moment from 'moment'
-import { DndTypes } from '../../utils/constants'
+import { DndTypes } from '../../utils/enums'
 
 const CELL_WIDTH = 113
 const CELL_HEIGHT = 22.5

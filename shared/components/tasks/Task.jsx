@@ -5,7 +5,7 @@ import { DragSource } from 'react-dnd'
 import { getEmptyImage } from 'react-dnd-html5-backend'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import tinycolor from 'tinycolor2'
-import { DndTypes } from '../../utils/constants'
+import { DndTypes } from '../../utils/enums'
 import IconButton from '../misc/IconButton'
 import TaskEdit from './TaskEdit'
 

@@ -6,12 +6,11 @@ import IconButton from '../../misc/IconButton'
 export default class HeaderRow extends React.Component {
 
     static propTypes = {
-        momentDate: momentPropTypes.momentObj.isRequired,
-        enterEditMode: React.PropTypes.func.isRequired
+        momentDate: momentPropTypes.momentObj.isRequired
     }
 
     render() {
-        const { momentDate, enterEditMode } = this.props
+        const { momentDate } = this.props
         let dayDate = momentDate.clone().isoWeekday(1) // calculate this weeks mondays date from any day of the week.
         let headers = []
         for ( let i = 0; i < 7; i++ ) {
@@ -23,12 +22,7 @@ export default class HeaderRow extends React.Component {
         }
 
         return <div className="tt-header-row">
-            <div className="tt-header-corner">
-                <IconButton
-                    iconName={'edit'}
-                    onClick={enterEditMode}
-                />
-            </div>
+            <div className="tt-header-corner" />
             { headers }
         </div>
     }

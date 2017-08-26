@@ -1,10 +1,6 @@
 export const RESOLVED_NAME = '_SUCCESS'
 export const REJECTED_NAME = '_FAILURE'
 
-export const DndTypes = {
-    TASK: 'DND_TASK',
-    HANDLE: 'DND_HANDLE'
-}
 
 export const PROJECT_COLORS = [
     '#FFFFFF',
@@ -18,3 +14,17 @@ export const PROJECT_COLORS = [
     '#7785FF',
     '#A37CFF'
 ]
+
+export const EXTRA_COLORS = {
+    CLEAR: {
+        dark: '#777',
+        normal: '#999',
+        light: '#eee'
+    },
+    BUFFER: {
+        dark: '#5e84c1',
+        normal: '#8eb9ff',
+        light: '#b5d1ff'
+    }
+
+}

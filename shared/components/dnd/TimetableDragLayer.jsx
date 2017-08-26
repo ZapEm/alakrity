@@ -3,7 +3,7 @@ import { DragLayer } from 'react-dnd'
 
 import shallowEqual from 'react-dnd/lib/utils/shallowEqual'
 import shallowEqualScalar from 'react-dnd/lib/utils/shallowEqualScalar'
-import { DndTypes } from '../../utils/constants'
+import { DndTypes } from '../../utils/enums'
 import { getSnappedOffset } from './dndFunctions'
 import TaskItemDragPreview from './TaskItemDragPreview'
 import ImmutablePropTypes from 'react-immutable-proptypes'

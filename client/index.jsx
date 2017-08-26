@@ -6,8 +6,8 @@ import transit from 'transit-immutable-js'
 import configureStore from '../shared/configureStore'
 import DevTools from '../shared/containers/devTools'
 import routes from '../shared/routes'
-import '../shared/static/favicon.ico'
 
+import '../shared/static/favicon.ico'
 import '../shared/static/main.styl'
 
 // hydrate initial state from transmitted state

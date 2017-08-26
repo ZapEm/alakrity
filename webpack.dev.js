@@ -49,7 +49,7 @@ export default function (app) {
                     loader: 'style-loader!css-loader!stylus-loader'
                 },
                 {
-                    test: /\.(jpg|jpeg|gif|png|ico)$/,
+                    test: /\.(jpg|jpeg|gif|png|ico|svg)$/,
                     exclude: /node_modules/,
                     loader: 'file-loader?name=[name].[ext]'
                 }

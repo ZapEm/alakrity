@@ -45,15 +45,6 @@ export default class ProjectColorPicker extends React.Component {
         this.setState({ isActive: false })
     }
 
-    // Doesn't play nice with onfocus/onblur
-    // toggle(e){
-    //     e.preventDefault()
-    //     if(this.colorPicker === document.activeElement){
-    //         this.colorPicker.blur()
-    //     }
-    // }
-
-
     render() {
         const { colors, label } = this.props
 
@@ -92,7 +83,7 @@ export default class ProjectColorPicker extends React.Component {
             />
             <div
                 className={`project-color-picker-content w3-dropdown-content w3-card-2
-                w3-round w3-border w3-border-theme ${this.state.isActive ? 'w3-show' : ''}`}>
+                w3-round w3-border w3-border-theme ${this.state.isActive ? 'w3-show-inline-block' : ''}`}>
                 {colorButtons}
             </div>
         </div>

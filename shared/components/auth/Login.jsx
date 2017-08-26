@@ -15,7 +15,7 @@ export default class Login extends React.Component {
 
         return (
             <form onSubmit={::this.handleSubmit}>
-                <input type="text" ref="username" className="form-control" placeholder="Username"/>
+                <input type="text" ref="username" className="form-control" placeholder="Username" autoFocus/>
                 <input type="password" ref="password" className="form-control" placeholder="Password"/>
                 <button className="btn btn-primary">
                     Login

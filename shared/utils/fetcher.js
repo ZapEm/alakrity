@@ -43,8 +43,8 @@ class ApiFetcher {
                         transformResponse: axios.defaults.transformResponse.concat((data) => {
                             if ( data && data.auth_token ) {
                                 cookie.save('auth', data.auth_token, { expires: new Date(jwt.decode(data.auth_token).exp * 1000) })
-                                console.log('---+ auth cookie renewed +---')
-                                // console.log(jwt.decode(cookie.load('auth')))
+                                delete data.auth_token
+                                console.log('---+ auth cookie renewed +---', data)
                             }
                             return data
                         })
