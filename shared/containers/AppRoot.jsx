@@ -42,8 +42,7 @@ export default class AppRoot extends React.Component {
                     currentPath={currentPath}
                     logout={bindActionCreators(logout, dispatch)}
                 />
-                {/*<CustomDragLayer*/}
-                    {/*snapToGrid={true}/>*/}
+
                 {this.props.children}
 
             </div>

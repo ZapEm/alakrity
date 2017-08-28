@@ -1,5 +1,6 @@
 .tt-timetable
   //transition box-shadow 0.5s ease-in-out
+  overflow hidden
   border solid 3px
   border-radius 8px
 
@@ -33,11 +34,14 @@
   width 79px
   text-align right
   border-right solid 1px #777
-  .tt-timecolumn-time
-    line-height 3rem
-    height 3rem
-    padding-right 0.2rem
-    border-top solid 1px #777
+  background-color $theme-l3
+
+.tt-timecolumn-time
+  line-height 3rem
+  height 3rem
+  padding-right 0.2rem
+  border-top solid 1px #777
+
 
 .tt-column
   display inline-block
@@ -114,7 +118,6 @@
 
 .tt-controls-edit-mode
   transition background 0.5s ease-in-out
-  border-radius 3px
   background-color $theme-l5
   background-image repeating-linear-gradient(135deg, transparent, transparent 20px, $theme-l7 21px, $theme-l7 40px)
 
@@ -153,16 +156,31 @@
 .tt-form-spacer
   flex 0 0 32px
 
-//.tt-project-period-picker
+.tt-project-picker
+  max-height 200px
+  display flex
+  flex-direction column
+  flex-wrap nowrap
+
+
+.tt-project-picker-label
+  flex 0
+
+.tt-project-picker-content
+  padding 0 4px
+  border solid 1px $theme
+  border-radius 4px
+  display flex
+  flex 1
 
 .tt-project-picker-option
   display flex
   flex-direction row
   align-items center
   cursor pointer
-  margin 2px 0
+  margin 2px
   &:hover
-    margin 2px -2px
+    margin 2px 0
     border-left solid 2px
     border-right solid 2px
 

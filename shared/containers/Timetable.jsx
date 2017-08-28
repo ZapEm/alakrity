@@ -6,13 +6,14 @@ import ImmutablePropTypes from 'react-immutable-proptypes'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import Spinner from '../components/misc/Spinner'
-import TaskForm from '../components/tasks/TaskForm'
 import TasksList from '../components/tasks/TasksList'
 import EditTimetableForm from '../components/timetable/EditTimetableForm'
 import TimetableView from '../components/timetable/TimetableView'
-import Toolbar from '../components/timetable/Toolbar'
 import * as TaskActions from '../modules/tasks'
 import * as TimetableActions from '../modules/timetables'
+import * as TimerActions from '../modules/timer'
+
+import Clock from '../components/timer/Clock'
 
 
 @connect(state => ({
@@ -20,6 +21,7 @@ import * as TimetableActions from '../modules/timetables'
     tasks: state.tasks,
     projects: state.projects,
     timetables: state.timetables,
+    timer: state.timer,
     isAuthenticated: state.auth.get('isAuthenticated')
 }))
 @DragDropContext(HTML5Backend)
@@ -30,6 +32,7 @@ export default class Timetable extends React.Component {
         tasks: ImmutablePropTypes.map,
         timetables: ImmutablePropTypes.map,
         projects: ImmutablePropTypes.map,
+        timer: ImmutablePropTypes.map,
         isAuthenticated: React.PropTypes.bool,
         dispatch: React.PropTypes.func
     }
@@ -59,7 +62,7 @@ export default class Timetable extends React.Component {
     }
 
     render() {
-        const { tasks, dispatch, timetables, projects } = this.props
+        const { tasks, dispatch, timetables, projects, timer } = this.props
         const userSettings = {}
         const editMode = timetables.get('editMode')
         const projectList = projects.get('projectList')
@@ -73,16 +76,10 @@ export default class Timetable extends React.Component {
 
         return (
             <div className="react-container">
-                {/*
-                <Toolbar
-                    editMode={editMode}
-                    timetables={timetables}
-                    projectList={projectList}
-                    onNewTimetable={() => this.createNewTimetable(this.props.timetables.get('timetableList').size + 1)}
-                    loadTimetable={bindActionCreators(TimetableActions.loadTimetable, dispatch)}
-                    setCurrentProject={bindActionCreators(TimetableActions.setCurrentProject, dispatch)}
+                <Clock
+                    taskList={tasks.get('taskList')}
+                    timerActions={bindActionCreators(TimerActions, dispatch)}
                 />
-                */}
                 <div className="row">
                     <div className="col px900">
                         <TimetableView
@@ -91,6 +88,7 @@ export default class Timetable extends React.Component {
                             editMode={editMode}
                             tasks={tasks}
                             projectList={projectList}
+                            {...timer.get('time') && {time: timer.get('time')}}
                             taskActions={bindActionCreators(TaskActions, dispatch)}
                             timetableActions={bindActionCreators(TimetableActions, dispatch)}
                         />

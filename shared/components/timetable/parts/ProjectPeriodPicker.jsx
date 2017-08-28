@@ -1,7 +1,8 @@
 import * as React from 'react'
+import CustomScroll from 'react-custom-scroll'
 import * as ImmutablePropTypes from 'react-immutable-proptypes'
+import { SPECIAL_PROJECTS } from '../../../utils/constants'
 import { getProjectColorMap } from '../../../utils/helpers'
-import { EXTRA_COLORS } from '../../../utils/constants'
 
 export default class ProjectPeriodPicker extends React.Component {
 
@@ -31,22 +32,24 @@ export default class ProjectPeriodPicker extends React.Component {
         this.props.setCurrentProject(e.target.getAttribute('data-id'))
     }
 
-    renderCustomListItem({ label, key, dataId, borderColor, backgroundColor, iconName }) {
+    renderSpecialProjects({ label, key, dataId, specialProject, iconName }) {
         const liStyle = this.props.currentProjectID === dataId ? {
-            backgroundColor: backgroundColor,
-            borderLeft: 'solid 2px ' + borderColor,
-            borderRight: 'solid 2px ' + borderColor,
-            margin: '2px -2px'
+            backgroundColor: specialProject.light,
+            ...specialProject.backgroundPattern && {
+                backgroundImage: specialProject.backgroundPattern,
+                //backgroundAttachment: 'local'
+            },
+            borderLeft: 'solid 2px ' + specialProject.dark,
+            borderRight: 'solid 2px ' + specialProject.dark,
+            margin: '2px 0'
         } : {
-            borderColor: borderColor
+            borderColor: specialProject.dark
         }
 
-        const squareStyle = iconName ? {
-            color: borderColor,
-            borderColor: borderColor
-        } : {
-            backgroundColor: backgroundColor,
-            borderColor: borderColor
+        const squareStyle = {
+            backgroundColor: specialProject.normal,
+            color: specialProject.dark,
+            borderColor: specialProject.dark
         }
 
         return <li
@@ -70,21 +73,26 @@ export default class ProjectPeriodPicker extends React.Component {
         const { projectList, currentProjectID } = this.props
 
         let projectPickOptions = [
-            this.renderCustomListItem({
+            this.renderSpecialProjects({
                 label: 'Clear',
                 key: '_0-clear',
                 dataId: '',
-                borderColor: EXTRA_COLORS.CLEAR.dark,
-                backgroundColor: EXTRA_COLORS.CLEAR.light,
+                specialProject: SPECIAL_PROJECTS.CLEAR,
                 iconName: 'clear'
             }),
-            this.renderCustomListItem({
+            this.renderSpecialProjects({
                 label: 'Buffer',
                 key: '_1-buffer',
-                dataId: 'buffer',
-                borderColor: EXTRA_COLORS.BUFFER.dark,
-                backgroundColor: EXTRA_COLORS.BUFFER.light,
+                dataId: 'BUFFER',
+                specialProject: SPECIAL_PROJECTS.BUFFER,
                 iconName: 'swap_calls' // 'cached' //'filter_drama'
+            }),
+            this.renderSpecialProjects({
+                label: 'Break',
+                key: '_2-break',
+                dataId: 'BREAK',
+                specialProject: SPECIAL_PROJECTS.BREAK,
+                iconName: 'restaurant'
             })
         ]
         projectList.forEach((project, index) => {
@@ -94,7 +102,7 @@ export default class ProjectPeriodPicker extends React.Component {
                 backgroundColor: this.state.projectColorMap.getIn([id, 'light']),
                 borderLeft: 'solid 2px ' + this.state.projectColorMap.getIn([id, 'dark']),
                 borderRight: 'solid 2px ' + this.state.projectColorMap.getIn([id, 'dark']),
-                margin: '2px -2px'
+                margin: '2px 0'
             } : {
                 borderColor: this.state.projectColorMap.getIn([id, 'dark'])
             }
@@ -119,10 +127,18 @@ export default class ProjectPeriodPicker extends React.Component {
             )
         })
 
-        return <div className="tt-project-period-picker">
-            <ul>
-                {projectPickOptions}
-            </ul>
+        return <div className="tt-project-picker">
+            <label title="Pick a project and 'paint in' project periods ">Work periods</label>
+            <div className="tt-project-picker-content">
+                <CustomScroll
+                    flex="1"
+                    //heightRelativeToParent="100%"
+                >
+                    <ul>
+                        {projectPickOptions}
+                    </ul>
+                </CustomScroll>
+            </div>
         </div>
     }
 }

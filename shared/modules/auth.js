@@ -5,7 +5,6 @@ import cookie from 'react-cookie'
 import xss from 'xss'
 import { REJECTED_NAME as FAILURE, RESOLVED_NAME as SUCCESS } from '../utils/constants'
 import fetch from '../utils/fetcher'
-import * as jwt from 'jsonwebtoken'
 
 
 /**

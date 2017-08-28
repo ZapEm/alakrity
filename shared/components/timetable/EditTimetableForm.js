@@ -189,7 +189,6 @@ export default class EditTimetableForm extends React.Component {
 
                     <div className="w3-border-bottom w3-margin-top w3-margin-bottom w3-border-theme"/>
 
-                    <label title="Pick a project and 'paint in' project periods">Projects</label>
                     <ProjectPeriodPicker
                         setCurrentProject={timetableActions.setCurrentProject}
                         projectList={projectList}

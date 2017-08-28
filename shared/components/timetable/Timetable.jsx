@@ -19,7 +19,8 @@ export default class Timetable extends React.Component {
         taskActions: React.PropTypes.objectOf(React.PropTypes.func).isRequired,
         editMode: React.PropTypes.bool.isRequired,
         timetableActions: React.PropTypes.object.isRequired,
-        timetables: ImmutablePropTypes.map.isRequired
+        timetables: ImmutablePropTypes.map.isRequired,
+        time: React.PropTypes.instanceOf(Date)
     }
 
     constructor(props) {
@@ -33,7 +34,7 @@ export default class Timetable extends React.Component {
 
 
     render() {
-        const { date, tasks, taskActions, editMode, timetableActions, timetables } = this.props
+        const { date, tasks, taskActions, editMode, timetableActions, timetables, time } = this.props
         const momentDate = moment.isMoment(date) ? date : moment(date)
 
         return (
@@ -51,6 +52,7 @@ export default class Timetable extends React.Component {
                 <div className="tt-body">
                     <TimeColumn
                         timetable={timetables.get('timetable')}
+                        time={time}
                     />
                     <ContentDnD
                         editMode={editMode}

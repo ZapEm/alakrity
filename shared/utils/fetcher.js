@@ -2,6 +2,7 @@ import axios from 'axios'
 import jwt from 'jsonwebtoken'
 import cookie from 'react-cookie'
 import transit from 'transit-immutable-js'
+import * as _ from 'lodash/object'
 //import config from 'config';
 
 
@@ -42,9 +43,10 @@ class ApiFetcher {
                         // Use default behaviour "parse into object" first.
                         transformResponse: axios.defaults.transformResponse.concat((data) => {
                             if ( data && data.auth_token ) {
-                                cookie.save('auth', data.auth_token, { expires: new Date(jwt.decode(data.auth_token).exp * 1000) })
+                                const token = data.auth_token
                                 delete data.auth_token
-                                console.log('---+ auth cookie renewed +---', data)
+                                cookie.save('auth', token, { expires: new Date(jwt.decode(token).exp * 1000) })
+                                console.log('---+ auth cookie renewed +---')
                             }
                             return data
                         })

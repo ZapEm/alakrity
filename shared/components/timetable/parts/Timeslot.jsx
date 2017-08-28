@@ -1,6 +1,7 @@
 import * as React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import momentPropTypes from 'react-moment-proptypes'
+import { SPECIAL_PROJECTS } from '../../../utils/constants'
 
 
 export default class Timeslot extends React.Component {
@@ -40,19 +41,25 @@ export default class Timeslot extends React.Component {
 
         const projectID = workPeriods.getIn(['selection', position.day, position.slot])
 
+        const timeslotStyle = (projectID in SPECIAL_PROJECTS) ?
+            {
+                backgroundColor: SPECIAL_PROJECTS[projectID].light,
+                ...SPECIAL_PROJECTS[projectID].backgroundPattern && {
+                    backgroundImage: SPECIAL_PROJECTS[projectID].backgroundPattern,
+                    backgroundAttachment: 'fixed'
+                },
+                height: 3 / position.steps + 'rem'
+            }
+            :
+            {
+                ...projectID && { backgroundColor: projectColorMap.getIn([projectID, 'light']) },
+                height: 3 / position.steps + 'rem'
+            }
+
         return <div
             className="tt-timeslot"
             value={projectID}
-            style={projectID ?
-                {
-                    backgroundColor: projectColorMap.getIn([projectID, 'light']),
-                    height: 3 / position.steps + 'rem'
-                } :
-                {
-                    height: 3 / position.steps + 'rem'
-                }
-
-            }
+            style={timeslotStyle}
             dateTime={dateTime.toISOString()}
             onClick={::this.handleClick}
         >
