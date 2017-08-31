@@ -1,28 +1,25 @@
 import { MODAL_TYPES } from '../../../utils/enums'
-import * as Immutable from 'immutable'
 
 export class Modal {
-    constructor(content, type) {
-        if(Immutable.isImmutable(content)){
-            content = content.toJS()
-        }
-        const initActions = {
-            [MODAL_TYPES.REMINDER]: () => {
-                this.modalType = MODAL_TYPES.REMINDER
-                this.headerTitle = content.text
-            }
-        }
+    constructor(content) {
+        this.type = MODAL_TYPES.DEFAULT
+        this.id = content.get('id')
+        this.headerTitle = ''
 
-        this.headerTitle = content.headerTitle
+        // if(content) {
+        //     content.forEach(key => this[key] = content.get(key))
+        // }
     }
 }
 
 export class ReminderModal extends Modal {
     constructor(task) {
-        super({
-            headerTitle: task.text
-        })
-        this.modalType = MODAL_TYPES.REMINDER
+        super(task)
+
+        this.type = MODAL_TYPES.REMINDER
+        this.headerTitle = 'Begin: ' + task.get('text')
+        this.task = task
+
     }
 
 }

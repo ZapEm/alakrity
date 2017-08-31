@@ -7,39 +7,84 @@ import { Modal } from './Modals'
 export default class ModalFooter extends React.Component {
 
     static propTypes = {
-        modal: React.PropTypes.instanceOf(Modal)
+        modal: React.PropTypes.instanceOf(Modal),
+        backendActions: React.PropTypes.objectOf(React.PropTypes.func).isRequired,
+        updateModal: React.PropTypes.func
     }
 
-    render() {
-        const { modal } = this.props
+    handleBegin(e) {
+        e.preventDefault()
+        this.props.backendActions.removeModal(this.props.modal)
+        this.props.updateModal()
+    }
 
-        const footers = []
+    handleReject(e) {
+        e.preventDefault()
+        this.props.backendActions.removeModal(this.props.modal)
+        this.props.updateModal()
+    }
 
-        return <footer
-            className="modal-footer w3-theme-l3"
-        >
-            {modal.type === MODAL_TYPES.REMINDER &&
-            [
+    getFooter(type){
+        const footers = {
+            [MODAL_TYPES.REMINDER]: () => [
                 <LabeledIconButton
+                    key={0}
                     iconName="play_circle_outline"//"slideshow"
                     label="Begin"
                     dangerLevel={DANGER_LEVELS.SAFE.hover}
-                    onClick={::this.handleAccept}
+                    onClick={::this.handleBegin}
                 />,
                 <LabeledIconButton
+                    key={1}
                     iconName="snooze"
                     label="Later"
                     dangerLevel={DANGER_LEVELS.WARN.hover}
                     onClick={::this.handleReject}
                 />,
                 <LabeledIconButton
+                    key={2}
                     iconName="timer_off" //"event_busy" //"cancel" //"remove_circle_outline" //"skip_next"
                     label="Skip"
                     dangerLevel={DANGER_LEVELS.DANGER.hover}
                     onClick={::this.handleReject}
                 />
+            ],
+            [MODAL_TYPES.EDIT_TASK]: () => [
+                <LabeledIconButton
+                    key={0}
+                    iconName="save"//"slideshow"
+                    label="Save"
+                    dangerLevel={DANGER_LEVELS.SAFE.hover}
+                    onClick={::this.handleAccept}
+                />,
+                <LabeledIconButton
+                    key={1}
+                    iconName="clear"
+                    label="Cancel"
+                    dangerLevel={DANGER_LEVELS.WARN.hover}
+                    onClick={::this.handleReject}
+                />,
+                <LabeledIconButton
+                    key={2}
+                    iconName="delete" //"event_busy" //"cancel" //"remove_circle_outline" //"skip_next"
+                    label="Delete"
+                    dangerLevel={DANGER_LEVELS.DANGER.hover}
+                    onClick={::this.handleReject}
+                />
             ]
-            }
+        }
+        return footers[type]()
+    }
+
+    render() {
+        const { modal } = this.props
+
+
+
+        return <footer
+            className="modal-footer w3-theme-l3"
+        >
+            {this.getFooter(modal.type)}
         </footer>
     }
 }

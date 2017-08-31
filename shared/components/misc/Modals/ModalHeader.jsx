@@ -1,40 +1,47 @@
 import * as React from 'react'
-import { MODAL_TYPES } from '../../../utils/enums'
-import { Modal } from './Modals'
+import * as ImmutablePropTypes from 'react-immutable-proptypes'
+import IconButton from '../IconButton'
 
 export default class ModalHeader extends React.Component {
 
     static propTypes = {
-        modalList: React.PropTypes.instanceOf(Modal),
-        currentModalIndex: React.PropTypes.number
-    }
-
-    static defaultProps = {
-        currentModalIndex: 0
+        modalsOM: ImmutablePropTypes.orderedMap.isRequired,
+        currentModalKey: React.PropTypes.string.isRequired,
+        handleNext: React.PropTypes.func.isRequired,
+        handleBack: React.PropTypes.func.isRequired
     }
 
     render() {
-        const { modalList, currentModalIndex } = this.props
+        const { modalsOM, currentModalKey, handleNext, handleBack } = this.props
 
-        const modal = modalList.get(currentModalIndex)
+        const modal = modalsOM.get(currentModalKey)
+        const multiple = modalsOM.size > 1
 
-        const headers = {
-            [MODAL_TYPES.REMINDER]: (modal) =>
-                <header
-                    className="modal-header w3-padding w3-large w3-theme"
-                >
-                    {'Begin with task: ' + modal.task.get('text')}
-                </header>
-            ,
-            [MODAL_TYPES.EDIT_TASK]: (modal) => <header
-                className="modal-header w3-padding w3-large w3-theme"
+        const headerTitle = modal && modal.headerTitle ? modal.headerTitle : ''
+
+        return (
+            <header
+                className="modal-header w3-large w3-theme"
             >
-                {'Change task: ' + modal.task.get('text')}
+                {multiple &&
+                <IconButton
+                    iconName={'navigate_before'}
+                    tooltip={'Back'}
+                    onClick={handleBack}
+                />}
+                <div style={{
+                    textAlign: 'center',
+                    width: '100%'
+                }}>{(multiple ? `(${modalsOM.keySeq().keyOf(currentModalKey) + 1}/${modalsOM.size}) ` :
+                     '') + headerTitle}</div>
+                {multiple &&
+                <IconButton
+                    iconName={'navigate_next'}
+                    tooltip={'Next'}
+                    onClick={handleNext}
+                />}
             </header>
-        }
-
-
-        return headers[modal.type](modal)
+        )
     }
 
 }

@@ -15,8 +15,9 @@ export const TaskListFilters = Object.freeze(
 
 export const MODAL_TYPES = Object.freeze(
     {
-        REMINDER: Symbol('reminder'),
-        EDIT_TASK: Symbol('edit_task'),
-        EDIT_PROJECT: Symbol('edit_project')
+        DEFAULT: Symbol('DEFAULT_MODAL'),
+        REMINDER: Symbol('REMINDER_MODAL'),
+        EDIT_TASK: Symbol('EDIT_TASK_MODAL'),
+        EDIT_PROJECT: Symbol('EDIT_PROJECT_MODAL')
     }
 )

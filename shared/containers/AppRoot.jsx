@@ -45,7 +45,7 @@ export default class AppRoot extends React.Component {
         return (
             <div id="app-view" className="main-app">
                 <ModalComponent
-                    modalList={backend.get('modalList')}
+                    modalsOM={backend.get('modalsOM')}
                     projectList={projectList}
                     backendActions={bindActionCreators(backendActions, dispatch)}
                 />

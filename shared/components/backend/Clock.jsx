@@ -17,7 +17,7 @@ export default class Clock extends React.Component {
         }
     }
 
-    componentDidMount() {
+    componentWillMount() {
         this.timerID = setInterval(() => this.tick(), 1000)
     }
 
@@ -35,12 +35,13 @@ export default class Clock extends React.Component {
         if ( !this.currentMinute || time.getMinutes() !== this.currentMinute ) {
             this.currentMinute = time.getMinutes()
 
-            const immediateSchedule = this.getImmediateSchedule(this.props.taskList, 1)
+            this.props.backendActions.updateUpcomingTasks(this.props.taskList, time, 30)
 
-            immediateSchedule.map((task) => new ReminderModal(task))
-            if(immediateSchedule.size > 0) {
-                this.props.backendActions.addModal(immediateSchedule)
-            }
+            // const immediateSchedule = this.getImmediateSchedule(this.props.taskList, 1)
+            //
+            // if(immediateSchedule.size > 0) {
+            //     this.props.backendActions.addModal(immediateSchedule.map((task) => new ReminderModal(task)))
+            // }
 
             //console.log(this.currentMinute, immediateSchedule.toJSON())
 
@@ -56,9 +57,10 @@ export default class Clock extends React.Component {
      */
     getImmediateSchedule(taskList, lookahead) {
         if ( taskList ) {
+            const lookAheadDate = new Date(this.state.time.getTime() + (lookahead * 3600000))
             return taskList.filter((task) => {
                 const startTime = new Date(task.get('start'))
-                return ( startTime >= this.state.time && startTime < new Date(this.state.time.getTime() + (lookahead * 3600000)))
+                return ( startTime >= this.state.time && startTime < lookAheadDate)
             })
         }
     }

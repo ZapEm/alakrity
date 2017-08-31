@@ -1,20 +1,15 @@
-import moment from 'moment'
 import * as React from 'react'
 import * as ImmutablePropTypes from 'react-immutable-proptypes'
-import { DANGER_LEVELS } from '../../../utils/constants'
 import { getProjectColorMap } from '../../../utils/helpers'
-import Task from '../../dnd/TaskItemDragPreview'
-import LabeledIconButton from '../LabeledIconButton'
-import ModalFooter from './ModalFooter'
-import { MODAL_TYPES } from '../../../utils/enums'
 import ModalContent from './ModalContent'
+import ModalFooter from './ModalFooter'
 import ModalHeader from './ModalHeader'
 
 
 export default class ModalComponent extends React.Component {
 
     static propTypes = {
-        modalList: ImmutablePropTypes.list.isRequired,
+        modalsOM: ImmutablePropTypes.orderedMap.isRequired,
         backendActions: React.PropTypes.objectOf(React.PropTypes.func).isRequired,
         projectList: ImmutablePropTypes.list.isRequired
     }
@@ -22,34 +17,65 @@ export default class ModalComponent extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            modalIndex: 0
+            modalKey: ''
         }
     }
 
     componentWillMount() {
-        this.setState({ projectColorMap: getProjectColorMap(this.props.projectList) })
+        this.setState({
+            projectColorMap: getProjectColorMap(this.props.projectList),
+            ...this.props.modalsOM.size > 0 && { modalKey: this.props.modalsOM.keySeq().first() }
+        })
     }
 
-    handleAccept(e) {
-        e.preventDefault()
-        this.props.backendActions.removeModal()
+    componentWillUpdate() {
+        if ( this.state.modalKey === '' && this.props.modalsOM.size > 0 ) {
+            this.setState({
+                modalKey: this.props.modalsOM.keySeq().first()
+            })
+        }
     }
 
-    handleReject(e) {
+
+    handleNext(e) {
         e.preventDefault()
-        this.props.backendActions.removeModal()
+        const keySeq = this.props.modalsOM.keySeq()
+        this.setState({
+            modalKey: keySeq.toIndexedSeq().get((keySeq.keyOf(this.state.modalKey) + 1 ) % keySeq.size)
+        })
+    }
+
+    handleBack(e) {
+        e.preventDefault()
+        const keySeq = this.props.modalsOM.keySeq()
+        this.setState({
+            modalKey: keySeq.toIndexedSeq().get((keySeq.keyOf(this.state.modalKey) - 1 ) % keySeq.size)
+        })
+    }
+
+    updateModal() {
+        const keySeq = this.props.modalsOM.keySeq()
+        if ( keySeq.size > 1 ) {
+            this.setState({
+                modalKey: keySeq.toIndexedSeq().get((keySeq.keyOf(this.state.modalKey) - 1 ) % keySeq.size)
+            })
+        } else {
+            this.setState({ modalKey: '' })
+        }
+
+        // this.forceUpdate()
     }
 
     render() {
-        const { modalList } = this.props
-        const { modalIndex } = this.state
+        const { modalsOM, backendActions } = this.props
+        const { modalKey } = this.state
 
-        if ( modalList.size === 0 ) {
+        if ( modalKey === '' ) {
             return <div className="w3-modal" style={{ display: 'none' }}/>
         }
 
-        const currentModal = modalList.get(modalIndex)
-        console.log(currentModal, modalList.toJS())
+        const currentModal = modalsOM.get(modalKey)
+        console.log(modalKey, currentModal)
 
         return (
             <div className="w3-modal w3-animate-opacity" style={
@@ -59,15 +85,20 @@ export default class ModalComponent extends React.Component {
             }>
                 <div className="modal w3-modal-content w3-round-large w3-card-4 w3-animate-top">
                     <ModalHeader
-                        modal={modalList}
-                        currentModalIndex={modalIndex}
+                        modalsOM={modalsOM}
+                        currentModalKey={modalKey}
+                        handleBack={::this.handleBack}
+                        handleNext={::this.handleNext}
                     />
                     <ModalContent
                         modal={currentModal}
+                        projectColorMap={this.state.projectColorMap}
                     />
 
                     <ModalFooter
                         modal={currentModal}
+                        backendActions={backendActions}
+                        updateModal={::this.updateModal}
                     />
                 </div>
             </div>
