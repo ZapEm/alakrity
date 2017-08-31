@@ -1,16 +1,15 @@
 import * as React from 'react'
 import { DANGER_LEVELS } from '../../utils/constants'
-import newId from '../../utils/newId'
 
-export default class IconButton extends React.Component {
+export default class LabeledIconButton extends React.Component {
 
     static propTypes = {
         iconName: React.PropTypes.string.isRequired,
         tooltip: React.PropTypes.string,
-        label: React.PropTypes.string,
+        label: React.PropTypes.string.isRequired,
         disabled: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.bool]),
         onClick: React.PropTypes.func,
-        dangerLevel: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.object]),
+        dangerLevel: React.PropTypes.string,
         style: React.PropTypes.object
     }
 
@@ -28,32 +27,19 @@ export default class IconButton extends React.Component {
             style.cursor = 'help'
         }
 
-        let id = ''
-        if ( label ) {
-            id = newId('IconButton_')
-        }
-
         let button = <button
-            className={'material-icons icon-button w3-round ' + (!disabled ? dangerLevel : DANGER_LEVELS.DISABLED.both + ' disabled')}
-            id={id}
+            className={'labeled-icon-button w3-round ' + (!disabled ? dangerLevel : DANGER_LEVELS.DISABLED.both + ' disabled')}
             style={style}
             onClick={onClick}
             disabled={disabled}
             title={!disabled ? tooltip : disabled}
         >
-            {iconName}
+            <i className="material-icons labeled-icon-button-icon">{iconName}</i>
+            <span className="labeled-icon-button-label">{label}</span>
+
         </button>
 
-        return (label
-            ? <div className="icon-button-wrapper">
-                    <label
-                        title={!disabled ? tooltip : disabled}
-                        className="icon-button-label"
-                        htmlFor={id}>{label}
-                    </label>
-                    {button}
-                </div>
-            : button)
+        return (button)
 
     }
 }

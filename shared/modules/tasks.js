@@ -4,14 +4,14 @@ import moment from 'moment'
 import xss from 'xss'
 import { REJECTED_NAME as FAILURE, RESOLVED_NAME as SUCCESS } from '../utils/constants'
 import fetch from '../utils/fetcher'
-//import { generateTempIDfromDate as tempID } from '../utils/tempID'
-
-import { LOGIN, LOGOUT } from './auth'
 import newId from '../utils/newId'
+import { LOGIN, LOGOUT } from './auth'
+//import { generateTempIDfromDate as tempID } from '../utils/tempID'
 
 // action types:
 const LOAD = 'alakrity/tasks/LOAD'
 const CREATE = 'alakrity/tasks/CREATE'
+const QUICK_ADD = 'alakrity/tasks/QUICK_ADD'
 const EDIT = 'alakrity/tasks/EDIT'
 const REMOVE = 'alakrity/tasks/REMOVE'
 
@@ -42,10 +42,34 @@ export function createTask(taskInput) {
     }
 }
 
+export function quickAddTask(projectID) {
+
+    const taskInput = {
+        text: '',
+        projectID,
+        created: moment(),
+        duration: 120,
+        start: null
+    }
+
+    return {
+        type: QUICK_ADD,
+        payload: _merge({
+            id: newId('TEMP_ID_'),
+            editing: true
+        }, taskInput),
+        meta: {
+            promise: fetch.post('tasks', { data: taskInput }),
+            optimist: true
+        }
+    }
+}
+
 export function editTask(taskInput) {
 
     taskInput.text = xss(taskInput.text)
     taskInput = _merge({}, taskInput, { lastEdited: moment() })
+    delete taskInput.editing
 
     if ( !taskInput.id || taskInput.id.startsWith('TEMP_ID_') ) {
         return {
@@ -96,12 +120,13 @@ export default function reducer(state = initialState, action) {
             return state.set('isWorking', true)
 
         case CREATE:
+        case QUICK_ADD:
             return state.set('taskList', state.get('taskList').push(Immutable.Map(action.payload)))
                         .set('isWorking', true)
 
         case EDIT:
             return state.set('taskList', state.get('taskList').map(task =>
-                            (task.get('id') === action.payload.id) ? task.merge(action.payload) : task))
+                            (task.get('id') === action.payload.id) ? task.merge(action.payload).delete('editing') : task))
                         .set('isWorking', true)
 
         case REMOVE:
@@ -118,6 +143,7 @@ export default function reducer(state = initialState, action) {
             return state.set('isWorking', false)
 
         case CREATE + SUCCESS:
+        case QUICK_ADD + SUCCESS:
             return ((state.getIn(['taskList', -1, 'id']) === action.meta.payload.id)
                 ? state.setIn(['taskList', -1, 'id'], action.payload.data.id)
                 : state.set('taskList', state.get('taskList').map((task) => ((task.get('id') === action.meta.payload.id)

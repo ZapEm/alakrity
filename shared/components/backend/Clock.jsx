@@ -6,7 +6,7 @@ export default class Clock extends React.Component {
 
     static propTypes = {
         taskList: ImmutablePropTypes.list.isRequired,
-        timerActions: React.PropTypes.objectOf(React.PropTypes.func).isRequired
+        backendActions: React.PropTypes.objectOf(React.PropTypes.func).isRequired
     }
 
     constructor(props) {
@@ -34,9 +34,12 @@ export default class Clock extends React.Component {
         if ( !this.currentMinute || time.getMinutes() !== this.currentMinute ) {
             this.currentMinute = time.getMinutes()
 
-            console.log(this.currentMinute, this.getImmediateSchedule(this.props.taskList, 1).toJSON())
+            const immediateSchedule =  this.getImmediateSchedule(this.props.taskList, 1)
+            this.props.backendActions.setModal(immediateSchedule.first() ? immediateSchedule.first() : false)
 
-            this.props.timerActions.setTime(time)
+            //console.log(this.currentMinute, immediateSchedule.toJSON())
+
+            this.props.backendActions.setTime(time)
         }
     }
 
@@ -58,7 +61,7 @@ export default class Clock extends React.Component {
     render() {
         //const {  } = this.props
         return <div className="clock-wrapper w3-row w3-top">
-            <div className="clock w3-right w3-large">
+            <div className="clock w3-right w3-large w3-theme-d1">
                 {
                     this.state.time.toLocaleTimeString()
                 }

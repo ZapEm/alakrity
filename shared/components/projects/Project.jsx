@@ -3,6 +3,7 @@ import ImmutablePropTypes from 'react-immutable-proptypes'
 import tinycolor from 'tinycolor2'
 import IconButton from '../misc/IconButton'
 import ProjectEdit from './ProjectEdit'
+import { DANGER_LEVELS } from '../../utils/constants'
 
 
 export default class Project extends React.Component {
@@ -73,7 +74,7 @@ export default class Project extends React.Component {
                     <IconButton
                         iconName={'delete_forever'}
                         onClick={() => projectActions.removeProject(project.get('id'))}
-                        dangerLevel={'danger'}
+                        dangerLevel={DANGER_LEVELS.DANGER}
                     />
                     }
                 </div>

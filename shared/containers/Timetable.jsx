@@ -11,9 +11,7 @@ import EditTimetableForm from '../components/timetable/EditTimetableForm'
 import TimetableView from '../components/timetable/TimetableView'
 import * as TaskActions from '../modules/tasks'
 import * as TimetableActions from '../modules/timetables'
-import * as TimerActions from '../modules/timer'
 
-import Clock from '../components/timer/Clock'
 
 
 @connect(state => ({
@@ -21,7 +19,7 @@ import Clock from '../components/timer/Clock'
     tasks: state.tasks,
     projects: state.projects,
     timetables: state.timetables,
-    timer: state.timer,
+    backend: state.backend,
     isAuthenticated: state.auth.get('isAuthenticated')
 }))
 @DragDropContext(HTML5Backend)
@@ -32,7 +30,7 @@ export default class Timetable extends React.Component {
         tasks: ImmutablePropTypes.map,
         timetables: ImmutablePropTypes.map,
         projects: ImmutablePropTypes.map,
-        timer: ImmutablePropTypes.map,
+        backend: ImmutablePropTypes.map,
         isAuthenticated: React.PropTypes.bool,
         dispatch: React.PropTypes.func
     }
@@ -62,7 +60,7 @@ export default class Timetable extends React.Component {
     }
 
     render() {
-        const { tasks, dispatch, timetables, projects, timer } = this.props
+        const { tasks, dispatch, timetables, projects, backend } = this.props
         const userSettings = {}
         const editMode = timetables.get('editMode')
         const projectList = projects.get('projectList')
@@ -76,10 +74,6 @@ export default class Timetable extends React.Component {
 
         return (
             <div className="react-container">
-                <Clock
-                    taskList={tasks.get('taskList')}
-                    timerActions={bindActionCreators(TimerActions, dispatch)}
-                />
                 <div className="row">
                     <div className="col px900">
                         <TimetableView
@@ -88,7 +82,7 @@ export default class Timetable extends React.Component {
                             editMode={editMode}
                             tasks={tasks}
                             projectList={projectList}
-                            {...timer.get('time') && {time: timer.get('time')}}
+                            {...backend.get('time') && {time: backend.get('time')}}
                             taskActions={bindActionCreators(TaskActions, dispatch)}
                             timetableActions={bindActionCreators(TimetableActions, dispatch)}
                         />

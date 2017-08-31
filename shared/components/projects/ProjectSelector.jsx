@@ -2,11 +2,13 @@ import * as Immutable from 'immutable'
 import * as React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import tinycolor from 'tinycolor2'
+import { SPECIAL_PROJECTS } from '../../utils/constants'
 
 export default class ProjectSelector extends React.Component {
 
     static propTypes = {
         projectList: ImmutablePropTypes.list.isRequired,
+        specialProjects: ImmutablePropTypes.list,
         selectProject: React.PropTypes.func.isRequired
     }
 
@@ -21,13 +23,28 @@ export default class ProjectSelector extends React.Component {
 
     handleSelectProject(e) {
         e.preventDefault()
-        const currentProject = this.props.projectList.get(e.target.value)
+        const currentProject = ((key) => {
+            const actions = {
+                [SPECIAL_PROJECTS.ONE_TIME.key]: () => Immutable.Map(
+                    {
+                        title: SPECIAL_PROJECTS.ONE_TIME.title,
+                        id: SPECIAL_PROJECTS.ONE_TIME.key,
+                        color: SPECIAL_PROJECTS.ONE_TIME.normal
+                    })
+            }
+
+            if ( typeof actions[key] !== 'function' ) {
+                return this.props.projectList.get(key)
+            }
+            return actions[key]()
+        })(e.target.value)
+
         this.setState({ currentProject: currentProject })
         this.props.selectProject(currentProject)
     }
 
     render() {
-        const { projectList } = this.props
+        const { projectList, specialProjects } = this.props
 
         const disabled = (projectList.size === 0) ? 'A project needs to be created first.' : false
         let projectSelectOptions = []
@@ -43,6 +60,17 @@ export default class ProjectSelector extends React.Component {
                     >{project.get('title')}</option>
                 )
             }
+            for ( let project of specialProjects ) {
+                projectSelectOptions.push(
+                    <option
+                        className="project-selector-option"
+                        key={project.get('key')}
+                        value={project.get('key')}
+                        style={{ backgroundColor: project.get('light') }}
+                    >{project.get('title')}</option>
+                )
+            }
+
         } else {
             projectSelectOptions.push(
                 <option key={'noProject'}
@@ -54,10 +82,14 @@ export default class ProjectSelector extends React.Component {
 
         return <select
             onChange={::this.handleSelectProject}
-            className={'project-selector w3-border w3-border-theme w3-round w3-select' + (disabled ? ' w3-text-gray' : '')}
+            className={'project-selector w23-border-theme w3-round w3-select' + (disabled ? ' w3-text-gray' :
+                                                                                          '')}
             name="option"
             style={{
-                backgroundColor: this.state.currentProject ? tinycolor(this.state.currentProject.get('color')).brighten(10) : 'none'
+                backgroundColor: this.state.currentProject ?
+                                 tinycolor(this.state.currentProject.get('color')).brighten(10) : 'none',
+                border: this.state.currentProject ?
+                                 'solid 1px ' + tinycolor(this.state.currentProject.get('color')).brighten(-35) : 'none'
             }}
             disabled={disabled}
         >

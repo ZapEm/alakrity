@@ -1,8 +1,10 @@
 .no-underline
   text-decoration inherit
 
+.labeled-icon-button
 .icon-button
   display inline-block
+  align-self center
   padding 0
   margin 4px
   background none
@@ -11,7 +13,7 @@
   text-decoration none
   cursor pointer
   -webkit-appearance none
-  &:not(.icon-button-disabled):hover
+  &:not(.disabled):hover
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12)!important
 
 .icon-button-wrapper
@@ -26,6 +28,19 @@
   transform translateY(-6px)
   cursor pointer
 
+.labeled-icon-button
+  padding 0 8px
+  display flex
+  align-items center
+
+.labeled-icon-button-label
+  flex 1
+  text-align left
+  margin 0 8px
+
+.labeled-icon-button-icon
+  flex 0
+
 .clock
   display inline-block
   pointer-events all
@@ -36,3 +51,32 @@
   position fixed
   max-width 1200px
   pointer-events none
+
+.modal
+  width 400px
+  overflow hidden
+  border solid 1px $theme-d3
+
+.modal-header
+  text-align center
+
+.modal-middle
+  display flex
+  min-height 200px
+
+.modal-middle-left
+  flex 0
+
+.modal-middle-right
+  flex 1
+
+.modal-footer
+  display inline-grid
+  width 100%
+  grid-template-columns 1fr 1fr 1fr
+  grid-column-gap 16px
+  align-items center
+  height 43px
+  padding 4px 22px
+  text-align center
+

@@ -1,9 +1,12 @@
+import Immutable from 'immutable'
 import moment from 'moment'
 import React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import MomentPropTypes from 'react-moment-proptypes'
+import { SPECIAL_PROJECTS } from '../../utils/constants'
 import { TaskListFilters } from '../../utils/enums'
 import { getProjectColorMap } from '../../utils/helpers'
+import LabeledIconButton from '../misc/LabeledIconButton'
 import ProjectSelector from '../projects/ProjectSelector'
 import Task from './Task'
 
@@ -42,6 +45,11 @@ export default class TasksList extends React.Component {
     handleFilterChange(e) {
         this.setState({ filterRadioSelection: e.target.value })
         console.log(e.target.value)
+    }
+
+    handleQuickAddTask(e){
+        e.preventDefault()
+        this.props.taskActions.quickAddTask(this.state.project.get('id'))
     }
 
     changeProject(project) {
@@ -102,8 +110,11 @@ export default class TasksList extends React.Component {
                              'task-list-view') + ' w3-card-4 w3-padding w3-border w3-border-theme w3-round-large'}>
                 <ProjectSelector
                     projectList={projectList}
+                    specialProjects={Immutable.fromJS([SPECIAL_PROJECTS.ONE_TIME])}
                     selectProject={::this.changeProject}
                 />
+
+
                 <form
                     className="w3-border-bottom w3-border-theme w3-center"
                     onChange={::this.handleFilterChange}
@@ -132,6 +143,14 @@ export default class TasksList extends React.Component {
                         {'All'}
                     </label>
                 </form>
+                <div className="tt-form-line">
+                    {sidebar &&
+                    <LabeledIconButton
+                        iconName="add_circle_outline"
+                        label="Quick Add Task"
+                        onClick={::this.handleQuickAddTask}
+                    />}
+                </div>
                 <div className="task-list-container">
                     <ul className={'task-list' + (sidebar ? ' task-list-sidebar' : '')}>
                         {taskItems}

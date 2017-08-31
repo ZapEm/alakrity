@@ -4,7 +4,7 @@ import * as React from 'react'
 import { DragSource } from 'react-dnd'
 import { getEmptyImage } from 'react-dnd-html5-backend'
 import ImmutablePropTypes from 'react-immutable-proptypes'
-import tinycolor from 'tinycolor2'
+import { DANGER_LEVELS } from '../../utils/constants'
 import { DndTypes } from '../../utils/enums'
 import IconButton from '../misc/IconButton'
 import TaskEdit from './TaskEdit'
@@ -73,14 +73,20 @@ export default class Task extends React.Component {
         }
     }
 
+    componentWillMount() {
+        this.setState({ editing: this.props.task.get('editing') || false })
+    }
+
     componentDidMount() {
         // Use empty image as a drag preview so browsers don't draw it
         // and we can draw whatever we want on the custom drag layer instead.
-        this.props.connectDragPreview(getEmptyImage(), {
-            // IE fallback: specify that we'd rather screenshot the node
-            // when it already knows it's being dragged so we can hide it with CSS.
-            captureDraggingState: false
-        })
+        if ( this.props.draggable ) {
+            this.props.connectDragPreview(getEmptyImage(), {
+                // IE fallback: specify that we'd rather screenshot the node
+                // when it already knows it's being dragged so we can hide it with CSS.
+                captureDraggingState: false
+            })
+        }
     }
 
 
@@ -93,7 +99,7 @@ export default class Task extends React.Component {
 
     handleSave(task) {
         if ( task.text.length === 0 ) {
-            this.props.taskActions.removeTask(task)
+            this.props.taskActions.removeTask(task.id)
         } else {
             this.props.taskActions.editTask(task)
         }
@@ -107,22 +113,24 @@ export default class Task extends React.Component {
             projectColorMap
         } = this.props
 
+
         if ( isDragging ) {
             return null
         }
 
         const durationCutoff = task.get('duration') >= 90
 
+        const projectID = task.get('projectID')
         const colorStyle = {
-            backgroundColor: projectColorMap.getIn([task.get('projectID'), 'normal']),
-            borderColor: projectColorMap.getIn([task.get('projectID'),'dark'])
+            backgroundColor: projectColorMap.getIn([projectID, 'normal']),
+            borderColor: projectColorMap.getIn([projectID, 'dark'])
         }
         const dragStyle = draggable ?
             {
                 cursor: 'move'
             } : {}
-        let element
 
+        let element
         if ( this.state.editing ) {
             element = <TaskEdit
                 colorStyle={colorStyle}
@@ -132,7 +140,7 @@ export default class Task extends React.Component {
         } else {
             element =
                 <div
-                    className="task-item w3-card-2 w3-round-large w3-display-container"
+                    className={'task-item w3-card-2 w3-round-large w3-display-container' + (projectID.startsWith('_') && ' special')}
                     style={_merge({}, colorStyle, dragStyle, isDragging ?
                         {
                             pointerEvents: 'none',
@@ -156,7 +164,7 @@ export default class Task extends React.Component {
                         <IconButton
                             iconName={'delete_forever'}
                             onClick={() => removeTask(task.get('id'))}
-                            dangerLevel={'danger'}
+                            dangerLevel={DANGER_LEVELS.DANGER}
                         />
                         }
                     </div>

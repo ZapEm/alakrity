@@ -94,7 +94,7 @@ export default class TaskEdit extends React.Component {
 
     handleSubmit(e) {
         e.preventDefault()
-        this.props.onSubmit(this.state)
+        this.props.onSubmit(_.merge({}, this.state, {id: this.props.task.get('id')}))
     }
 
     handleTextChange(e) {
@@ -123,6 +123,8 @@ export default class TaskEdit extends React.Component {
                         <input
                             className="w3-input task-item-title-edit"
                             type="text"
+                            autoFocus
+                            placeholder="Enter title..."
                             onChange={::this.handleTextChange}
                             defaultValue={this.state.text}/>
                     </div>

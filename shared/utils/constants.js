@@ -15,26 +15,65 @@ export const PROJECT_COLORS = [
     '#A37CFF'
 ]
 
-export const SPECIAL_PROJECTS = {
-    CLEAR: {
-        dark: '#777777',
-        normal: '#cccccc',
-        light: '#eeeeee'
-    },
-    BUFFER: {
-        dark: '#5673a6',
-        normal: '#8eb9ff',
-        light: '#b5d1ff',
-        backgroundPattern: `${generateRepeatingLinearLines(255, 255, 255, 0.4, 0, 5)}, ${generateRepeatingLinearLines(255, 255, 255, 0.4, 90, 5)}`
-    },
-    BREAK: {
-        dark: '#48774c',
-        normal: '#7ccb81',
-        light: '#b9f4b7',
-        backgroundPattern: `${generateRepeatingLinearLines(255, 255, 255, 0.4, 45, 3, 6)}`
+export const SPECIAL_PROJECTS = Object.freeze(
+    {
+        CLEAR: {
+            title: 'Clear',
+            key: '_CLEAR',
+            dark: '#777777',
+            normal: '#cccccc',
+            light: '#eeeeee'
+        },
+        BUFFER: {
+            title: 'Buffer',
+            key: '_BUFFER',
+            dark: '#5673a6',
+            normal: '#8eb9ff',
+            light: '#b5d1ff',
+            backgroundPattern: `${generateRepeatingLinearLines(255, 255, 255, 0.4, 0, 5)}, ${generateRepeatingLinearLines(255, 255, 255, 0.4, 90, 5)}`
+        },
+        BREAK: {
+            title: 'Break',
+            key: '_BREAK',
+            dark: '#48774c',
+            normal: '#7ccb81',
+            light: '#b9f4b7',
+            backgroundPattern: `${generateRepeatingLinearLines(255, 255, 255, 0.4, 45, 3, 6)}`
+        },
+        ONE_TIME: {
+            title: 'Appointments',
+            key: '_ONE_TIME',
+            dark: '#5f0006',
+            normal: '#9b0913',
+            light: '#c6444e'
+        }
     }
-}
+)
+
+export const DANGER_LEVELS = Object.freeze(
+    {
+        DEFAULT: {
+            both: 'w3-text-theme w3-hover-theme',
+            hover: 'w3-text-theme w3-hover-theme'
+        },
+        SAFE: {
+            both: 'w3-text-green w3-hover-green',
+            hover: 'w3-text-theme w3-hover-green'
+        },
+        WARN: {
+            both: 'w3-text-deep-orange w3-hover-deep-orange',
+            hover: 'w3-text-theme w3-hover-deep-orange'
+        },
+        DANGER: {
+            both: 'w3-text-pink w3-hover-pink',
+            hover: 'w3-text-theme w3-hover-pink'
+        },
+        DISABLED: {
+            both: 'w3-text-gray'
+        }
+    }
+)
 
 function generateRepeatingLinearLines(r, g, b, a, deg, width1, width2 = width1) {
-    return `repeating-linear-gradient(${deg}deg, transparent, transparent ${width1}px, rgba(${r},${g},${b},${a}) ${width1+1}px, rgba(${r},${g},${b},${a}) ${(width1+width2+1)}px)`
+    return `repeating-linear-gradient(${deg}deg, transparent, transparent ${width1}px, rgba(${r},${g},${b},${a}) ${width1 + 1}px, rgba(${r},${g},${b},${a}) ${(width1 + width2 + 1)}px)`
 }
