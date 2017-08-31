@@ -1,12 +1,13 @@
+import * as _ from 'lodash/object'
 import * as React from 'react'
 
 import { DragLayer, DragSource } from 'react-dnd'
 import { getEmptyImage } from 'react-dnd-html5-backend'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import { DndTypes } from '../../utils/enums'
+import newId from '../../utils/newId'
 import { getDurationDelta } from '../dnd/dndFunctions'
 import IconButton from '../misc/IconButton'
-import * as _ from 'lodash/object'
 
 
 const dragSource = {
@@ -43,7 +44,7 @@ export default class TaskEdit extends React.Component {
         monitor: React.PropTypes.func,
         item: React.PropTypes.object,
         itemType: React.PropTypes.string,
-        colorStyle: React.PropTypes.object
+        colors: React.PropTypes.object
     }
 
     static contextTypes = {
@@ -94,7 +95,7 @@ export default class TaskEdit extends React.Component {
 
     handleSubmit(e) {
         e.preventDefault()
-        this.props.onSubmit(_.merge({}, this.state, {id: this.props.task.get('id')}))
+        this.props.onSubmit(_.merge({}, this.state, { id: this.props.task.get('id') }))
     }
 
     handleTextChange(e) {
@@ -102,12 +103,22 @@ export default class TaskEdit extends React.Component {
     }
 
     render() {
-        const { connectDragSource, isDragging, colorStyle } = this.props
+        const { connectDragSource, isDragging, colors } = this.props
+
+        const colorStyle = {
+            backgroundColor: colors.normal,
+            borderColor: colors.dark
+        }
+        const formID = newId('FORM_')
 
         const durationCutoff = this.state.duration >= 90
 
-        return <div className="task-list-item">
+        return <div className="task-list-item" style={{
+            zIndex: 3,
+            minHeight: '7rem'
+        }}>
             <form
+                id={formID}
                 onSubmit={::this.handleSubmit}
                 className="task-item task-item-edit w3-card-2 w3-round-large w3-display-container"
                 style={
@@ -130,21 +141,43 @@ export default class TaskEdit extends React.Component {
                     </div>
                     {durationCutoff && <p className="task-item-info duration">{this.state.duration / 60} hours</p>}
                 </div>
-                <div className="task-item-buttons w3-display-bottomright">
-                    <IconButton
-                        iconName={'save'}
-                    />
-                </div>
+
                 {connectDragSource(<div
                     className="material-icons task-item-handle w3-display-bottommiddle"
                     style={isDragging ?
                         {
                             pointerEvents: 'none',
-                            color: colorStyle.backgroundColor
-                        } : { color: colorStyle.backgroundColor} }
+                            color: colors.normal
+                        } : { color: colors.normal }}
                 >{'more_horiz'}</div>)
                 }
             </form>
+            <div
+                className="task-item-edit-buttons"
+                style={{
+                    backgroundColor: colors.light,
+                    borderColor: colors.dark
+                }}
+            >
+                <IconButton
+                    formID={formID}
+                    iconName={'save'}
+                />
+                <IconButton
+                    style={{
+                        display: 'block',
+                        marginTop: 0
+                    }}
+                    iconName={'clear'}
+                />
+                <IconButton
+                    style={{
+                        display: 'block',
+                        marginTop: 0
+                    }}
+                    iconName={'content_paste'}
+                />
+            </div>
         </div>
     }
 }

@@ -46,6 +46,7 @@ together {
         primary_key(id) : str
         secondary_key(userID) : str
         secondary_key(projectID) : str
+        + repeating: bool
         + duration : int
         + start : datetime
         + text : str

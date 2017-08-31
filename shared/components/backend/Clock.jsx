@@ -1,5 +1,6 @@
 import * as React from 'react'
 import * as ImmutablePropTypes from 'react-immutable-proptypes'
+import { ReminderModal } from '../misc/Modals/Modals'
 
 
 export default class Clock extends React.Component {
@@ -34,8 +35,12 @@ export default class Clock extends React.Component {
         if ( !this.currentMinute || time.getMinutes() !== this.currentMinute ) {
             this.currentMinute = time.getMinutes()
 
-            const immediateSchedule =  this.getImmediateSchedule(this.props.taskList, 1)
-            this.props.backendActions.setModal(immediateSchedule.first() ? immediateSchedule.first() : false)
+            const immediateSchedule = this.getImmediateSchedule(this.props.taskList, 1)
+
+            immediateSchedule.map((task) => new ReminderModal(task))
+            if(immediateSchedule.size > 0) {
+                this.props.backendActions.addModal(immediateSchedule)
+            }
 
             //console.log(this.currentMinute, immediateSchedule.toJSON())
 

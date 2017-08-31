@@ -47,6 +47,7 @@ export function quickAddTask(projectID) {
     const taskInput = {
         text: '',
         projectID,
+        repeating: false,
         created: moment(),
         duration: 120,
         start: null

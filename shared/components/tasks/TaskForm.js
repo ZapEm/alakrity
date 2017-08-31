@@ -18,6 +18,7 @@ export default class TaskForm extends React.Component {
             this.state = {
                 errors: [],
                 text: this.props.task.get('text') || '',
+                repeating: this.props.task.get('repeating') || false,
                 start: this.props.task.get('start') || null,
                 duration: this.props.task.get('duration') || 120,
                 projectID: this.props.task.get('projectID') || 'none'
@@ -26,6 +27,7 @@ export default class TaskForm extends React.Component {
             this.state = {
                 errors: [],
                 text: '',
+                repeating: false,
                 start: null,
                 duration: 120,
                 projectID: 'none'
@@ -50,6 +52,7 @@ export default class TaskForm extends React.Component {
             this.props.onSubmit({
                 id: this.props.editing ? this.props.task.get('id') : undefined,
                 text: this.state.text,
+                repeating: this.state.repeating,
                 start: this.state.start,
                 duration: this.state.duration,
                 projectID: this.state.projectID

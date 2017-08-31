@@ -23,7 +23,7 @@ export default class TaskItemDragPreview extends React.Component {
                         pointerEvents: 'none'
                     }
                 }>
-                <div className={'task-item w3-card-4 w3-round-large' + (task.projectID.startsWith('_') && ' special')}
+                <div className={'task-item w3-card-4 w3-round-large' + (task.projectID.startsWith('_') ? ' special' : '')}
                      style={
                          {
                              backgroundColor: projectColorMap.getIn([task.projectID, 'normal']),

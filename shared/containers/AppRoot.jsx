@@ -7,7 +7,7 @@ import { bindActionCreators } from 'redux'
 import Navbar from '../components/misc/Navbar'
 import { logout } from '../modules/auth'
 import { checkWorking } from '../utils/stateChecks'
-import Modal from '../components/misc/Modal'
+import ModalComponent from '../components/misc/Modals/ModalComponent'
 import * as ImmutablePropTypes from 'react-immutable-proptypes'
 import Clock from '../components/backend/Clock'
 import * as backendActions from '../modules/backend'
@@ -44,8 +44,8 @@ export default class AppRoot extends React.Component {
         const { isWorking, isAuthenticated, message, dispatch, currentPath, backend, taskList, projectList } = this.props
         return (
             <div id="app-view" className="main-app">
-                <Modal
-                    task={backend.get('modal')}
+                <ModalComponent
+                    modalList={backend.get('modalList')}
                     projectList={projectList}
                     backendActions={bindActionCreators(backendActions, dispatch)}
                 />

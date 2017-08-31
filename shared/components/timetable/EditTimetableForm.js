@@ -92,10 +92,10 @@ export default class EditTimetableForm extends React.Component {
 
         return (
             <div
-                className="w3-display-container"
+                className="tt-form-wrapper w3-display-container "
             >
                 <form
-                    className="task-form w3-padding w3-card-4 w3-round-large w3-border w3-border-theme w3-leftbar w3-rightbar"
+                    className="tt-form w3-padding w3-card-4 w3-round-large w3-border w3-border-theme w3-leftbar w3-rightbar"
                     onSubmit={::this.handleSubmit}
                 >
                     <select

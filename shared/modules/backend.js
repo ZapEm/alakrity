@@ -6,8 +6,8 @@ import * as Immutable from 'immutable'
  * */
 
 const SET_TIME = 'alakrity/backend/SET_TIME'
-const SET_MODAL = 'alakrity/backend/SET_MODAL'
-const ClOSE_MODAL = 'alakrity/backend/CLOSE_MODAL'
+const ADD_MODAL = 'alakrity/backend/ADD_MODAL'
+const REMOVE_MODAL = 'alakrity/backend/REMOVE_MODAL'
 
 /**
  * Action Creators:
@@ -20,16 +20,17 @@ export function setTime(time) {
     }
 }
 
-export function setModal(task) {
+export function addModal(modal) {
     return {
-        type: SET_MODAL,
-        payload: task
+        type: ADD_MODAL,
+        payload: modal
     }
 }
 
-export function closeModal() {
+export function removeModal(index) {
     return {
-        type: SET_MODAL
+        type: REMOVE_MODAL,
+        payload: index
     }
 }
 
@@ -39,7 +40,7 @@ export function closeModal() {
  * */
 const initialState = Immutable.fromJS({
     time: false,
-    modal: false
+    modalList: Immutable.List()
 })
 
 export default function reducer(state = initialState, action) {
@@ -47,11 +48,11 @@ export default function reducer(state = initialState, action) {
         case SET_TIME:
             return state.set('time', action.payload)
 
-        case SET_MODAL:
-            return state.set('modal', action.payload)
+        case ADD_MODAL:
+            return state.withMutations((state) => state.set('modalList', state.get('modalList').push(action.payload)))
 
-        case ClOSE_MODAL:
-            return state.set('modal', false)
+        case REMOVE_MODAL:
+            return state.deleteIn(['modalList', action.payload])
 
         default:
             return state

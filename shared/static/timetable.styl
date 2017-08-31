@@ -34,6 +34,7 @@
   width 79px
   text-align right
   border-right solid 1px #777
+  border-bottom-left-radius 5px
   background-color $theme-l3
 
 .tt-timecolumn-time
@@ -118,6 +119,8 @@
 
 .tt-controls-edit-mode
   transition background 0.5s ease-in-out
+  border-top-left-radius 5px
+  border-top-right-radius 5px
   background-color $theme-l5
   background-image repeating-linear-gradient(135deg, transparent, transparent 20px, $theme-l7 21px, $theme-l7 40px)
 
@@ -132,6 +135,19 @@
   margin 0 4px
   display inline-block
   transform translateY(-7px)
+
+.tt-form-wrapper
+  box-sizing border-box
+  position absolute
+  top 8px
+  bottom 8px
+  left 8px
+  right 8px
+
+.tt-form
+  height 100%
+  width 100%
+
 
 .tt-form-line
   padding 4px 0

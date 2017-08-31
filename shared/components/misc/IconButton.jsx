@@ -6,6 +6,7 @@ export default class IconButton extends React.Component {
 
     static propTypes = {
         iconName: React.PropTypes.string.isRequired,
+        formID: React.PropTypes.string,
         tooltip: React.PropTypes.string,
         label: React.PropTypes.string,
         disabled: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.bool]),
@@ -15,7 +16,7 @@ export default class IconButton extends React.Component {
     }
 
     render() {
-        const { iconName, label, onClick, style = {}, disabled = false, tooltip = '' } = this.props
+        const { iconName, formID, label, onClick, style = {}, disabled = false, tooltip = '' } = this.props
         let { dangerLevel } = this.props
 
         dangerLevel = (typeof dangerLevel === 'object' && dangerLevel.both) ? dangerLevel.both :
@@ -34,6 +35,7 @@ export default class IconButton extends React.Component {
         }
 
         let button = <button
+            form={formID}
             className={'material-icons icon-button w3-round ' + (!disabled ? dangerLevel : DANGER_LEVELS.DISABLED.both + ' disabled')}
             id={id}
             style={style}

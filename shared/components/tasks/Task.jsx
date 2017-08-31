@@ -51,7 +51,7 @@ export default class Task extends React.Component {
     static propTypes = {
         task: ImmutablePropTypes.map.isRequired,
         projectColorMap: ImmutablePropTypes.map.isRequired,
-        taskActions: React.PropTypes.objectOf(React.PropTypes.func).isRequired,
+        taskActions: React.PropTypes.objectOf(React.PropTypes.func),
         editable: React.PropTypes.bool,
         draggable: React.PropTypes.bool,
         scaled: React.PropTypes.bool,
@@ -121,9 +121,10 @@ export default class Task extends React.Component {
         const durationCutoff = task.get('duration') >= 90
 
         const projectID = task.get('projectID')
-        const colorStyle = {
-            backgroundColor: projectColorMap.getIn([projectID, 'normal']),
-            borderColor: projectColorMap.getIn([projectID, 'dark'])
+        const itemColors = {
+            normal: projectColorMap.getIn([projectID, 'normal']),
+            dark: projectColorMap.getIn([projectID, 'dark']),
+            light: projectColorMap.getIn([projectID, 'light'])
         }
         const dragStyle = draggable ?
             {
@@ -133,15 +134,19 @@ export default class Task extends React.Component {
         let element
         if ( this.state.editing ) {
             element = <TaskEdit
-                colorStyle={colorStyle}
+                colors={itemColors}
                 task={task}
                 onSubmit={(task) => this.handleSave(task)}
             />
         } else {
             element =
                 <div
-                    className={'task-item w3-card-2 w3-round-large w3-display-container' + (projectID.startsWith('_') && ' special')}
-                    style={_merge({}, colorStyle, dragStyle, isDragging ?
+                    className={'task-item w3-card-2 w3-round-large w3-display-container' + (projectID.startsWith('_') ?
+                                                                                            ' special' : '')}
+                    style={_merge({}, {
+                            backgroundColor: itemColors.normal,
+                            borderColor: itemColors.dark
+                        }, dragStyle, isDragging ?
                         {
                             pointerEvents: 'none',
                             opacity: 0.6,
