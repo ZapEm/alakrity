@@ -1,13 +1,14 @@
+import PropTypes from 'prop-types'
 import React from 'react'
 
 export default class TasksForm extends React.Component {
     static propTypes = {
-        createTask: React.PropTypes.func.isRequired
+        createTask: PropTypes.func.isRequired
     }
 
     handleSubmit = () => {
-        let textNode = this.refs['text-input']
-        let durationNode = this.refs['duration-input']
+        let textNode = this.textInput
+        let durationNode = this.durationInput
 
         this.props.createTask(
             {
@@ -23,8 +24,8 @@ export default class TasksForm extends React.Component {
     render() {
         return (
             <div id="task-form">
-                <input type="text" placeholder="type task text" ref="text-input"/>
-                <input type="number" placeholder="0" ref="duration-input"/>
+                <input type="text" placeholder="type task text" ref={ref => this.textInput = ref}/>
+                <input type="number" placeholder="0" ref={ref => this.durationInput = ref}/>
                 <input label="Duration: " type="submit" value="OK!" onClick={this.handleSubmit}/>
             </div>
         )

@@ -1,17 +1,18 @@
-import * as React from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import tinycolor from 'tinycolor2'
+import { DANGER_LEVELS } from '../../utils/constants'
 import IconButton from '../misc/IconButton'
 import ProjectEdit from './ProjectEdit'
-import { DANGER_LEVELS } from '../../utils/constants'
 
 
 export default class Project extends React.Component {
 
     static propTypes = {
         project: ImmutablePropTypes.map.isRequired,
-        projectActions: React.PropTypes.objectOf(React.PropTypes.func), // required if editable is true!
-        editable: React.PropTypes.bool
+        projectActions: PropTypes.objectOf(PropTypes.func), // required if editable is true!
+        editable: PropTypes.bool
     }
 
     static defaultPropTypes = {

@@ -1,26 +1,27 @@
 import moment from 'moment'
-import * as React from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import momentPropTypes from 'react-moment-proptypes'
+import { getProjectColorMap } from '../../utils/helpers'
 import ContentDnD from './parts/ContentDnD'
 import HeaderRow from './parts/HeaderRow'
 import TimeColumn from './parts/TimeColumn'
-import { getProjectColorMap } from '../../utils/helpers'
 import TimetableControls from './TimetableControls'
 
 
 export default class Timetable extends React.Component {
 
     static propTypes = {
-        date: React.PropTypes.oneOfType([momentPropTypes.momentObj,
-                                         React.PropTypes.instanceOf(Date)]).isRequired,
+        date: PropTypes.oneOfType([momentPropTypes.momentObj,
+                                   PropTypes.instanceOf(Date)]).isRequired,
         tasks: ImmutablePropTypes.list,
         projectList: ImmutablePropTypes.list.isRequired,
-        taskActions: React.PropTypes.objectOf(React.PropTypes.func).isRequired,
-        editMode: React.PropTypes.bool.isRequired,
-        timetableActions: React.PropTypes.object.isRequired,
+        taskActions: PropTypes.objectOf(PropTypes.func).isRequired,
+        editMode: PropTypes.bool.isRequired,
+        timetableActions: PropTypes.object.isRequired,
         timetables: ImmutablePropTypes.map.isRequired,
-        time: React.PropTypes.instanceOf(Date)
+        time: PropTypes.instanceOf(Date)
     }
 
     constructor(props) {

@@ -1,5 +1,6 @@
 import * as _ from 'lodash/object'
-import * as React from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 
 import { DragLayer, DragSource } from 'react-dnd'
 import { getEmptyImage } from 'react-dnd-html5-backend'
@@ -35,20 +36,20 @@ export default class TaskEdit extends React.Component {
 
     static propTypes = {
         task: ImmutablePropTypes.map.isRequired,
-        onSubmit: React.PropTypes.func.isRequired,
-        // removeTask: React.PropTypes.func,
-        editTask: React.PropTypes.func,
-        connectDragSource: React.PropTypes.func,
-        connectDragPreview: React.PropTypes.func,
-        isDragging: React.PropTypes.bool,
-        monitor: React.PropTypes.func,
-        item: React.PropTypes.object,
-        itemType: React.PropTypes.string,
-        colors: React.PropTypes.object
+        onSubmit: PropTypes.func.isRequired,
+        // removeTask: PropTypes.func,
+        editTask: PropTypes.func,
+        connectDragSource: PropTypes.func,
+        connectDragPreview: PropTypes.func,
+        isDragging: PropTypes.bool,
+        monitor: PropTypes.func,
+        item: PropTypes.object,
+        itemType: PropTypes.string,
+        colors: PropTypes.object
     }
 
     static contextTypes = {
-        dragDropManager: React.PropTypes.object
+        dragDropManager: PropTypes.object
     }
 
     constructor(props) {

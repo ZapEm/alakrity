@@ -1,5 +1,6 @@
 import { merge as _merge } from 'lodash/object'
-import * as React from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 
 import { DragSource } from 'react-dnd'
 import { getEmptyImage } from 'react-dnd-html5-backend'
@@ -51,18 +52,18 @@ export default class Task extends React.Component {
     static propTypes = {
         task: ImmutablePropTypes.map.isRequired,
         projectColorMap: ImmutablePropTypes.map.isRequired,
-        taskActions: React.PropTypes.objectOf(React.PropTypes.func),
-        editable: React.PropTypes.bool,
-        draggable: React.PropTypes.bool,
-        scaled: React.PropTypes.bool,
-        connectDragSource: React.PropTypes.func,
-        connectDragPreview: React.PropTypes.func,
-        isDragging: React.PropTypes.bool,
-        liWrapper: React.PropTypes.object
+        taskActions: PropTypes.objectOf(PropTypes.func),
+        editable: PropTypes.bool,
+        draggable: PropTypes.bool,
+        scaled: PropTypes.bool,
+        connectDragSource: PropTypes.func,
+        connectDragPreview: PropTypes.func,
+        isDragging: PropTypes.bool,
+        liWrapper: PropTypes.object
     }
 
     static contextTypes = {
-        dragDropManager: React.PropTypes.object
+        dragDropManager: PropTypes.object
     }
 
     constructor(props, context) {

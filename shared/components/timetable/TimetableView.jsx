@@ -1,8 +1,9 @@
+import * as Immutable from 'immutable'
 import moment from 'moment'
-import * as React from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import Timetable from './Timetable'
-import * as Immutable from 'immutable'
 
 // import Task from '../tasks/Task';
 
@@ -12,12 +13,12 @@ export default class TimetableView extends React.Component {
     static propTypes = {
         tasks: ImmutablePropTypes.map,
         projectList: ImmutablePropTypes.list.isRequired,
-        taskActions: React.PropTypes.objectOf(React.PropTypes.func).isRequired,
-        editMode: React.PropTypes.bool.isRequired,
+        taskActions: PropTypes.objectOf(PropTypes.func).isRequired,
+        editMode: PropTypes.bool.isRequired,
         timetables: ImmutablePropTypes.map.isRequired,
-        timetableActions: React.PropTypes.objectOf(React.PropTypes.func).isRequired,
-        userSettings: React.PropTypes.object.isRequired,
-        time: React.PropTypes.instanceOf(Date)
+        timetableActions: PropTypes.objectOf(PropTypes.func).isRequired,
+        userSettings: PropTypes.object.isRequired,
+        time: PropTypes.instanceOf(Date)
     }
 
     render() {

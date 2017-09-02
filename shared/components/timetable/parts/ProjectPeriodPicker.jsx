@@ -1,4 +1,5 @@
-import * as React from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import CustomScroll from 'react-custom-scroll'
 import * as ImmutablePropTypes from 'react-immutable-proptypes'
 import { SPECIAL_PROJECTS } from '../../../utils/constants'
@@ -8,8 +9,8 @@ export default class ProjectPeriodPicker extends React.Component {
 
     static propTypes = {
         projectList: ImmutablePropTypes.list.isRequired,
-        setCurrentProject: React.PropTypes.func.isRequired,
-        currentProjectID: React.PropTypes.string
+        setCurrentProject: PropTypes.func.isRequired,
+        currentProjectID: PropTypes.string
     }
 
     static defaultProps = {
@@ -36,7 +37,7 @@ export default class ProjectPeriodPicker extends React.Component {
         const liStyle = this.props.currentProjectID === dataId ? {
             backgroundColor: specialProject.light,
             ...specialProject.backgroundPattern && {
-                backgroundImage: specialProject.backgroundPattern,
+                backgroundImage: specialProject.backgroundPattern
                 //backgroundAttachment: 'local'
             },
             borderLeft: 'solid 2px ' + specialProject.dark,

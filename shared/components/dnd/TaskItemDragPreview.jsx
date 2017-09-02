@@ -1,10 +1,11 @@
-import * as React from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 
 export default class TaskItemDragPreview extends React.Component {
 
     static propTypes = {
-        task: React.PropTypes.object.isRequired,
+        task: PropTypes.object.isRequired,
         projectColorMap: ImmutablePropTypes.map.isRequired
     }
 
@@ -23,7 +24,8 @@ export default class TaskItemDragPreview extends React.Component {
                         pointerEvents: 'none'
                     }
                 }>
-                <div className={'task-item w3-card-4 w3-round-large' + (task.projectID.startsWith('_') ? ' special' : '')}
+                <div className={'task-item w3-card-4 w3-round-large' + (task.projectID.startsWith('_') ? ' special' :
+                                                                        '')}
                      style={
                          {
                              backgroundColor: projectColorMap.getIn([task.projectID, 'normal']),

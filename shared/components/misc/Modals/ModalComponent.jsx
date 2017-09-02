@@ -1,4 +1,5 @@
-import * as React from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import * as ImmutablePropTypes from 'react-immutable-proptypes'
 import { getProjectColorMap } from '../../../utils/helpers'
 import ModalContent from './ModalContent'
@@ -10,7 +11,7 @@ export default class ModalComponent extends React.Component {
 
     static propTypes = {
         modalsOM: ImmutablePropTypes.orderedMap.isRequired,
-        backendActions: React.PropTypes.objectOf(React.PropTypes.func).isRequired,
+        backendActions: PropTypes.objectOf(PropTypes.func).isRequired,
         projectList: ImmutablePropTypes.list.isRequired
     }
 

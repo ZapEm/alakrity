@@ -1,4 +1,5 @@
-import * as React from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import IconButton from '../misc/IconButton'
 
@@ -6,12 +7,12 @@ import IconButton from '../misc/IconButton'
 export default class Toolbar extends React.Component {
 
     static propTypes = {
-        editMode: React.PropTypes.bool.isRequired,
+        editMode: PropTypes.bool.isRequired,
         timetables: ImmutablePropTypes.map.isRequired,
-        loadTimetable: React.PropTypes.func.isRequired,
-        setCurrentProject: React.PropTypes.func.isRequired,
+        loadTimetable: PropTypes.func.isRequired,
+        setCurrentProject: PropTypes.func.isRequired,
         projectList: ImmutablePropTypes.list.isRequired,
-        onNewTimetable: React.PropTypes.func.isRequired
+        onNewTimetable: PropTypes.func.isRequired
     }
 
 

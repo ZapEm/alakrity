@@ -1,13 +1,14 @@
-import * as React from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import newId from '../../utils/newId'
 
 
 export default class ProjectColorPicker extends React.Component {
 
     static propTypes = {
-        colors: React.PropTypes.array.isRequired,
-        setColor: React.PropTypes.func.isRequired,
-        label: React.PropTypes.string
+        colors: PropTypes.array.isRequired,
+        setColor: PropTypes.func.isRequired,
+        label: PropTypes.string
     }
 
     constructor(props) {
@@ -18,7 +19,7 @@ export default class ProjectColorPicker extends React.Component {
         }
     }
 
-    componentWillMount(){
+    componentWillMount() {
         this.id = newId('color_')
     }
 

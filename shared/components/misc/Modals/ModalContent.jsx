@@ -1,13 +1,14 @@
-import * as React from 'react'
+import moment from 'moment'
+import PropTypes from 'prop-types'
+import React from 'react'
+import * as ImmutablePropTypes from 'react-immutable-proptypes'
 import TaskPreview from '../../dnd/TaskItemDragPreview'
 import { Modal } from './Modals'
-import moment from 'moment'
-import * as ImmutablePropTypes from 'react-immutable-proptypes'
 
 export default class ModalContent extends React.Component {
 
     static propTypes = {
-        modal: React.PropTypes.instanceOf(Modal),
+        modal: PropTypes.instanceOf(Modal),
         projectColorMap: ImmutablePropTypes.map.isRequired
     }
 

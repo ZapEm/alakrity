@@ -1,4 +1,5 @@
-import * as React from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import Project from './Project'
 
@@ -6,7 +7,7 @@ export default class ProjectsList extends React.Component {
 
     static propTypes = {
         projectList: ImmutablePropTypes.list.isRequired,
-        projectActions: React.PropTypes.objectOf(React.PropTypes.func)
+        projectActions: PropTypes.objectOf(PropTypes.func)
     }
 
     render() {
@@ -17,7 +18,7 @@ export default class ProjectsList extends React.Component {
             projectElements = projectList.map((project, index) =>
                 <li
                     key={'pjt_li_' + index}
-                    className={'project-list-item' + ((index+1) % 3 === 0 ? ' project-list-item-3rd' : '')}
+                    className={'project-list-item' + ((index + 1) % 3 === 0 ? ' project-list-item-3rd' : '')}
                 >
                     <Project
                         value={project.get('id')}

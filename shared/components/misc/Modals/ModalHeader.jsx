@@ -1,4 +1,5 @@
-import * as React from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import * as ImmutablePropTypes from 'react-immutable-proptypes'
 import IconButton from '../IconButton'
 
@@ -6,9 +7,9 @@ export default class ModalHeader extends React.Component {
 
     static propTypes = {
         modalsOM: ImmutablePropTypes.orderedMap.isRequired,
-        currentModalKey: React.PropTypes.string.isRequired,
-        handleNext: React.PropTypes.func.isRequired,
-        handleBack: React.PropTypes.func.isRequired
+        currentModalKey: PropTypes.string.isRequired,
+        handleNext: PropTypes.func.isRequired,
+        handleBack: PropTypes.func.isRequired
     }
 
     render() {

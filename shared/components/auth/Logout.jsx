@@ -1,9 +1,10 @@
-import * as React from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 
 
 export default class Logout extends React.Component {
     static propTypes = {
-        onLogoutClick: React.PropTypes.func.isRequired
+        onLogoutClick: PropTypes.func.isRequired
     }
 
     render() {

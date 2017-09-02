@@ -1,6 +1,5 @@
-import * as React from 'react'
+import React from 'react'
 import momentPropTypes from 'react-moment-proptypes'
-import IconButton from '../../misc/IconButton'
 
 
 export default class HeaderRow extends React.Component {
@@ -15,15 +14,15 @@ export default class HeaderRow extends React.Component {
         let headers = []
         for ( let i = 0; i < 7; i++ ) {
             headers.push(<div key={i} className="tt-header-day">
-                <div className="tt-header-day-name">{ dayDate.format('dddd') }</div>
-                <div className="tt-header-day-date">{ dayDate.format('MM[/]DD') }</div>
+                <div className="tt-header-day-name">{dayDate.format('dddd')}</div>
+                <div className="tt-header-day-date">{dayDate.format('MM[/]DD')}</div>
             </div>)
             dayDate.add(1, 'days')
         }
 
         return <div className="tt-header-row">
-            <div className="tt-header-corner" />
-            { headers }
+            <div className="tt-header-corner"/>
+            {headers}
         </div>
     }
 }

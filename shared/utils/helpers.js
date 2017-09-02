@@ -30,13 +30,13 @@ export function getProjectColorMap(projectList) {
     // )
 
     Immutable.fromJS(SPECIAL_PROJECTS).forEach(project => {
-                colorMap[project.get('key')] = {
-                    normal: project.get('normal'),
-                    light: project.get('light'),
-                    dark: project.get('dark')
-                }
+            colorMap[project.get('key')] = {
+                normal: project.get('normal'),
+                light: project.get('light'),
+                dark: project.get('dark')
             }
-        )
+        }
+    )
 
     return Immutable.fromJS(colorMap)
 }

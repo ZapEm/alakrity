@@ -19,12 +19,12 @@ export function getTargetDate(offset) {
  * was processed (not necessarily different) and the preview should be shown.
  */
 export function getSnappedOffset(dndType, offset) {
-    if(!dndType) {
+    if ( !dndType ) {
         return { offset: offset, show: false }
     }
 
     const snapFunctions = {
-        [DndTypes.TASK]: snapIfInBounds,
+        [DndTypes.TASK]: snapIfInBounds
         // [DndTypes.HANDLE]: snapY
     }
     return snapFunctions[dndType](offset)

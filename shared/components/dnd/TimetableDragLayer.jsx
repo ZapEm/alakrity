@@ -1,12 +1,13 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { DragLayer } from 'react-dnd'
 
 import shallowEqual from 'react-dnd/lib/utils/shallowEqual'
 import shallowEqualScalar from 'react-dnd/lib/utils/shallowEqualScalar'
+import ImmutablePropTypes from 'react-immutable-proptypes'
 import { DndTypes } from '../../utils/enums'
 import { getSnappedOffset } from './dndFunctions'
 import TaskItemDragPreview from './TaskItemDragPreview'
-import ImmutablePropTypes from 'react-immutable-proptypes'
 
 const arePropsEqual = shallowEqualScalar
 
@@ -104,8 +105,6 @@ export default class CustomDragLayer extends Component {
             isDragging: this.props.monitor.isDragging()
         }
     }
-
-
 
 
     renderItem(type, item) {

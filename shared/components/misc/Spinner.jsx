@@ -1,10 +1,11 @@
 import classNames from 'classnames'
-import * as React from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 
 export default class Spinner extends React.Component {
 
     static propTypes = {
-        status: React.PropTypes.oneOf(['IDLE', 'WORKING', 'ERROR', 'WARNING'])
+        status: PropTypes.oneOf(['IDLE', 'WORKING', 'ERROR', 'WARNING'])
     }
 
     static defaultProptypes = {

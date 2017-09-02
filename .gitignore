@@ -45,3 +45,5 @@ jspm_packages
 /dist/
 # /tls/dev/
 .idea/workspace.xml
+
+client.json

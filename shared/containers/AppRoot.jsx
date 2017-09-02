@@ -1,17 +1,17 @@
-import React from 'react'
 import PropTypes from 'prop-types'
+import React from 'react'
 
 import { DragDropContext } from 'react-dnd'
 import HTML5Backend from 'react-dnd-html5-backend'
+import * as ImmutablePropTypes from 'react-immutable-proptypes'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import Clock from '../components/backend/Clock'
+import ModalComponent from '../components/misc/Modals/ModalComponent'
 import Navbar from '../components/misc/Navbar'
 import { logout } from '../modules/auth'
-import { checkWorking } from '../utils/stateChecks'
-import ModalComponent from '../components/misc/Modals/ModalComponent'
-import * as ImmutablePropTypes from 'react-immutable-proptypes'
-import Clock from '../components/backend/Clock'
 import * as backendActions from '../modules/backend'
+import { checkWorking } from '../utils/stateChecks'
 
 
 @DragDropContext(HTML5Backend)
@@ -27,15 +27,15 @@ import * as backendActions from '../modules/backend'
 export default class AppRoot extends React.Component {
 
     static propTypes = {
-        children: React.PropTypes.node.isRequired,
-        isWorking: React.PropTypes.bool,
-        isAuthenticated: React.PropTypes.bool,
-        message: React.PropTypes.string,
+        children: PropTypes.node.isRequired,
+        isWorking: PropTypes.bool,
+        isAuthenticated: PropTypes.bool,
+        message: PropTypes.string,
         backend: ImmutablePropTypes.map,
         taskList: ImmutablePropTypes.list,
         projectList: ImmutablePropTypes.list,
-        dispatch: React.PropTypes.func,
-        currentPath: React.PropTypes.string
+        dispatch: PropTypes.func,
+        currentPath: PropTypes.string
     }
 
     static childContextTypes = {

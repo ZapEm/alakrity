@@ -1,4 +1,5 @@
 import moment from 'moment'
+import PropTypes from 'prop-types'
 import React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import IconButton from '../misc/IconButton'
@@ -6,12 +7,12 @@ import ProjectPeriodPicker from './parts/ProjectPeriodPicker'
 
 export default class EditTimetableForm extends React.Component {
     static propTypes = {
-        onSave: React.PropTypes.func.isRequired,
-        onRemove: React.PropTypes.func.isRequired,
-        timetableActions: React.PropTypes.object.isRequired,
+        onSave: PropTypes.func.isRequired,
+        onRemove: PropTypes.func.isRequired,
+        timetableActions: PropTypes.object.isRequired,
         timetables: ImmutablePropTypes.map.isRequired,
         projectList: ImmutablePropTypes.list.isRequired,
-        textLabel: React.PropTypes.string
+        textLabel: PropTypes.string
     }
 
     constructor(props) {

@@ -1,16 +1,17 @@
-import * as React from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 
 export default class CreateAccount extends React.Component {
 
     static propTypes = {
-        createUser: React.PropTypes.func.isRequired,
-        errorMessage: React.PropTypes.string
+        createUser: PropTypes.func.isRequired,
+        errorMessage: PropTypes.string
     }
 
     handleSubmit() {
         this.props.createUser({
-            userID: this.refs.username.value.trim(),
-            password: this.refs.password.value.trim()
+            userID: this.userRef.value.trim(),
+            password: this.pwRef.value.trim()
         })
     }
 
@@ -19,8 +20,8 @@ export default class CreateAccount extends React.Component {
 
         return (
             <form onSubmit={() => this.handleSubmit()}>
-                <input type="text" ref="username" className="form-control" placeholder="Username"/>
-                <input type="password" ref="password" className="form-control" placeholder="Password"/>
+                <input type="text" ref={userRef => this.userRef = userRef} className="form-control" placeholder="Username"/>
+                <input type="password" ref={pwRef => this.pwRef = pwRef} className="form-control" placeholder="Password"/>
                 <button className="btn btn-primary">
                     Create Account
                 </button>

@@ -8,7 +8,7 @@ import * as Immutable from 'immutable'
 import jwt from 'jsonwebtoken'
 import * as path from 'path'
 
-import * as React from 'react'
+import React from 'react'
 import cookie from 'react-cookie'
 import * as ReactDOMServer from 'react-dom/server'
 import { Provider } from 'react-redux'
@@ -27,11 +27,11 @@ const isDev = (process.env.NODE_ENV !== 'production')
 const app = express()
 
 const server = (config.get('express.protocol').toString() === 'https') ?
-                    https.createServer({
-                        key: fs.readFileSync((isDev) ? './tls/dev/localhost.key' : './tls/alakrity.key'),
-                        cert: fs.readFileSync((isDev) ? './tls/dev/localhost.crt' : './tls/alakrity.crt')
-                    }, app) :
-                    http.createServer(app)
+               https.createServer({
+                   key: fs.readFileSync((isDev) ? './tls/dev/localhost.key' : './tls/alakrity.key'),
+                   cert: fs.readFileSync((isDev) ? './tls/dev/localhost.crt' : './tls/alakrity.crt')
+               }, app) :
+               http.createServer(app)
 
 
 const port = config.get('express.port') || 3000

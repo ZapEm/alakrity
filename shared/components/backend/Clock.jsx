@@ -1,4 +1,5 @@
-import * as React from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import * as ImmutablePropTypes from 'react-immutable-proptypes'
 
 
@@ -6,7 +7,7 @@ export default class Clock extends React.Component {
 
     static propTypes = {
         taskList: ImmutablePropTypes.list.isRequired,
-        backendActions: React.PropTypes.objectOf(React.PropTypes.func).isRequired
+        backendActions: PropTypes.objectOf(PropTypes.func).isRequired
     }
 
     constructor(props) {
@@ -52,21 +53,21 @@ export default class Clock extends React.Component {
         }
     }
 
-    /**
-     * Gets all tasks that start between 'now' and 'in <lookahead> hours'
-     * @param taskList <Immutable list> of tasks (with start: date)
-     * @param lookahead <int> time in hours
-     * @return Immutable list
-     */
-    getImmediateSchedule(taskList, lookahead) {
-        if ( taskList ) {
-            const lookAheadDate = new Date(this.state.time.getTime() + (lookahead * 3600000))
-            return taskList.filter((task) => {
-                const startTime = new Date(task.get('start'))
-                return ( startTime >= this.state.time && startTime < lookAheadDate)
-            })
-        }
-    }
+    // /**
+    //  * Gets all tasks that start between 'now' and 'in <lookahead> hours'
+    //  * @param taskList <Immutable list> of tasks (with start: date)
+    //  * @param lookahead <int> time in hours
+    //  * @return Immutable list
+    //  */
+    // getImmediateSchedule(taskList, lookahead) {
+    //     if ( taskList ) {
+    //         const lookAheadDate = new Date(this.state.time.getTime() + (lookahead * 3600000))
+    //         return taskList.filter((task) => {
+    //             const startTime = new Date(task.get('start'))
+    //             return ( startTime >= this.state.time && startTime < lookAheadDate)
+    //         })
+    //     }
+    // }
 
     render() {
         //const {  } = this.props

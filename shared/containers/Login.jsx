@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -20,9 +21,9 @@ export default class Login extends React.Component {
     static propTypes = {
         // auth: ImmutablePropTypes.map,
         // tasks: ImmutablePropTypes.map,
-        // isWorking: React.PropTypes.bool,
-        // isAuthenticated: React.PropTypes.bool,
-        dispatch: React.PropTypes.func
+        // isWorking: PropTypes.bool,
+        // isAuthenticated: PropTypes.bool,
+        dispatch: PropTypes.func
     }
 
 
@@ -33,10 +34,10 @@ export default class Login extends React.Component {
                 <div className="login-form">
                     <span>Please log in...</span>
                     <LoginForm
-                        login={ bindActionCreators(login, dispatch) }
+                        login={bindActionCreators(login, dispatch)}
                     />
                     <CreateAccountForm
-                        createUser={ bindActionCreators(createUser, dispatch) }
+                        createUser={bindActionCreators(createUser, dispatch)}
                     />
                 </div>
             </div>

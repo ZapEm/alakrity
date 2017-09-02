@@ -26,7 +26,7 @@ function refreshOldTokens(res, decoded) {
             res.json = oldResJson
             res.json(data)
         }
-     }
+    }
 }
 
 

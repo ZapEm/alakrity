@@ -4,8 +4,8 @@ import { UserIsAuthenticated, UserIsNotAuthenticated } from './authwrappers'
 
 import AppRoot from './containers/AppRoot'
 import Login from './containers/Login'
-import Tasks from './containers/Tasks'
 import Projects from './containers/Projects'
+import Tasks from './containers/Tasks'
 import Timetable from './containers/Timetable'
 
 export default (

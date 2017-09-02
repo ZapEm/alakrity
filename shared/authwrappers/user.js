@@ -1,6 +1,6 @@
 import { routerActions } from 'react-router-redux'
-import { connectedReduxRedirect as UserAuthWrapper } from 'redux-auth-wrapper/history3/redirect'
 import locationHelperBuilder from 'redux-auth-wrapper/history3/locationHelper'
+import { connectedReduxRedirect as UserAuthWrapper } from 'redux-auth-wrapper/history3/redirect'
 
 import Loading from '../components/misc/Spinner'
 

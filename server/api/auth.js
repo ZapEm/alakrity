@@ -41,9 +41,10 @@ export function login(req, res) {
                                        rethink.findIndexed('tasks', req.body.userID, 'userID'),
                                        rethink.findIndexed('projects', req.body.userID, 'userID'),
                                        (user.currentTimetable) ?
-                                           rethink.find('timetables', user.currentTimetable) :
-                                           rethink.findLastIndexed('timetables', req.body.userID, 'userID'),
-                                       rethink.findIndexedWithFields('timetables', req.body.userID, 'userID', ['id', 'title'])
+                                       rethink.find('timetables', user.currentTimetable) :
+                                       rethink.findLastIndexed('timetables', req.body.userID, 'userID'),
+                                       rethink.findIndexedWithFields('timetables', req.body.userID, 'userID', ['id',
+                                                                                                               'title'])
                                    ]
                                ).then(responses => {
                                    const { userNoPw, token } = createToken(user)

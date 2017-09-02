@@ -1,10 +1,12 @@
-import * as React from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
+
 
 export default class Login extends React.Component {
 
     static propTypes = {
-        login: React.PropTypes.func.isRequired,
-        errorMessage: React.PropTypes.string
+        login: PropTypes.func.isRequired,
+        errorMessage: PropTypes.string
     }
 
     handleSubmit(e) {
@@ -16,8 +18,10 @@ export default class Login extends React.Component {
 
         return (
             <form onSubmit={::this.handleSubmit}>
-                <input type="text" ref={username => this.username = username} className="form-control" placeholder="Username" autoFocus/>
-                <input type="password" ref={password => this.password = password} className="form-control" placeholder="Password"/>
+                <input type="text" ref={username => this.username = username} className="form-control"
+                       placeholder="Username" autoFocus/>
+                <input type="password" ref={password => this.password = password} className="form-control"
+                       placeholder="Password"/>
                 <button className="btn btn-primary">
                     Login
                 </button>

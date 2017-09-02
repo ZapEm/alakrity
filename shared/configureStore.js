@@ -32,12 +32,20 @@ export default function configureStore(baseHistory, initialState, isServer = fal
             })
 
             enhancer = compose(
-                applyMiddleware(loggerMiddleware, routerMiddleware(baseHistory), optimistPromiseMiddleware(RESOLVED_NAME, REJECTED_NAME), myMiddlewares.authErrorLogout()),
+                applyMiddleware(loggerMiddleware, routerMiddleware(baseHistory), optimistPromiseMiddleware({
+                    resolvedName: RESOLVED_NAME,
+                    rejectedName: REJECTED_NAME,
+                    throwOnReject: false
+                }), myMiddlewares.authErrorLogout()),
                 DevTools.instrument()
             )
         } else {
             enhancer = compose(
-                applyMiddleware(routerMiddleware(baseHistory), optimistPromiseMiddleware(RESOLVED_NAME, REJECTED_NAME), myMiddlewares.authErrorLogout()),
+                applyMiddleware(routerMiddleware(baseHistory), optimistPromiseMiddleware({
+                    resolvedName: RESOLVED_NAME,
+                    rejectedName: REJECTED_NAME,
+                    throwOnReject: false
+                }), myMiddlewares.authErrorLogout()),
                 DevTools.instrument()
             )
         }

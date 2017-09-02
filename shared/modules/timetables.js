@@ -33,6 +33,7 @@ export function changeTimetable(timetableInput) {
         payload: timetableInput
     }
 }
+
 export function changeSlotProjectID(slotInput) {
     return {
         type: CHANGE_SLOT_PROJECT_ID,
@@ -70,6 +71,7 @@ export function listTimetables() {
         }
     }
 }
+
 export function loadTimetable(id) {
     return {
         type: LOAD,

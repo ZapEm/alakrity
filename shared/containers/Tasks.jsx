@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import { connect } from 'react-redux'
@@ -19,12 +20,8 @@ export default class Tasks extends React.Component {
         auth: ImmutablePropTypes.map,
         tasks: ImmutablePropTypes.map,
         projects: ImmutablePropTypes.map,
-        isAuthenticated: React.PropTypes.bool,
-        dispatch: React.PropTypes.func
-    }
-
-    handleSelectProject(project) {
-        console.log('selected:', project)
+        isAuthenticated: PropTypes.bool,
+        dispatch: PropTypes.func
     }
 
     render() {
@@ -35,14 +32,6 @@ export default class Tasks extends React.Component {
             <div className="react-container">
                 <div className="row">
                     <div className="col px900">
-
-                        {/*<ProjectsView
-                            tasks={tasks}
-                            projects={projects}
-                            projectActions={bindActionCreators(ProjectActions, dispatch)}
-                            taskActions={bindActionCreators(TaskActions, dispatch)}
-                        />
-                        */}
                         <TasksList
                             taskList={tasks.get('taskList')}
                             projectList={projectList}
@@ -52,10 +41,6 @@ export default class Tasks extends React.Component {
 
                     </div>
                     <div className="col px300">
-                        {/*<ProjectPicker*/}
-                            {/*projectList={projectList}*/}
-                            {/*selectProject={this.handleSelectProject}*/}
-                        {/*/>*/}
                         <TaskForm
                             onSubmit={bindActionCreators(TaskActions.createTask, dispatch)}
                             textLabel="Enter new task name"

@@ -1,5 +1,6 @@
 import moment from 'moment'
-import * as React from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import { DropTarget } from 'react-dnd'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import momentPropTypes from 'react-moment-proptypes'
@@ -26,18 +27,18 @@ function collectTarget(connect) {
 export default class ContentDnD extends React.Component {
 
     static propTypes = {
-        editMode: React.PropTypes.bool.isRequired,
+        editMode: PropTypes.bool.isRequired,
         timetables: ImmutablePropTypes.map.isRequired,
         momentDate: momentPropTypes.momentObj.isRequired,
         tasks: ImmutablePropTypes.list,
         projectColorMap: ImmutablePropTypes.map.isRequired,
-        taskActions: React.PropTypes.objectOf(React.PropTypes.func).isRequired,
-        changeSlotProjectID: React.PropTypes.func.isRequired,
-        connectDropTarget: React.PropTypes.func
+        taskActions: PropTypes.objectOf(PropTypes.func).isRequired,
+        changeSlotProjectID: PropTypes.func.isRequired,
+        connectDropTarget: PropTypes.func
     }
 
     static contextTypes = {
-        dragDropManager: React.PropTypes.object
+        dragDropManager: PropTypes.object
     }
 
     render() {
@@ -65,7 +66,7 @@ export default class ContentDnD extends React.Component {
         return connectDropTarget(
             <div
                 className="tt-content-dnd"
-                style={editMode ? {cursor: 'pointer'} : null}
+                style={editMode ? { cursor: 'pointer' } : null}
                 id="tt-content-dnd">
                 <CustomDragLayer
                     snapToGrid={true}

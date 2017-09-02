@@ -1,4 +1,5 @@
-import * as React from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import momentPropTypes from 'react-moment-proptypes'
 import { SPECIAL_PROJECTS } from '../../../utils/constants'
@@ -8,16 +9,16 @@ export default class Timeslot extends React.Component {
 
     static propTypes = {
         dateTime: momentPropTypes.momentObj.isRequired,
-        position: React.PropTypes.shape({
-            day: React.PropTypes.number,
-            slot: React.PropTypes.number,
-            steps: React.PropTypes.number
+        position: PropTypes.shape({
+            day: PropTypes.number,
+            slot: PropTypes.number,
+            steps: PropTypes.number
         }),
-        editMode: React.PropTypes.bool.isRequired,
+        editMode: PropTypes.bool.isRequired,
         workPeriods: ImmutablePropTypes.map.isRequired,
         projectColorMap: ImmutablePropTypes.map.isRequired,
-        currentProjectID: React.PropTypes.string,
-        changeSlotProjectID: React.PropTypes.func.isRequired
+        currentProjectID: PropTypes.string,
+        changeSlotProjectID: PropTypes.func.isRequired
     }
 
     static defaultProps = {

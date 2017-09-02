@@ -1,10 +1,11 @@
+import PropTypes from 'prop-types'
 import React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import ProjectsView from '../components/projects/ProjectsView'
-import * as TaskActions from '../modules/tasks'
 import * as ProjectActions from '../modules/projects'
+import * as TaskActions from '../modules/tasks'
 
 
 @connect(state => ({
@@ -19,8 +20,8 @@ export default class Projects extends React.Component {
         auth: ImmutablePropTypes.map,
         tasks: ImmutablePropTypes.map,
         projects: ImmutablePropTypes.map,
-        isAuthenticated: React.PropTypes.bool,
-        dispatch: React.PropTypes.func
+        isAuthenticated: PropTypes.bool,
+        dispatch: PropTypes.func
     }
 
     render() {

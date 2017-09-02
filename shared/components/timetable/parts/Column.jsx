@@ -1,5 +1,6 @@
 import moment from 'moment'
-import * as React from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import momentPropTypes from 'react-moment-proptypes'
 import Task from '../../tasks/Task'
@@ -8,13 +9,13 @@ import Timeslot from './Timeslot'
 
 export default class Column extends React.Component {
     static propTypes = {
-        editMode: React.PropTypes.bool.isRequired,
+        editMode: PropTypes.bool.isRequired,
         timetables: ImmutablePropTypes.map.isRequired,
         momentDayDate: momentPropTypes.momentObj.isRequired,
         dayTasks: ImmutablePropTypes.list,
         projectColorMap: ImmutablePropTypes.map.isRequired,
-        taskActions: React.PropTypes.objectOf(React.PropTypes.func).isRequired,
-        changeSlotProjectID: React.PropTypes.func.isRequired
+        taskActions: PropTypes.objectOf(PropTypes.func).isRequired,
+        changeSlotProjectID: PropTypes.func.isRequired
     }
 
 
@@ -43,10 +44,10 @@ export default class Column extends React.Component {
                     changeSlotProjectID={changeSlotProjectID}
                 />)
             }
-            timeslots.push(<div key={'group_' + hour} className="tt-timeslot-group"> { slots } </div>)
+            timeslots.push(<div key={'group_' + hour} className="tt-timeslot-group"> {slots} </div>)
         }
 
-        let taskItems = [], k2=0
+        let taskItems = [], k2 = 0
         for ( let task of dayTasks ) {
             const momentTaskStart = moment(task.get('start'))
             const positionStyle = {
@@ -69,8 +70,8 @@ export default class Column extends React.Component {
                     }/>)
         }
         return <div className="tt-column">
-            { timeslots }
-            { (taskItems !== []) ? <ul> { taskItems } </ul> : '' }
+            {timeslots}
+            {(taskItems !== []) ? <ul> {taskItems} </ul> : ''}
         </div>
     }
 }

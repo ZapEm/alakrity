@@ -1,4 +1,5 @@
-import * as React from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import { Link } from 'react-router'
 import LogoutButton from '../auth/Logout'
 import Spinner from './Spinner'
@@ -6,15 +7,15 @@ import Spinner from './Spinner'
 
 export default class Navbar extends React.Component {
     static propTypes = {
-        isWorking: React.PropTypes.bool,
-        isAuthenticated: React.PropTypes.bool.isRequired,
-        message: React.PropTypes.string,
-        logout: React.PropTypes.func.isRequired,
-        currentPath: React.PropTypes.string
+        isWorking: PropTypes.bool,
+        isAuthenticated: PropTypes.bool.isRequired,
+        message: PropTypes.string,
+        logout: PropTypes.func.isRequired,
+        currentPath: PropTypes.string
     }
 
     static contextTypes = {
-        router: React.PropTypes.object
+        router: PropTypes.object
     }
 
     constructor(props, context) {
@@ -26,7 +27,7 @@ export default class Navbar extends React.Component {
         return (
             <nav className="w3-row w3-top" style={{ maxWidth: '1200px' }}>
                 <div className="w3-bar w3-large w3-theme-d1">
-                    { isAuthenticated
+                    {isAuthenticated
                         ? [<Link
                                key={'timetable'} style={{ width: '15%' }}
                                className={(currentPath === '/' ? 'w3-theme-l1' :
@@ -46,17 +47,17 @@ export default class Navbar extends React.Component {
                                to={'/projects'}
                            >Projects</Link>
                         ] :
-                      <Link
-                          key={'login'} style={{ width: '15%' }}
-                          className={(currentPath === '/login' ? 'w3-theme-l1' :
-                                      'w3-hover-theme') + ' w3-bar-item w3-center no-underline'}
-                          to={'/login'}
-                      >Login</Link>
+                     <Link
+                         key={'login'} style={{ width: '15%' }}
+                         className={(currentPath === '/login' ? 'w3-theme-l1' :
+                                     'w3-hover-theme') + ' w3-bar-item w3-center no-underline'}
+                         to={'/login'}
+                     >Login</Link>
                     }
 
                     {isAuthenticated &&
                     <div className="w3-right">
-                        <LogoutButton onLogoutClick={ logout }/>
+                        <LogoutButton onLogoutClick={logout}/>
                     </div>}
                     <div className="w3-right w3-medium">
                         <Spinner status={isWorking ? 'WORKING' : isAuthenticated ? 'IDLE' : 'WARNING'}/>

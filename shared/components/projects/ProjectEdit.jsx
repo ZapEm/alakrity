@@ -1,17 +1,17 @@
-import Immutable from 'immutable'
 import * as _ from 'lodash/object'
-import * as React from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
+import { PROJECT_COLORS } from '../../utils/constants'
 import newId from '../../utils/newId'
 import ProjectColorPicker from './ProjectColorPicker'
-import { PROJECT_COLORS } from '../../utils/constants'
 
 export default class ProjectEdit extends React.Component {
 
     static propTypes = {
-        onSubmit: React.PropTypes.func.isRequired,
+        onSubmit: PropTypes.func.isRequired,
         project: ImmutablePropTypes.map.isRequired,
-        style: React.PropTypes.object
+        style: PropTypes.object
     }
 
     constructor(props) {
@@ -38,7 +38,7 @@ export default class ProjectEdit extends React.Component {
         } else {
             this.props.onSubmit(this.state.project)
             this.setState({
-                errors: [],
+                errors: []
                 //project: this.props.project.toJSON()
             })
         }

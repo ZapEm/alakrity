@@ -1,4 +1,5 @@
-import * as React from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import { DANGER_LEVELS } from '../../../utils/constants'
 import { MODAL_TYPES } from '../../../utils/enums'
 import LabeledIconButton from '../LabeledIconButton'
@@ -7,9 +8,9 @@ import { Modal } from './Modals'
 export default class ModalFooter extends React.Component {
 
     static propTypes = {
-        modal: React.PropTypes.instanceOf(Modal),
-        backendActions: React.PropTypes.objectOf(React.PropTypes.func).isRequired,
-        updateModal: React.PropTypes.func
+        modal: PropTypes.instanceOf(Modal),
+        backendActions: PropTypes.objectOf(PropTypes.func).isRequired,
+        updateModal: PropTypes.func
     }
 
     handleBegin(e) {
@@ -24,7 +25,7 @@ export default class ModalFooter extends React.Component {
         this.props.updateModal()
     }
 
-    getFooter(type){
+    getFooter(type) {
         const footers = {
             [MODAL_TYPES.REMINDER]: () => [
                 <LabeledIconButton
@@ -78,7 +79,6 @@ export default class ModalFooter extends React.Component {
 
     render() {
         const { modal } = this.props
-
 
 
         return <footer

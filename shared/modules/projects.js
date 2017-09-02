@@ -4,10 +4,9 @@ import moment from 'moment'
 import xss from 'xss'
 import { REJECTED_NAME as FAILURE, RESOLVED_NAME as SUCCESS } from '../utils/constants'
 import fetch from '../utils/fetcher'
-import { generateTempIDfromDate as tempID } from '../utils/tempID'
+import newId from '../utils/newId'
 
 import { LOGIN, LOGOUT } from './auth'
-import newId from '../utils/newId'
 
 
 // action types:

@@ -1,5 +1,6 @@
 import moment from 'moment'
-import * as React from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import { DragDropContext } from 'react-dnd'
 import HTML5Backend from 'react-dnd-html5-backend'
 import ImmutablePropTypes from 'react-immutable-proptypes'
@@ -11,7 +12,6 @@ import EditTimetableForm from '../components/timetable/EditTimetableForm'
 import TimetableView from '../components/timetable/TimetableView'
 import * as TaskActions from '../modules/tasks'
 import * as TimetableActions from '../modules/timetables'
-
 
 
 @connect(state => ({
@@ -31,8 +31,8 @@ export default class Timetable extends React.Component {
         timetables: ImmutablePropTypes.map,
         projects: ImmutablePropTypes.map,
         backend: ImmutablePropTypes.map,
-        isAuthenticated: React.PropTypes.bool,
-        dispatch: React.PropTypes.func
+        isAuthenticated: PropTypes.bool,
+        dispatch: PropTypes.func
     }
 
     componentDidMount() {
@@ -82,7 +82,7 @@ export default class Timetable extends React.Component {
                             editMode={editMode}
                             tasks={tasks}
                             projectList={projectList}
-                            {...backend.get('time') && {time: backend.get('time')}}
+                            {...backend.get('time') && { time: backend.get('time') }}
                             taskActions={bindActionCreators(TaskActions, dispatch)}
                             timetableActions={bindActionCreators(TimetableActions, dispatch)}
                         />

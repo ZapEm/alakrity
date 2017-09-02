@@ -1,5 +1,6 @@
 import Immutable from 'immutable'
 import moment from 'moment'
+import PropTypes from 'prop-types'
 import React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import MomentPropTypes from 'react-moment-proptypes'
@@ -16,10 +17,10 @@ export default class TasksList extends React.Component {
     static propTypes = {
         taskList: ImmutablePropTypes.list.isRequired,
         projectList: ImmutablePropTypes.list.isRequired,
-        taskActions: React.PropTypes.objectOf(React.PropTypes.func).isRequired,
-        draggable: React.PropTypes.bool,
+        taskActions: PropTypes.objectOf(PropTypes.func).isRequired,
+        draggable: PropTypes.bool,
         filterByMoment: MomentPropTypes.momentObj,
-        sidebar: React.PropTypes.bool
+        sidebar: PropTypes.bool
     }
 
     static defaultProps = {
@@ -47,7 +48,7 @@ export default class TasksList extends React.Component {
         console.log(e.target.value)
     }
 
-    handleQuickAddTask(e){
+    handleQuickAddTask(e) {
         e.preventDefault()
         this.props.taskActions.quickAddTask(this.state.project.get('id'))
     }

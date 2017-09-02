@@ -1,32 +1,20 @@
 import axios from 'axios'
-//import * as _ from 'lodash/object'
-//import { client } from 'config'
 import jwt from 'jsonwebtoken'
 import cookie from 'react-cookie'
-import transit from 'transit-immutable-js'
+
+// import { api as apiCfg } from 'config'
 
 // Set default values for requests on server and client:
 axios.defaults.timeout = 5000
 
 let apiCfg = {}
 if ( typeof window === 'undefined' ) {
-    // const config = require('config')
-    // apiCfg = client
-    apiCfg = {
-        protocol: 'http',
-        host: 'localhost',
-        port: 3000,
-        api: '/api/0/'
-    }
+    apiCfg = require('config').get('express')
 } else {
-    apiCfg = transit.fromJSON(window.__CONFIG__).api
+    apiCfg = require('config').api // via webpack alias and config/client.json file
 }
-// const apiCfg = client.get('api')
-
-//console.log(apiCfg, `${apiCfg.protocol}://${apiCfg.host}:${apiCfg.port}${apiCfg.api}`)
 axios.defaults.baseURL = `${apiCfg.protocol}://${apiCfg.host}:${apiCfg.port}${apiCfg.api}`
 
-// if ( typeof window === 'undefined' ) {
 //     // const serverCfg = config.get('express');
 //     // axios.defaults.baseURL = 'http://' + serverCfg.get('host') + ':' + serverCfg.get('port') + serverCfg.get('api');
 //     axios.defaults.baseURL = 'http://localhost:3000/api/0/'

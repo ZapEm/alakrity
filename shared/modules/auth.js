@@ -1,5 +1,5 @@
 import * as Immutable from 'immutable'
-import { omit as _omit, merge as _merge } from 'lodash/object'
+import { merge as _merge, omit as _omit } from 'lodash/object'
 import moment from 'moment'
 import cookie from 'react-cookie'
 import xss from 'xss'

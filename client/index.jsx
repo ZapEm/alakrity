@@ -15,14 +15,14 @@ const transitState = transit.fromJSON(window.__INITIAL_STATE__)
 const { store, history } = configureStore(browserHistory, transitState)
 
 const isDev = process.env.NODE_ENV !== 'production'
-const devTools = (isDev) ? <DevTools /> : null
+const devTools = (isDev) ? <DevTools/> : null
 
 
 render(
     <Provider store={store}>
         <div>
-            { isDev && <div className="debug"><p>## CLIENT ##</p></div> }
-            <Router children={routes} history={history}/>
+            {isDev && <div className="debug"><p>## CLIENT ##</p></div>}
+            <Router history={history}>{routes}</Router>
             {devTools}
         </div>
     </Provider>,

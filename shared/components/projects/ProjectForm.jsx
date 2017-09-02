@@ -1,6 +1,7 @@
 import Immutable from 'immutable'
 import * as _ from 'lodash/object'
-import * as React from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import newId from '../../utils/newId'
 import ProjectColorPicker from './ProjectColorPicker'
@@ -8,9 +9,9 @@ import ProjectColorPicker from './ProjectColorPicker'
 export default class ProjectForm extends React.Component {
 
     static propTypes = {
-        onSubmit: React.PropTypes.func.isRequired,
+        onSubmit: PropTypes.func.isRequired,
         project: ImmutablePropTypes.map,
-        colors: React.PropTypes.array.isRequired
+        colors: PropTypes.array.isRequired
     }
 
     static defaultProps = {

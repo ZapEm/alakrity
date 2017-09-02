@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import * as React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import IconButton from '../misc/IconButton'
@@ -5,10 +6,10 @@ import IconButton from '../misc/IconButton'
 
 export default class TaskForm extends React.Component {
     static propTypes = {
-        onSubmit: React.PropTypes.func.isRequired,
+        onSubmit: PropTypes.func.isRequired,
         task: ImmutablePropTypes.map,
-        textLabel: React.PropTypes.string,
-        editing: React.PropTypes.bool,
+        textLabel: PropTypes.string,
+        editing: PropTypes.bool,
         projectList: ImmutablePropTypes.list.isRequired
     }
 
@@ -113,7 +114,7 @@ export default class TaskForm extends React.Component {
                 />
                 <select
                     onChange={::this.handleSelectProject}
-                    className={'w3-select w3-right' + (disabled ? ' w3-text-gray' : '') }
+                    className={'w3-select w3-right' + (disabled ? ' w3-text-gray' : '')}
                     name="option"
                     style={{
                         padding: '8px 4px'

@@ -1,18 +1,19 @@
-import * as React from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import { DANGER_LEVELS } from '../../utils/constants'
 import newId from '../../utils/newId'
 
 export default class IconButton extends React.Component {
 
     static propTypes = {
-        iconName: React.PropTypes.string.isRequired,
-        formID: React.PropTypes.string,
-        tooltip: React.PropTypes.string,
-        label: React.PropTypes.string,
-        disabled: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.bool]),
-        onClick: React.PropTypes.func,
-        dangerLevel: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.object]),
-        style: React.PropTypes.object
+        iconName: PropTypes.string.isRequired,
+        formID: PropTypes.string,
+        tooltip: PropTypes.string,
+        label: PropTypes.string,
+        disabled: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+        onClick: PropTypes.func,
+        dangerLevel: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+        style: PropTypes.object
     }
 
     render() {
@@ -36,7 +37,8 @@ export default class IconButton extends React.Component {
 
         let button = <button
             form={formID}
-            className={'material-icons icon-button w3-round ' + (!disabled ? dangerLevel : DANGER_LEVELS.DISABLED.both + ' disabled')}
+            className={'material-icons icon-button w3-round ' + (!disabled ? dangerLevel :
+                                                                 DANGER_LEVELS.DISABLED.both + ' disabled')}
             id={id}
             style={style}
             onClick={onClick}

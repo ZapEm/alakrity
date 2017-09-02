@@ -1,5 +1,6 @@
 import * as Immutable from 'immutable'
-import * as React from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import tinycolor from 'tinycolor2'
 import { SPECIAL_PROJECTS } from '../../utils/constants'
@@ -9,7 +10,7 @@ export default class ProjectSelector extends React.Component {
     static propTypes = {
         projectList: ImmutablePropTypes.list.isRequired,
         specialProjects: ImmutablePropTypes.list,
-        selectProject: React.PropTypes.func.isRequired
+        selectProject: PropTypes.func.isRequired
     }
 
     constructor(props) {
@@ -83,13 +84,13 @@ export default class ProjectSelector extends React.Component {
         return <select
             onChange={::this.handleSelectProject}
             className={'project-selector w23-border-theme w3-round w3-select' + (disabled ? ' w3-text-gray' :
-                                                                                          '')}
+                                                                                 '')}
             name="option"
             style={{
                 backgroundColor: this.state.currentProject ?
                                  tinycolor(this.state.currentProject.get('color')).brighten(10) : 'none',
                 border: this.state.currentProject ?
-                                 'solid 1px ' + tinycolor(this.state.currentProject.get('color')).brighten(-35) : 'none'
+                        'solid 1px ' + tinycolor(this.state.currentProject.get('color')).brighten(-35) : 'none'
             }}
             disabled={disabled}
         >
