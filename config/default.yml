@@ -6,12 +6,13 @@ rethinkdbdash:
   - host: localhost
     port: 28015
     db: alakrity_db
-express:
+express: &EXP
   host: localhost
+  protocol: http
   port: 3000
   api: /api/0/
 auth:
   jwtExpiresIn: 2h
   jwtSecret: MuchSecretSuchWow
 client: # The settings below are send to the client and are therefore not secure!
-  apiUrl: https://localhost:3000/api/0/
+  api: *EXP # from the express settings.

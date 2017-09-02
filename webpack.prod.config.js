@@ -1,7 +1,10 @@
 var path = require('path')
 var webpack = require('webpack')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
+const clientConfig = require('config').get('client')
+const fs = require('fs')
 
+fs.writeFileSync(path.resolve(__dirname, 'config/client.json'), JSON.stringify(clientConfig))
 
 const BABEL_QUERY = {
     presets: ['nodejs6', 'es2015', 'stage-0', 'react'],
@@ -33,7 +36,10 @@ module.exports = {
     ],
     resolve: {
         modulesDirectories: ['node_modules', 'shared'],
-        extensions: ['', '.js', '.jsx', '.styl', '.css', '.ico', '.svg']
+        extensions: ['', '.js', '.jsx', '.styl', '.css', '.ico', '.svg', '.json'],
+        alias: {
+            config: path.resolve(__dirname, 'config/client.json')
+        }
     },
     output: {
         path: path.join(__dirname, 'dist'),

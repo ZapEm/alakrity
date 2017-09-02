@@ -31,7 +31,7 @@ const BABEL_QUERY = {
 
 export default function (app) {
     const config = Object.assign(prodCfg, {
-        devtool: (process.env.NODE_SOURCEMAP == 'eval') ? 'eval' : 'inline-source-map',
+        devtool: (process.env.NODE_SOURCEMAP === 'eval') ? 'eval' : 'inline-source-map',
         entry: [
             'webpack-hot-middleware/client',
             './client'

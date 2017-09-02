@@ -1,23 +1,39 @@
 import axios from 'axios'
+//import * as _ from 'lodash/object'
+//import { client } from 'config'
 import jwt from 'jsonwebtoken'
 import cookie from 'react-cookie'
 import transit from 'transit-immutable-js'
-import * as _ from 'lodash/object'
-//import config from 'config';
-
 
 // Set default values for requests on server and client:
 axios.defaults.timeout = 5000
 
-
+let apiCfg = {}
 if ( typeof window === 'undefined' ) {
-    // const serverCfg = config.get('express');
-    // axios.defaults.baseURL = 'http://' + serverCfg.get('host') + ':' + serverCfg.get('port') + serverCfg.get('api');
-    axios.defaults.baseURL = 'http://localhost:3000/api/0/'
+    // const config = require('config')
+    // apiCfg = client
+    apiCfg = {
+        protocol: 'http',
+        host: 'localhost',
+        port: 3000,
+        api: '/api/0/'
+    }
 } else {
-    axios.defaults.baseURL = transit.fromJSON(window.__CONFIG__).apiUrl
+    apiCfg = transit.fromJSON(window.__CONFIG__).api
 }
+// const apiCfg = client.get('api')
 
+//console.log(apiCfg, `${apiCfg.protocol}://${apiCfg.host}:${apiCfg.port}${apiCfg.api}`)
+axios.defaults.baseURL = `${apiCfg.protocol}://${apiCfg.host}:${apiCfg.port}${apiCfg.api}`
+
+// if ( typeof window === 'undefined' ) {
+//     // const serverCfg = config.get('express');
+//     // axios.defaults.baseURL = 'http://' + serverCfg.get('host') + ':' + serverCfg.get('port') + serverCfg.get('api');
+//     axios.defaults.baseURL = 'http://localhost:3000/api/0/'
+// } else {
+//     api = transit.fromJSON(window.__CONFIG__).api
+//     axios.defaults.baseURL = `${apiCfg.protocol}://${apiCfg.host}:${apiCfg.port}${apiCfg.api}`
+// }
 
 const methods = ['get', 'post', 'delete']
 
@@ -58,5 +74,4 @@ class ApiFetcher {
     }
 }
 
-const fetch = new ApiFetcher()
-export default fetch
+export default new ApiFetcher()

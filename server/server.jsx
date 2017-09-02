@@ -2,6 +2,7 @@ import bodyParser from 'body-parser'
 import config from 'config'
 import express from 'express'
 import * as fs from 'fs'
+import * as http from 'http'
 import * as https from 'https'
 import * as Immutable from 'immutable'
 import jwt from 'jsonwebtoken'
@@ -12,26 +13,30 @@ import cookie from 'react-cookie'
 import * as ReactDOMServer from 'react-dom/server'
 import { Provider } from 'react-redux'
 import { createMemoryHistory, match, RouterContext } from 'react-router'
+import { resetIdCounter } from 'react-tabs'
 import transit from 'transit-immutable-js'
 import configureStore from '../shared/configureStore'
 import DevTools from '../shared/containers/devTools'
 import routes from '../shared/routes'
 import getRouters from './api/routes'
 import { serverGetInitial } from './api/utils/serverQueries'
-import { resetIdCounter } from 'react-tabs'
 
 
 const isDev = (process.env.NODE_ENV !== 'production')
 
 const app = express()
 
-const httpsServer = https.createServer({
-    key: fs.readFileSync((isDev) ? './tls/dev/localhost.key' : './tls/alakrity.key'),
-    cert: fs.readFileSync((isDev) ? './tls/dev/localhost.crt' : './tls/alakrity.crt')
-}, app)
+const server = (config.get('express.protocol').toString() === 'https') ?
+                    https.createServer({
+                        key: fs.readFileSync((isDev) ? './tls/dev/localhost.key' : './tls/alakrity.key'),
+                        cert: fs.readFileSync((isDev) ? './tls/dev/localhost.crt' : './tls/alakrity.crt')
+                    }, app) :
+                    http.createServer(app)
+
 
 const port = config.get('express.port') || 3000
 console.log('ENVIRONMENT =', process.env.NODE_ENV)
+console.log('Protocol =', config.get('express.protocol'))
 
 if ( isDev ) {
 
@@ -83,7 +88,7 @@ app.use((req, res) => {
     }
 
     serverGetInitial(userID).then(response => {
-        // response = [ currentTimetable, [timetableList...], [tasks...], [projects...] ]
+                                // response = [ currentTimetable, [timetableList...], [tasks...], [projects...] ]
                                 // console.log(response);
                                 const prelimState = {
                                     auth: Immutable.fromJS(
@@ -128,7 +133,7 @@ app.use((req, res) => {
                                     }
 
                                     if ( !renderProps ) return res.status(404).end('Not found.')
-                                    const devTools = (isDev) ? <DevTools /> : null
+                                    const devTools = (isDev) ? <DevTools/> : null
 
 
                                     if ( redirectLocation ) {
@@ -144,7 +149,7 @@ app.use((req, res) => {
                                     let html = ReactDOMServer.renderToString(
                                         <Provider store={store}>
                                             <div>
-                                                { isDev && <div className="debug"><p>## SERVER ##</p></div> }
+                                                {isDev && <div className="debug"><p>## SERVER ##</p></div>}
                                                 <RouterContext {...renderProps} />
                                                 {devTools}
                                             </div>
@@ -170,11 +175,11 @@ app.use((req, res) => {
 
 
 if ( isDev ) {
-    httpsServer.listen(port, () =>
+    server.listen(port, () =>
         console.log('Development server listening on:', port)
     )
 } else {
-    httpsServer.listen(port, '0.0.0.0', () =>
+    server.listen(port, '0.0.0.0', () =>
         console.log('Production server listening on:', port)
     )
 }

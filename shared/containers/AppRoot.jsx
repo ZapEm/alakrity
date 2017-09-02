@@ -44,11 +44,11 @@ export default class AppRoot extends React.Component {
         const { isWorking, isAuthenticated, message, dispatch, currentPath, backend, taskList, projectList } = this.props
         return (
             <div id="app-view" className="main-app">
-                <ModalComponent
+                {isAuthenticated && <ModalComponent
                     modalsOM={backend.get('modalsOM')}
                     projectList={projectList}
                     backendActions={bindActionCreators(backendActions, dispatch)}
-                />
+                />}
                 <Navbar
                     isAuthenticated={isAuthenticated}
                     isWorking={isWorking}
@@ -56,10 +56,10 @@ export default class AppRoot extends React.Component {
                     currentPath={currentPath}
                     logout={bindActionCreators(logout, dispatch)}
                 />
-                <Clock
+                {isAuthenticated && <Clock
                     taskList={taskList}
                     backendActions={bindActionCreators(backendActions, dispatch)}
-                />
+                />}
 
                 {this.props.children}
 

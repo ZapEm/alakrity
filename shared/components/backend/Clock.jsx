@@ -1,6 +1,5 @@
 import * as React from 'react'
 import * as ImmutablePropTypes from 'react-immutable-proptypes'
-import { ReminderModal } from '../misc/Modals/Modals'
 
 
 export default class Clock extends React.Component {
@@ -26,16 +25,20 @@ export default class Clock extends React.Component {
     }
 
     tick() {
+
         const time = new Date()
-        this.setState({
-            time: time
-        })
+        if ( this.refs.clockRef ) {
+            this.setState({
+                time: time
+            })
+
+        }
 
         // do once per minute...
         if ( !this.currentMinute || time.getMinutes() !== this.currentMinute ) {
             this.currentMinute = time.getMinutes()
 
-            this.props.backendActions.updateUpcomingTasks(this.props.taskList, time, 30)
+            this.props.backendActions.updateUpcomingTasks(this.props.taskList, time, 10)
 
             // const immediateSchedule = this.getImmediateSchedule(this.props.taskList, 1)
             //
@@ -67,7 +70,7 @@ export default class Clock extends React.Component {
 
     render() {
         //const {  } = this.props
-        return <div className="clock-wrapper w3-row w3-top">
+        return <div className="clock-wrapper w3-row w3-top" ref="clockRef">
             <div className="clock w3-right w3-large w3-theme-d1">
                 {
                     this.state.time.toLocaleTimeString()
