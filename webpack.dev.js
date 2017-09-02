@@ -37,21 +37,28 @@ export default function (app) {
             './client'
         ],
         module: {
-            loaders: [
+            rules: [
                 {
                     test: /\.jsx?$/,
                     exclude: /node_modules/,
-                    loader: 'babel',
+                    loader: 'babel-loader',
                     query: BABEL_QUERY
                 },
                 {
                     test: /main\.styl$/,
-                    loader: 'style-loader!css-loader!stylus-loader'
+                    use: [
+                        'style-loader',
+                        'css-loader',
+                        'stylus-loader'
+                    ]
                 },
                 {
                     test: /\.(jpg|jpeg|gif|png|ico|svg)$/,
                     exclude: /node_modules/,
-                    loader: 'file-loader?name=[name].[ext]'
+                    loader: 'file-loader',
+                    options: {
+                        name: '[name].[ext]'
+                    }
                 }
             ]
         },
@@ -60,10 +67,9 @@ export default function (app) {
                 'paths': true,
                 'guards': true
             }),
-            new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/),
-            new webpack.optimize.OccurenceOrderPlugin(),
+            new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /en/),
             new webpack.HotModuleReplacementPlugin(),
-            new webpack.NoErrorsPlugin()
+            new webpack.NoEmitOnErrorsPlugin()
         ]
     })
 

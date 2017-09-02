@@ -1,6 +1,6 @@
 import { routerMiddleware, syncHistoryWithStore } from 'react-router-redux'
 import { applyMiddleware, compose, createStore } from 'redux'
-import createLogger from 'redux-logger'
+import { createLogger } from 'redux-logger'
 import optimistPromiseMiddleware from 'redux-optimist-promise'
 import DevTools from '../shared/containers/devTools'
 import reducer from '../shared/modules/reducer'
@@ -11,7 +11,17 @@ import * as myMiddlewares from './utils/middlewares'
 export default function configureStore(baseHistory, initialState, isServer = false) {
 
     let enhancer = compose(
-        applyMiddleware(routerMiddleware(baseHistory), optimistPromiseMiddleware(RESOLVED_NAME, REJECTED_NAME), myMiddlewares.authErrorLogout())
+        applyMiddleware(
+            routerMiddleware(baseHistory),
+            optimistPromiseMiddleware(
+                {
+                    resolvedName: RESOLVED_NAME,
+                    rejectedName: REJECTED_NAME,
+                    throwOnReject: false
+                }
+            ),
+            myMiddlewares.authErrorLogout()
+        )
     )
 
     if ( process.env.NODE_ENV !== 'production' ) {

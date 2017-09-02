@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 import { DragDropContext } from 'react-dnd'
 import HTML5Backend from 'react-dnd-html5-backend'
@@ -12,6 +13,8 @@ import * as ImmutablePropTypes from 'react-immutable-proptypes'
 import Clock from '../components/backend/Clock'
 import * as backendActions from '../modules/backend'
 
+
+@DragDropContext(HTML5Backend)
 @connect(state => ({
     isWorking: checkWorking(state),
     isAuthenticated: state.auth.get('isAuthenticated'),
@@ -21,7 +24,6 @@ import * as backendActions from '../modules/backend'
     projectList: state.projects.get('projectList'),
     currentPath: state.routing.locationBeforeTransitions.pathname || '/'
 }))
-@DragDropContext(HTML5Backend)
 export default class AppRoot extends React.Component {
 
     static propTypes = {
@@ -37,13 +39,15 @@ export default class AppRoot extends React.Component {
     }
 
     static childContextTypes = {
-        dragDropManager: React.PropTypes.object
+        dragDropManager: PropTypes.object,
+        storeSubscription: PropTypes.any
     }
 
     render() {
         const { isWorking, isAuthenticated, message, dispatch, currentPath, backend, taskList, projectList } = this.props
-        return (
-            <div id="app-view" className="main-app">
+        return (<div id="app-view" className="main-app">
+
+
                 {isAuthenticated && <ModalComponent
                     modalsOM={backend.get('modalsOM')}
                     projectList={projectList}
@@ -64,6 +68,7 @@ export default class AppRoot extends React.Component {
                 {this.props.children}
 
             </div>
+
         )
     }
 }

@@ -1,25 +1,30 @@
 import { routerActions } from 'react-router-redux'
-import { UserAuthWrapper } from 'redux-auth-wrapper'
+import { connectedReduxRedirect as UserAuthWrapper } from 'redux-auth-wrapper/history3/redirect'
+import locationHelperBuilder from 'redux-auth-wrapper/history3/locationHelper'
+
 import Loading from '../components/misc/Spinner'
 
-// Redirects to /login by default
-export const UserIsAuthenticated = UserAuthWrapper({
-    authSelector: state => state.auth, // how to get the user state
-    authenticatingSelector: state => state.auth.get('isWorking'),
-    predicate: auth => auth.get('isAuthenticated'),
-    LoadingComponent: Loading,
-    redirectAction: routerActions.replace, // the redux action to dispatch for redirect
-    wrapperDisplayName: 'UserIsAuthenticated' // a nice name for this auth check
-})
 
-export const UserIsNotAuthenticated = UserAuthWrapper({
-    authSelector: state => state.auth,
-    redirectAction: routerActions.replace,
-    wrapperDisplayName: 'UserIsNotAuthenticated',
-    // Want to redirect the user when they are done loading and authenticated
-    predicate: auth => auth.get('isAuthenticated') === false && auth.get('isWorking') === false,
-    failureRedirectPath: (state, ownProps) => {
-        return (ownProps && ownProps.location.query.redirect) ? ownProps.location.query.redirect : '/'
-    },
-    allowRedirectBack: false
-})
+const locationHelper = locationHelperBuilder({})
+
+// Redirects to /login by default
+export const UserIsAuthenticated = UserAuthWrapper(
+    {
+        wrapperDisplayName: 'UserIsAuthenticated', // a nice name for this auth check,
+        redirectPath: '/login',
+        authenticatedSelector: state => state.auth.get('isAuthenticated'),
+        authenticatingSelector: state => state.auth.get('isWorking'),
+        LoadingComponent: Loading,
+        redirectAction: routerActions.replace // the redux action to dispatch for redirect
+    }
+)
+
+export const UserIsNotAuthenticated = UserAuthWrapper(
+    {
+        wrapperDisplayName: 'UserIsNotAuthenticated',
+        redirectPath: (state, ownProps) => locationHelper.getRedirectQueryParam(ownProps) || '/',
+        redirectAction: routerActions.replace,
+        authenticatedSelector: state => state.auth.get('isAuthenticated') === false && state.auth.get('isWorking') === false,
+        allowRedirectBack: false
+    }
+)

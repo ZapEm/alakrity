@@ -7,16 +7,17 @@ export default class Login extends React.Component {
         errorMessage: React.PropTypes.string
     }
 
-    handleSubmit() {
-        this.props.login(this.refs.username.value.trim(), this.refs.password.value.trim())
+    handleSubmit(e) {
+        e.preventDefault()
+        this.props.login(this.username.value.trim(), this.password.value.trim())
     }
 
     render() {
 
         return (
             <form onSubmit={::this.handleSubmit}>
-                <input type="text" ref="username" className="form-control" placeholder="Username" autoFocus/>
-                <input type="password" ref="password" className="form-control" placeholder="Password"/>
+                <input type="text" ref={username => this.username = username} className="form-control" placeholder="Username" autoFocus/>
+                <input type="password" ref={password => this.password = password} className="form-control" placeholder="Password"/>
                 <button className="btn btn-primary">
                     Login
                 </button>

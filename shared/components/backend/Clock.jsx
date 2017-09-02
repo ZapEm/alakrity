@@ -27,7 +27,7 @@ export default class Clock extends React.Component {
     tick() {
 
         const time = new Date()
-        if ( this.refs.clockRef ) {
+        if ( this.clockRef ) {
             this.setState({
                 time: time
             })
@@ -70,7 +70,7 @@ export default class Clock extends React.Component {
 
     render() {
         //const {  } = this.props
-        return <div className="clock-wrapper w3-row w3-top" ref="clockRef">
+        return <div className="clock-wrapper w3-row w3-top" ref={clockRef => this.clockRef = clockRef}>
             <div className="clock w3-right w3-large w3-theme-d1">
                 {
                     this.state.time.toLocaleTimeString()

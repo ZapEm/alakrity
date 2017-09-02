@@ -35,8 +35,8 @@ module.exports = {
         './client'
     ],
     resolve: {
-        modulesDirectories: ['node_modules', 'shared'],
-        extensions: ['', '.js', '.jsx', '.styl', '.css', '.ico', '.svg', '.json'],
+        modules: ['node_modules', 'shared'],
+        extensions: ['.js', '.jsx', '.styl', '.css', '.ico', '.svg', '.json'],
         alias: {
             config: path.resolve(__dirname, 'config/client.json')
         }
@@ -47,21 +47,27 @@ module.exports = {
         publicPath: '/'
     },
     module: {
-        loaders: [
+        rules: [
             {
                 test: /\.jsx?$/,
                 exclude: /node_modules/,
-                loader: 'babel',
+                loader: 'babel-loader',
                 query: BABEL_QUERY
             },
             {
                 test: /\.styl$/,
-                loader: ExtractTextPlugin.extract('style-loader', 'css-loader!stylus-loader')
+                use: ExtractTextPlugin.extract({
+                    fallback: 'style-loader',
+                    use: ['css-loader', 'stylus-loader']
+                })
             },
             {
                 test: /\.(jpg|jpeg|gif|png|ico|svg)$/,
                 exclude: /node_modules/,
-                loader: 'file-loader?name=[name].[ext]'
+                loader: 'file-loader',
+                options: {
+                    name: '[name].[ext]'
+                }
             }
         ]
     },
@@ -72,18 +78,14 @@ module.exports = {
         fs: 'empty'
     },
     plugins: [
-        new ExtractTextPlugin('style.css'),
+        new ExtractTextPlugin({filename: 'style.css'}),
         new webpack.DefinePlugin({
             'process.env': {
                 NODE_ENV: '"production"'
             }
         }),
-        new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/),
-        new webpack.optimize.OccurenceOrderPlugin(),
-        new webpack.optimize.UglifyJsPlugin({
-            compress: {
-                warnings: false
-            }
-        })
+        new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /en/),
+        // new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/),
+        new webpack.optimize.UglifyJsPlugin()
     ]
 }
