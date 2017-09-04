@@ -34,7 +34,7 @@ export default class ProjectsList extends React.Component {
             </li>
         }
 
-        return <ul className="projects-list">
+        return <ul className="projects-list w3-card-4 w3-padding w3-round-large w3-border w3-border-theme w3-margin-top">
             {projectElements}
         </ul>
     }

@@ -12,6 +12,7 @@ import * as TaskActions from '../modules/tasks'
     auth: state.auth,
     tasks: state.tasks,
     projects: state.projects,
+    settings: state.settings,
     isAuthenticated: state.auth.get('isAuthenticated')
 }))
 export default class Tasks extends React.Component {
@@ -20,13 +21,15 @@ export default class Tasks extends React.Component {
         auth: ImmutablePropTypes.map,
         tasks: ImmutablePropTypes.map,
         projects: ImmutablePropTypes.map,
+        settings: ImmutablePropTypes.map,
         isAuthenticated: PropTypes.bool,
         dispatch: PropTypes.func
     }
 
     render() {
-        const { tasks, projects, dispatch } = this.props
+        const { tasks, projects, dispatch, settings } = this.props
         const projectList = projects.get('projectList')
+        const locale = settings.get('locale')
 
         return (
             <div className="react-container">
@@ -35,6 +38,7 @@ export default class Tasks extends React.Component {
                         <TasksList
                             taskList={tasks.get('taskList')}
                             projectList={projectList}
+                            locale={locale}
                             draggable={false}
                             taskActions={bindActionCreators(TaskActions, dispatch)}
                         />

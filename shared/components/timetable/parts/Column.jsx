@@ -15,12 +15,13 @@ export default class Column extends React.Component {
         dayTasks: ImmutablePropTypes.list,
         projectColorMap: ImmutablePropTypes.map.isRequired,
         taskActions: PropTypes.objectOf(PropTypes.func).isRequired,
-        changeSlotProjectID: PropTypes.func.isRequired
+        changeSlotProjectID: PropTypes.func.isRequired,
+        locale: PropTypes.string.isRequired
     }
 
 
     render() {
-        const { editMode, timetables, dayTasks, taskActions, changeSlotProjectID, momentDayDate, projectColorMap } = this.props
+        const { editMode, timetables, dayTasks, taskActions, changeSlotProjectID, momentDayDate, projectColorMap, locale } = this.props
 
         const timetable = timetables.get('timetable')
         const dayNr = momentDayDate.isoWeekday() - 1
@@ -62,6 +63,7 @@ export default class Column extends React.Component {
                     projectColorMap={projectColorMap}
                     draggable={true}
                     taskActions={taskActions}
+                    locale={locale}
                     liWrapper={
                         {
                             className: 'tt-task-item',

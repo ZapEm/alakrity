@@ -5,20 +5,22 @@ import React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import newId from '../../utils/newId'
 import ProjectColorPicker from './ProjectColorPicker'
+import { TASK_TYPES } from '../../utils/constants'
 
 export default class ProjectForm extends React.Component {
 
     static propTypes = {
         onSubmit: PropTypes.func.isRequired,
-        project: ImmutablePropTypes.map,
-        colors: PropTypes.array.isRequired
+        project: ImmutablePropTypes.map
     }
 
     static defaultProps = {
         project: Immutable.fromJS(
             {
                 title: '',
-                color: '#FFFFFF'
+                color: '#FFFFFF',
+                defaultTaskType: TASK_TYPES.standard,
+                tracked: true
             }
         )
     }
@@ -74,7 +76,7 @@ export default class ProjectForm extends React.Component {
         const { project, colors } = this.props
 
         return <form
-            className="project-formtask-form w3-container w3-card-2 w3-round-large w3-border w3-border-theme w3-leftbar w3-rightbar"
+            className="project-form w3-container w3-card-2 w3-round-large w3-border w3-border-theme w3-leftbar w3-rightbar"
             onSubmit={::this.handleSubmit}>
 
             <label htmlFor={this.id + '_title'}>Name</label>

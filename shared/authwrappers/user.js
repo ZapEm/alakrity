@@ -2,7 +2,7 @@ import { routerActions } from 'react-router-redux'
 import locationHelperBuilder from 'redux-auth-wrapper/history3/locationHelper'
 import { connectedReduxRedirect as UserAuthWrapper } from 'redux-auth-wrapper/history3/redirect'
 
-import Loading from '../components/misc/Spinner'
+import Loading from '../components/misc/Loading'
 
 
 const locationHelper = locationHelperBuilder({})
@@ -14,7 +14,7 @@ export const UserIsAuthenticated = UserAuthWrapper(
         redirectPath: '/login',
         authenticatedSelector: state => state.auth.get('isAuthenticated'),
         authenticatingSelector: state => state.auth.get('isWorking'),
-        LoadingComponent: Loading,
+        AuthenticatingComponent: Loading,
         redirectAction: routerActions.replace // the redux action to dispatch for redirect
     }
 )

@@ -12,6 +12,7 @@ import * as TaskActions from '../modules/tasks'
     auth: state.auth,
     tasks: state.tasks,
     projects: state.projects,
+    settings: state.settings,
     isAuthenticated: state.auth.get('isAuthenticated')
 }))
 export default class Projects extends React.Component {
@@ -21,6 +22,7 @@ export default class Projects extends React.Component {
         tasks: ImmutablePropTypes.map,
         projects: ImmutablePropTypes.map,
         isAuthenticated: PropTypes.bool,
+        settings: ImmutablePropTypes.map,
         dispatch: PropTypes.func
     }
 
@@ -40,6 +42,7 @@ export default class Projects extends React.Component {
 
                     </div>
                     <div className="col px300">
+
                     </div>
                 </div>
             </div>

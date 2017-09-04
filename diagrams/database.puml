@@ -20,6 +20,9 @@ together {
     table(Timetables) {
         primary_key(id) : str
         secondary_key(userID) : str
+        + created : datetime
+        + lastEdited : datetime
+        ....
         + title : str
         + start : int
         + end : int
@@ -27,31 +30,32 @@ together {
         + workPeriods : { colors, selection }
         ~ .colors : str[]
         ~ .selection : int[ [], [], ... ]
-        + created : datetime
-        + lastEdited : datetime
     }
 
 
     table(Projects) {
         primary_key(id)
         secondary_key(userID)
-        + type : str[work, chore, personal, sport, break]
-        + title : str
-        + color : hex
         + created : datetime
         + lastEdited : datetime
+        ....
+        + defaultTaskType : number
+        + tracked : bool
+        + title : str
+        + color : hex
     }
 
     table(Tasks) {
         primary_key(id) : str
         secondary_key(userID) : str
         secondary_key(projectID) : str
-        + repeating: bool
-        + duration : int
-        + start : datetime
-        + text : str
         + created : datetime
         + lastEdited : datetime
+        ....
+        + type: number
+        + duration : int
+        + start : datetime
+        + title : str
     }
 
 }

@@ -17,13 +17,14 @@ export default class TimetableView extends React.Component {
         editMode: PropTypes.bool.isRequired,
         timetables: ImmutablePropTypes.map.isRequired,
         timetableActions: PropTypes.objectOf(PropTypes.func).isRequired,
-        userSettings: PropTypes.object.isRequired,
+        settings: ImmutablePropTypes.map.isRequired,
+        settingsActions: PropTypes.object.isRequired,
         time: PropTypes.instanceOf(Date)
     }
 
     render() {
 
-        const { taskActions, tasks, projectList, timetables, timetableActions, editMode, userSettings, time } = this.props
+        const { taskActions, tasks, projectList, timetables, timetableActions, editMode, settings, settingsActions, time } = this.props
         const taskList = !editMode ? tasks.get('taskList') : Immutable.List()
 
         const date = timetables.get('currentWeek') || moment()
@@ -37,7 +38,8 @@ export default class TimetableView extends React.Component {
                 editMode={editMode}
                 timetableActions={timetableActions}
                 timetables={timetables}
-                userSettings={userSettings}
+                settings={settings}
+                settingsActions={settingsActions}
                 time={time}
             />
         )

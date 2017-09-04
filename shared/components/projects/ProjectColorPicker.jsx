@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import newId from '../../utils/newId'
+import { PROJECT_COLORS } from '../../utils/constants'
 
 
 export default class ProjectColorPicker extends React.Component {
@@ -31,7 +32,7 @@ export default class ProjectColorPicker extends React.Component {
                 isActive: false
             }
         )
-        this.props.setColor(this.props.colors[+e.target.value])
+        this.props.setColor(PROJECT_COLORS[+e.target.value])
         // convoluted way to un-focus the color picker button to close the drawer.
         this.colorPicker.blur()
     }
@@ -47,10 +48,10 @@ export default class ProjectColorPicker extends React.Component {
     }
 
     render() {
-        const { colors, label } = this.props
+        const { label } = this.props
 
         let colorButtons = []
-        for ( let i = 0; i < colors.length; i++ ) {
+        for ( let i = 0; i < PROJECT_COLORS.length; i++ ) {
             colorButtons.push(
                 <button
                     key={'color_' + i}
@@ -60,7 +61,7 @@ export default class ProjectColorPicker extends React.Component {
                     onMouseDown={::this.handleColorClick}
                     style={
                         {
-                            backgroundColor: colors[i]
+                            backgroundColor: PROJECT_COLORS[i]
                         }
                     }
                 />
@@ -78,7 +79,7 @@ export default class ProjectColorPicker extends React.Component {
                 className="w3-btn w3-round tt-toolbar-color-option w3-dropdown-click"
                 style={
                     {
-                        backgroundColor: colors[this.state.pickedColor]
+                        backgroundColor: PROJECT_COLORS[this.state.pickedColor]
                     }
                 }
             />

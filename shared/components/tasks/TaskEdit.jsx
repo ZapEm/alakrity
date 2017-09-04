@@ -9,6 +9,7 @@ import { DndTypes } from '../../utils/enums'
 import newId from '../../utils/newId'
 import { getDurationDelta } from '../dnd/dndFunctions'
 import IconButton from '../misc/IconButton'
+import { LOCALE_STRINGS } from '../../utils/constants'
 
 
 const dragSource = {
@@ -45,11 +46,16 @@ export default class TaskEdit extends React.Component {
         monitor: PropTypes.func,
         item: PropTypes.object,
         itemType: PropTypes.string,
-        colors: PropTypes.object
+        colors: PropTypes.object,
+        locale: PropTypes.string.isRequired
     }
 
+    // static defaultProps = {
+    //     locale: 'en'
+    // }
+
     static contextTypes = {
-        dragDropManager: PropTypes.object
+        dragDropManager: PropTypes.object,
     }
 
     constructor(props) {
@@ -104,7 +110,7 @@ export default class TaskEdit extends React.Component {
     }
 
     render() {
-        const { connectDragSource, isDragging, colors } = this.props
+        const { connectDragSource, isDragging, colors, locale } = this.props
 
         const colorStyle = {
             backgroundColor: colors.normal,
@@ -121,7 +127,7 @@ export default class TaskEdit extends React.Component {
             <form
                 id={formID}
                 onSubmit={::this.handleSubmit}
-                className="task-item task-item-edit w3-card-2 w3-round-large w3-display-container"
+                className="task-item task-item-edit w3-card w3-round-large w3-display-container"
                 style={
                     _.merge({}, colorStyle, {
                         height: this.state.duration / 20 + 'rem'
@@ -140,7 +146,7 @@ export default class TaskEdit extends React.Component {
                             onChange={::this.handleTextChange}
                             defaultValue={this.state.text}/>
                     </div>
-                    {durationCutoff && <p className="task-item-info duration">{this.state.duration / 60} hours</p>}
+                    {durationCutoff && <p className="task-item-info duration">{(this.state.duration / 60) + LOCALE_STRINGS[locale].hours}</p>}
                 </div>
 
                 {connectDragSource(<div

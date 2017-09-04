@@ -3,6 +3,7 @@ import * as projects from './projects'
 import * as tasks from './tasks'
 import * as timetables from './timetables'
 import * as users from './users'
+import * as settings from './settings'
 // import { Router } from 'express'
 import { authMiddleware } from './utils/authentication'
 
@@ -15,8 +16,10 @@ export default function getRouters(express) {
     router.post('/auth/', auth.login)
 
     router.post('/users', users.addUser)
-    routerWithAuth.delete('/users/:id', users.removeUser) //TODO
-    routerWithAuth.post('/users/:id', users.editUser) //TODO
+    routerWithAuth.delete('/user', users.removeUser) //TODO
+    routerWithAuth.post('/user', users.editUser)
+
+    routerWithAuth.post('/settings', settings.editSettings)
 
     routerWithAuth.get('/tasks', tasks.getTasks)
     routerWithAuth.post('/tasks', tasks.addTask)

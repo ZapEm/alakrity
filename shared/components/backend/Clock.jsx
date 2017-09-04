@@ -40,44 +40,16 @@ export default class Clock extends React.Component {
             this.currentMinute = time.getMinutes()
 
             this.props.backendActions.updateUpcomingTasks(this.props.taskList, time, 10)
-
-            // const immediateSchedule = this.getImmediateSchedule(this.props.taskList, 1)
-            //
-            // if(immediateSchedule.size > 0) {
-            //     this.props.backendActions.addModal(immediateSchedule.map((task) => new ReminderModal(task)))
-            // }
-
-            //console.log(this.currentMinute, immediateSchedule.toJSON())
-
             this.props.backendActions.setTime(time)
         }
     }
 
-    // /**
-    //  * Gets all tasks that start between 'now' and 'in <lookahead> hours'
-    //  * @param taskList <Immutable list> of tasks (with start: date)
-    //  * @param lookahead <int> time in hours
-    //  * @return Immutable list
-    //  */
-    // getImmediateSchedule(taskList, lookahead) {
-    //     if ( taskList ) {
-    //         const lookAheadDate = new Date(this.state.time.getTime() + (lookahead * 3600000))
-    //         return taskList.filter((task) => {
-    //             const startTime = new Date(task.get('start'))
-    //             return ( startTime >= this.state.time && startTime < lookAheadDate)
-    //         })
-    //     }
-    // }
-
     render() {
-        //const {  } = this.props
-        return <div className="clock-wrapper w3-row w3-top" ref={clockRef => this.clockRef = clockRef}>
-            <div className="clock w3-right w3-large w3-theme-d1">
-                {
-                    this.state.time.toLocaleTimeString()
-                }
-            </div>
+        return <div
+            className="clock"
+            ref={ref => this.clockRef = ref}
+        >
+            <span className="w3-large w3-theme-d1">{this.state.time.toLocaleTimeString()}</span>
         </div>
-
     }
 }

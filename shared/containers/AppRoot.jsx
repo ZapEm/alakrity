@@ -6,7 +6,6 @@ import HTML5Backend from 'react-dnd-html5-backend'
 import * as ImmutablePropTypes from 'react-immutable-proptypes'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import Clock from '../components/backend/Clock'
 import ModalComponent from '../components/misc/Modals/ModalComponent'
 import Navbar from '../components/misc/Navbar'
 import { logout } from '../modules/auth'
@@ -20,6 +19,7 @@ import { checkWorking } from '../utils/stateChecks'
     isAuthenticated: state.auth.get('isAuthenticated'),
     message: state.auth.get('message') || '',
     backend: state.backend,
+    settings: state.settings,
     taskList: state.tasks.get('taskList'),
     projectList: state.projects.get('projectList'),
     currentPath: state.routing.locationBeforeTransitions.pathname || '/'
@@ -35,20 +35,22 @@ export default class AppRoot extends React.Component {
         taskList: ImmutablePropTypes.list,
         projectList: ImmutablePropTypes.list,
         dispatch: PropTypes.func,
-        currentPath: PropTypes.string
+        currentPath: PropTypes.string,
+        settings: ImmutablePropTypes.map
     }
 
     static childContextTypes = {
         dragDropManager: PropTypes.object,
-        storeSubscription: PropTypes.any
+        storeSubscription: PropTypes.any,
     }
 
+
     render() {
-        const { isWorking, isAuthenticated, message, dispatch, currentPath, backend, taskList, projectList } = this.props
-        return (<div id="app-view" className="main-app">
-
-
+        const { isWorking, isAuthenticated, message, dispatch, currentPath, backend, taskList, projectList, settings } = this.props
+        return (
+            <div id="app-view">
                 {isAuthenticated && <ModalComponent
+                    settings={settings}
                     modalsOM={backend.get('modalsOM')}
                     projectList={projectList}
                     backendActions={bindActionCreators(backendActions, dispatch)}
@@ -59,16 +61,11 @@ export default class AppRoot extends React.Component {
                     message={message}
                     currentPath={currentPath}
                     logout={bindActionCreators(logout, dispatch)}
-                />
-                {isAuthenticated && <Clock
                     taskList={taskList}
                     backendActions={bindActionCreators(backendActions, dispatch)}
-                />}
-
-                {this.props.children}
-
+                />
+                <div id="main-view">{this.props.children}</div>
             </div>
-
         )
     }
 }

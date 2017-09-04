@@ -39,14 +39,15 @@ export const SPECIAL_PROJECTS = Object.freeze(
             normal: '#7ccb81',
             light: '#b9f4b7',
             backgroundPattern: `${generateRepeatingLinearLines(255, 255, 255, 0.4, 45, 3, 6)}`
-        },
-        ONE_TIME: {
-            title: 'Appointments',
-            key: '_ONE_TIME',
-            dark: '#5f0006',
-            normal: '#9b0913',
-            light: '#c6444e'
         }
+    }
+)
+
+export const TASK_TYPES = Object.freeze(
+    {
+        standard: 0,
+        oneTime: 1,
+        repeating: 2
     }
 )
 
@@ -70,6 +71,28 @@ export const DANGER_LEVELS = Object.freeze(
         },
         DISABLED: {
             both: 'w3-text-gray'
+        }
+    }
+)
+
+export const DEFAULT_SETTINGS = Object.freeze(
+    {
+        isDefault: true,
+        locale: 'en'
+    }
+)
+
+export const LOCALE_STRINGS = Object.freeze(
+    {
+        en: {
+            hours: ' hours',
+            dateFormat: 'MMM, D.',
+            changeFrom: 'Change to German date/time format'
+        },
+        de: {
+            hours: ' Stunden',
+            dateFormat: 'D. MMM',
+            changeFrom: 'Change to US date/time format'
         }
     }
 )

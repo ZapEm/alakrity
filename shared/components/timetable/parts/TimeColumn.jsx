@@ -8,11 +8,12 @@ export default class TimeColumn extends React.Component {
 
     static propTypes = {
         timetable: ImmutablePropTypes.map.isRequired,
-        time: PropTypes.instanceOf(Date)
+        time: PropTypes.instanceOf(Date),
+        locale: PropTypes.string.isRequired
     }
 
     render() {
-        const { timetable, time } = this.props
+        const { timetable, time, locale } = this.props
         const endMoment = moment({ hour: timetable.get('end') })
 
         let percent = 0
@@ -40,11 +41,11 @@ export default class TimeColumn extends React.Component {
         }
 
         let timeLabels = []
-        for ( let dt = moment({ hour: timetable.get('start') }); dt.isBefore(endMoment); dt.add(1, 'h') ) {
+        for ( let dt = moment({ hour: timetable.get('start') }).locale(locale); dt.isBefore(endMoment); dt.add(1, 'h') ) {
             timeLabels.push(
                 <div
                     key={dt.hour()}
-                    className="tt-timecolumn-time"
+                    className={'tt-timecolumn-time'}
                 >
                     {dt.format('LT')}
                 </div>

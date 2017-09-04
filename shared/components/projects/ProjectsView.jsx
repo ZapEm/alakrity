@@ -24,11 +24,6 @@ export default class ProjectsView extends React.Component {
 
         return (
             <div className="projects-view">
-                <ProjectFrom
-                    onSubmit={projectActions.createProject}
-                    colors={PROJECT_COLORS}
-                />
-
                 <ProjectsList
                     projectList={projects.get('projectList')}
                     projectActions={projectActions}

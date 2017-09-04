@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'
 import React from 'react'
+import LabeledIconButton from '../misc/LabeledIconButton'
 
 export default class CreateAccount extends React.Component {
 
@@ -19,13 +20,32 @@ export default class CreateAccount extends React.Component {
         const { errorMessage } = this.props
 
         return (
-            <form onSubmit={() => this.handleSubmit()}>
-                <input type="text" ref={userRef => this.userRef = userRef} className="form-control" placeholder="Username"/>
-                <input type="password" ref={pwRef => this.pwRef = pwRef} className="form-control" placeholder="Password"/>
-                <button className="btn btn-primary">
-                    Create Account
-                </button>
+            <form
+                className="auth-form-create"
+                onSubmit={() => this.handleSubmit()}
+            >
+                <input
+                    className="auth-form-input w3-input"
+                    type="text"
+                    ref={userRef => this.userRef = userRef}
+                    placeholder="Username"/>
+                <input
+                    className="auth-form-input w3-input"
+                    type="password"
+                    ref={pwRef => this.pwRef = pwRef}
+                    placeholder="Password"/>
 
+                <div className="auth-form-right">
+                    <LabeledIconButton
+                        style={{
+                            marginLeft: 'auto',
+                            marginRight: 0
+                        }}
+                        label="Create Account"
+                        iconName="person_add"
+                        onClick={::this.handleSubmit}
+                    />
+                </div>
                 {errorMessage &&
                 <p> {errorMessage} </p>
                 }

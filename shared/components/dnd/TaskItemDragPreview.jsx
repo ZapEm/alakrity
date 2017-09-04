@@ -1,16 +1,48 @@
+import classNames from 'classnames'
 import PropTypes from 'prop-types'
 import React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
+import Immutable from 'immutable'
+import { LOCALE_STRINGS, TASK_TYPES } from '../../utils/constants'
+import * as _ from 'lodash/object'
 
 export default class TaskItemDragPreview extends React.Component {
 
     static propTypes = {
         task: PropTypes.object.isRequired,
-        projectColorMap: ImmutablePropTypes.map.isRequired
+        projectColorMap: ImmutablePropTypes.map.isRequired,
+        locale: PropTypes.string.isRequired,
+        notDragging: PropTypes.bool
     }
 
+    static defaultPropTypes = {
+        notDragging: false
+    }
+
+    constructor(props) {
+        super(props)
+
+        const colors = (this.props.projectColorMap.get(this.props.task.projectID) || Immutable.fromJS({
+            normal: 'magenta',
+            dark: 'darkred',
+            light: 'lightred',
+            special: {
+                normal: 'cyan',
+                dark: 'darkblue',
+                light: 'lightblue'
+            }
+        })).toJSON()
+
+        this.state = {
+            colors: !this.props.task.type ?
+                    _.omit(colors, ['special']) :
+                    colors.special
+        }
+    }
+
+
     render() {
-        const { task, projectColorMap } = this.props
+        const { task, locale, notDragging } = this.props
         const durationCutoff = task.duration >= 90
 
         return (
@@ -24,18 +56,24 @@ export default class TaskItemDragPreview extends React.Component {
                         pointerEvents: 'none'
                     }
                 }>
-                <div className={'task-item w3-card-4 w3-round-large' + (task.projectID.startsWith('_') ? ' special' :
-                                                                        '')}
-                     style={
-                         {
-                             backgroundColor: projectColorMap.getIn([task.projectID, 'normal']),
-                             borderColor: projectColorMap.getIn([task.projectID, 'dark'])
-                         }
-                     }>
+                <div
+                    className={classNames('task-item', {
+                        'w3-card': notDragging,
+                        'w3-card-4': !notDragging,
+                        'w3-round-large': !(task.type === TASK_TYPES.repeating),
+                        'special': task.type > TASK_TYPES.standard
+                    })}
+
+                    style={
+                        {
+                            backgroundColor: this.state.colors.normal,
+                            borderColor: this.state.colors.dark
+                        }
+                    }>
                     <div className="task-item-info">
                         <p className="task-item-info title">{task.text}</p>
                         {durationCutoff &&
-                        <p className="task-item-info duration">{task.duration / 60} hours</p>}
+                        <p className="task-item-info duration">{(task.duration / 60) + LOCALE_STRINGS[locale].hours}</p>}
                     </div>
                 </div>
             </div>)

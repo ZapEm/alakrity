@@ -12,7 +12,7 @@ import EditTimetableForm from '../components/timetable/EditTimetableForm'
 import TimetableView from '../components/timetable/TimetableView'
 import * as TaskActions from '../modules/tasks'
 import * as TimetableActions from '../modules/timetables'
-
+import * as SettingsActions from '../modules/settings'
 
 @connect(state => ({
     auth: state.auth,
@@ -20,9 +20,9 @@ import * as TimetableActions from '../modules/timetables'
     projects: state.projects,
     timetables: state.timetables,
     backend: state.backend,
+    settings: state.settings,
     isAuthenticated: state.auth.get('isAuthenticated')
 }))
-@DragDropContext(HTML5Backend)
 export default class Timetable extends React.Component {
 
     static propTypes = {
@@ -31,6 +31,7 @@ export default class Timetable extends React.Component {
         timetables: ImmutablePropTypes.map,
         projects: ImmutablePropTypes.map,
         backend: ImmutablePropTypes.map,
+        settings: ImmutablePropTypes.map,
         isAuthenticated: PropTypes.bool,
         dispatch: PropTypes.func
     }
@@ -60,8 +61,8 @@ export default class Timetable extends React.Component {
     }
 
     render() {
-        const { tasks, dispatch, timetables, projects, backend } = this.props
-        const userSettings = {}
+        const { tasks, dispatch, timetables, projects, backend, settings } = this.props
+        const locale = settings.get('locale')
         const editMode = timetables.get('editMode')
         const projectList = projects.get('projectList')
 
@@ -77,14 +78,15 @@ export default class Timetable extends React.Component {
                 <div className="row">
                     <div className="col px900">
                         <TimetableView
+                            settings={settings}
                             timetables={timetables}
-                            userSettings={userSettings}
                             editMode={editMode}
                             tasks={tasks}
                             projectList={projectList}
                             {...backend.get('time') && { time: backend.get('time') }}
                             taskActions={bindActionCreators(TaskActions, dispatch)}
                             timetableActions={bindActionCreators(TimetableActions, dispatch)}
+                            settingsActions={bindActionCreators(SettingsActions, dispatch)}
                         />
                     </div>
                     {(!editMode) ?
@@ -92,6 +94,7 @@ export default class Timetable extends React.Component {
                          <TasksList
                              taskList={tasks.get('taskList')}
                              projectList={projectList}
+                             locale={locale}
                              draggable={true}
                              filterByMoment={timetables.get('currentWeek')}
                              taskActions={bindActionCreators(TaskActions, dispatch)}

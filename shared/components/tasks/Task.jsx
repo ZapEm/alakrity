@@ -1,3 +1,5 @@
+import classNames from 'classnames'
+import * as _ from 'lodash/object'
 import { merge as _merge } from 'lodash/object'
 import PropTypes from 'prop-types'
 import React from 'react'
@@ -5,10 +7,11 @@ import React from 'react'
 import { DragSource } from 'react-dnd'
 import { getEmptyImage } from 'react-dnd-html5-backend'
 import ImmutablePropTypes from 'react-immutable-proptypes'
-import { DANGER_LEVELS } from '../../utils/constants'
+import { DANGER_LEVELS, LOCALE_STRINGS, TASK_TYPES } from '../../utils/constants'
 import { DndTypes } from '../../utils/enums'
 import IconButton from '../misc/IconButton'
 import TaskEdit from './TaskEdit'
+import Immutable from 'immutable'
 
 const dragSource = {
     canDrag(props) {
@@ -59,7 +62,8 @@ export default class Task extends React.Component {
         connectDragSource: PropTypes.func,
         connectDragPreview: PropTypes.func,
         isDragging: PropTypes.bool,
-        liWrapper: PropTypes.object
+        liWrapper: PropTypes.object,
+        locale: PropTypes.string.isRequired
     }
 
     static contextTypes = {
@@ -111,7 +115,7 @@ export default class Task extends React.Component {
     render() {
         const {
             task, taskActions: { removeTask }, editable, draggable, connectDragSource, isDragging, liWrapper,
-            projectColorMap
+            projectColorMap, locale
         } = this.props
 
 
@@ -121,12 +125,22 @@ export default class Task extends React.Component {
 
         const durationCutoff = task.get('duration') >= 90
 
-        const projectID = task.get('projectID')
-        const itemColors = {
-            normal: projectColorMap.getIn([projectID, 'normal']),
-            dark: projectColorMap.getIn([projectID, 'dark']),
-            light: projectColorMap.getIn([projectID, 'light'])
-        }
+
+        const colors = (projectColorMap.get(task.get('projectID')) || Immutable.fromJS({
+            normal: 'magenta',
+            dark: 'darkred',
+            light: 'lightred',
+            special: {
+                normal: 'cyan',
+                dark: 'darkblue',
+                light: 'lightblue'
+            }
+        })).toJSON()
+
+        const itemColors = !task.get('type') ?
+                           _.omit(colors, ['special']) :
+                           colors.special
+
         const dragStyle = draggable ?
             {
                 cursor: 'move'
@@ -137,13 +151,18 @@ export default class Task extends React.Component {
             element = <TaskEdit
                 colors={itemColors}
                 task={task}
+                locale={locale}
                 onSubmit={(task) => this.handleSave(task)}
             />
         } else {
             element =
                 <div
-                    className={'task-item w3-card-2 w3-round-large w3-display-container' + (projectID.startsWith('_') ?
-                                                                                            ' special' : '')}
+                    className={classNames('task-item', 'w3-card', 'w3-display-container', {
+                            'w3-round-large': !(task.get('projectType') === TASK_TYPES.repeating),
+                            'special': task.get('projectType') > TASK_TYPES.standard
+                        }
+                    )
+                    }
                     style={_merge({}, {
                             backgroundColor: itemColors.normal,
                             borderColor: itemColors.dark
@@ -157,7 +176,8 @@ export default class Task extends React.Component {
                 >
                     <div className="task-item-info">
                         <p className="title">{task.get('text')}</p>
-                        {durationCutoff && <p className="duration">{task.get('duration') / 60} hours</p>}
+                        {durationCutoff &&
+                        <p className="duration">{(task.get('duration') / 60) + LOCALE_STRINGS[locale].hours}</p>}
                     </div>
                     <div className="task-item-buttons w3-display-hover w3-display-topright">
                         {editable &&

@@ -23,14 +23,14 @@ export default class EditTimetableForm extends React.Component {
     componentWillMount() {
         this.setState(
             {
-                timetable: this.props.timetables.get('timetable').toJSON()
+                timetable: this.props.timetables.get('timetable')
             }
         )
     }
 
     componentWillReceiveProps(nextProps) {
         if ( this.props.timetables.get('timetable') !== nextProps.timetables.get('timetable') ) {
-            this.setState({ timetable: nextProps.timetables.get('timetable').toJSON() })
+            this.setState({ timetable: nextProps.timetables.get('timetable') })
         }
     }
 
@@ -40,7 +40,7 @@ export default class EditTimetableForm extends React.Component {
     }
 
     handleTitleChange(e) {
-        this.setState({ timetable: { title: e.target.value } })
+        this.setState({ timetable: this.state.timetable.merge({ title: e.target.value }) })
     }
 
     handleSelectTimetable(e) {
@@ -134,7 +134,7 @@ export default class EditTimetableForm extends React.Component {
                             id="tt_title"
                             type="text"
                             placeholder={textLabel}
-                            value={this.state.timetable.title}
+                            value={this.state.timetable.get('title')}
                             onChange={::this.handleTitleChange}
                         />
                     </div>

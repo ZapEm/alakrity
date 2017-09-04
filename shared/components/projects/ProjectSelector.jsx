@@ -9,7 +9,6 @@ export default class ProjectSelector extends React.Component {
 
     static propTypes = {
         projectList: ImmutablePropTypes.list.isRequired,
-        specialProjects: ImmutablePropTypes.list,
         selectProject: PropTypes.func.isRequired
     }
 
@@ -24,34 +23,20 @@ export default class ProjectSelector extends React.Component {
 
     handleSelectProject(e) {
         e.preventDefault()
-        const currentProject = ((key) => {
-            const actions = {
-                [SPECIAL_PROJECTS.ONE_TIME.key]: () => Immutable.Map(
-                    {
-                        title: SPECIAL_PROJECTS.ONE_TIME.title,
-                        id: SPECIAL_PROJECTS.ONE_TIME.key,
-                        color: SPECIAL_PROJECTS.ONE_TIME.normal
-                    })
-            }
-
-            if ( typeof actions[key] !== 'function' ) {
-                return this.props.projectList.get(key)
-            }
-            return actions[key]()
-        })(e.target.value)
+        const currentProject = this.props.projectList.get(e.target.value)
 
         this.setState({ currentProject: currentProject })
         this.props.selectProject(currentProject)
     }
 
     render() {
-        const { projectList, specialProjects } = this.props
+        const { projectList } = this.props
 
         const disabled = (projectList.size === 0) ? 'A project needs to be created first.' : false
         let projectSelectOptions = []
         if ( !disabled ) {
             let i = 0
-            for ( let project of projectList ) {
+            for ( const project of projectList ) {
                 projectSelectOptions.push(
                     <option
                         className="project-selector-option"
@@ -61,16 +46,16 @@ export default class ProjectSelector extends React.Component {
                     >{project.get('title')}</option>
                 )
             }
-            for ( let project of specialProjects ) {
-                projectSelectOptions.push(
-                    <option
-                        className="project-selector-option"
-                        key={project.get('key')}
-                        value={project.get('key')}
-                        style={{ backgroundColor: project.get('light') }}
-                    >{project.get('title')}</option>
-                )
-            }
+            // for ( const project of Object.values(SPECIAL_PROJECTS) ) {
+            //     projectSelectOptions.push(
+            //         <option
+            //             className="project-selector-option"
+            //             key={project.key}
+            //             value={project.key}
+            //             style={{ backgroundColor: project.light }}
+            //         >{project.title}</option>
+            //     )
+            // }
 
         } else {
             projectSelectOptions.push(

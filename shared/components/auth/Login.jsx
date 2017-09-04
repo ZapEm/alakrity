@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'
 import React from 'react'
+import LabeledIconButton from '../misc/LabeledIconButton'
 
 
 export default class Login extends React.Component {
@@ -17,14 +18,31 @@ export default class Login extends React.Component {
     render() {
 
         return (
-            <form onSubmit={::this.handleSubmit}>
-                <input type="text" ref={username => this.username = username} className="form-control"
-                       placeholder="Username" autoFocus/>
-                <input type="password" ref={password => this.password = password} className="form-control"
-                       placeholder="Password"/>
-                <button className="btn btn-primary">
-                    Login
-                </button>
+            <form
+                className="auth-form-login"
+                onSubmit={::this.handleSubmit}
+            >
+                <input
+                    className="auth-form-input w3-input"
+                    type="text"
+                    ref={username => this.username = username}
+                    placeholder="Username" autoFocus/>
+                <input
+                    className="auth-form-input w3-input"
+                    type="password"
+                    ref={password => this.password = password}
+                    placeholder="Password"/>
+                <div className="auth-form-right">
+                    <LabeledIconButton
+                        style={{
+                            marginLeft: 'auto',
+                            marginRight: 0
+                        }}
+                        label="Login"
+                        iconName="lock_open"
+                        onClick={::this.handleSubmit}
+                    />
+                </div>
             </form>
         )
     }

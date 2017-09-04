@@ -2,27 +2,14 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import CreateAccountForm from '../components/auth/CreateAccount'
-import LoginForm from '../components/auth/Login'
-import { createUser, login } from '../modules/auth'
-// import { checkWorking }         from '../utils/stateChecks';
-// import ImmutablePropTypes           from 'react-immutable-proptypes';
-
-//state => ({
-// auth: state.auth,
-// tasks: state.tasks,
-// isWorking: checkWorking(state),
-// isAuthenticated: state.auth.get('isAuthenticated')})
+import AuthForm from '../components/auth/AuthForm'
+import * as authActions from '../modules/auth'
 
 
 @connect()
 export default class Login extends React.Component {
 
     static propTypes = {
-        // auth: ImmutablePropTypes.map,
-        // tasks: ImmutablePropTypes.map,
-        // isWorking: PropTypes.bool,
-        // isAuthenticated: PropTypes.bool,
         dispatch: PropTypes.func
     }
 
@@ -30,15 +17,24 @@ export default class Login extends React.Component {
     render() {
         const { dispatch } = this.props
         return (
-            <div className="react-container">
-                <div className="login-form">
-                    <span>Please log in...</span>
-                    <LoginForm
-                        login={bindActionCreators(login, dispatch)}
-                    />
-                    <CreateAccountForm
-                        createUser={bindActionCreators(createUser, dispatch)}
-                    />
+            <div className="row">
+                <div className="col px900">
+                    <div className="welcome w3-card-4 w3-padding w3-border w3-border-theme w3-round-large">
+                        <h2 className="w3-text-theme w3-center">Alakrity Week Scheduler</h2>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis blandit vehicula sem ac
+                            porttitor. Ut id ligula velit. Donec arcu eros, consequat non nunc eget, aliquet dictum
+                            felis. Sed eget libero quis libero consectetur dictum sed eget justo. </p>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis blandit vehicula sem ac
+                            porttitor. Ut id ligula velit. Donec arcu eros, consequat non nunc eget, aliquet dictum
+                            felis. Sed eget libero quis libero consectetur dictum sed eget justo. </p>
+                    </div>
+                </div>
+                <div className="col px300">
+                    <div className="login-sidebar w3-card-4 w3-padding w3-border w3-border-theme w3-round-large">
+                        <AuthForm
+                            authActions={bindActionCreators(authActions, dispatch)}
+                        />
+                    </div>
                 </div>
             </div>
         )

@@ -27,7 +27,7 @@ export function addUser(req, res) {
 }
 
 export function editUser(req, res) {
-    rethink.edit('users', req.params.id, req.body)
+    rethink.edit('users', res.locals.decoded.id, req.body)
            .then((user) => res.json(user))
            .catch(err => {
                res.status(400)

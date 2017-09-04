@@ -72,6 +72,14 @@ export function remove(tableName, id) {
               })
 }
 
+
+/**
+ * @deprecated
+ * @param username
+ * @param hash
+ * @param permissions
+ * @returns {Promise.<object>|*}
+ */
 export function createUser(username, hash, permissions = 'user') {
     return rdb
         .table('users')

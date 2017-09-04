@@ -18,6 +18,7 @@ export default class TasksList extends React.Component {
         taskList: ImmutablePropTypes.list.isRequired,
         projectList: ImmutablePropTypes.list.isRequired,
         taskActions: PropTypes.objectOf(PropTypes.func).isRequired,
+        locale: PropTypes.string.isRequired,
         draggable: PropTypes.bool,
         filterByMoment: MomentPropTypes.momentObj,
         sidebar: PropTypes.bool
@@ -76,7 +77,7 @@ export default class TasksList extends React.Component {
     }
 
     render() {
-        const { draggable, taskActions, taskList, projectList, sidebar = false } = this.props
+        const { draggable, taskActions, taskList, projectList, sidebar = false, locale } = this.props
         let taskItems
 
         const filter = this.getFilter(this.state.filterRadioSelection)
@@ -91,6 +92,7 @@ export default class TasksList extends React.Component {
                     taskActions={taskActions}
                     draggable={draggable}
                     editable={true}
+                    locale={locale}
                     liWrapper={
                         {
                             className: 'task-list-item',

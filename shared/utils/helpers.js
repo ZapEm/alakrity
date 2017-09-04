@@ -12,22 +12,19 @@ export function getProjectColorMap(projectList) {
     let colorMap = {}
     projectList.forEach(project => {
             const color = project.get('color')
+
             colorMap[project.get('id')] = {
                 normal: color,
                 light: tinycolor(color).brighten(10).toHexString(),
-                dark: tinycolor(color).brighten(-35).toHexString()
+                dark: tinycolor(color).brighten(-35).toHexString(),
+                special: {
+                    normal: tinycolor(color).brighten(-30).toHexString(),
+                    light: tinycolor(color).brighten(-10).toHexString(),
+                    dark: tinycolor(color).brighten(-50).toHexString()
+                }
             }
         }
     )
-
-    // Object.entries(SPECIAL_PROJECTS).forEach(project => {
-    //         colorMap[project.key] = {
-    //             normal: project.normal,
-    //             light: project.light,
-    //             dark: project.dark
-    //         }
-    //     }
-    // )
 
     Immutable.fromJS(SPECIAL_PROJECTS).forEach(project => {
             colorMap[project.get('key')] = {

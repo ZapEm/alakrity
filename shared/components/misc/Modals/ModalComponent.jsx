@@ -12,7 +12,8 @@ export default class ModalComponent extends React.Component {
     static propTypes = {
         modalsOM: ImmutablePropTypes.orderedMap.isRequired,
         backendActions: PropTypes.objectOf(PropTypes.func).isRequired,
-        projectList: ImmutablePropTypes.list.isRequired
+        projectList: ImmutablePropTypes.list.isRequired,
+        settings: ImmutablePropTypes.map.isRequired
     }
 
     constructor(props) {
@@ -67,7 +68,7 @@ export default class ModalComponent extends React.Component {
     }
 
     render() {
-        const { modalsOM, backendActions } = this.props
+        const { modalsOM, backendActions, settings } = this.props
         const { modalKey } = this.state
 
         if ( modalKey === '' ) {
@@ -93,6 +94,7 @@ export default class ModalComponent extends React.Component {
                     <ModalContent
                         modal={currentModal}
                         projectColorMap={this.state.projectColorMap}
+                        settings={settings}
                     />
 
                     <ModalFooter

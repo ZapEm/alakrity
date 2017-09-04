@@ -6,6 +6,7 @@ import * as http from 'http'
 import * as https from 'https'
 import * as Immutable from 'immutable'
 import jwt from 'jsonwebtoken'
+import { isEmpty } from 'lodash/lang'
 import * as path from 'path'
 
 import React from 'react'
@@ -18,6 +19,7 @@ import transit from 'transit-immutable-js'
 import configureStore from '../shared/configureStore'
 import DevTools from '../shared/containers/devTools'
 import routes from '../shared/routes'
+import { DEFAULT_SETTINGS } from '../shared/utils/constants'
 import getRouters from './api/routes'
 import { serverGetInitial } from './api/utils/serverQueries'
 
@@ -89,7 +91,6 @@ app.use((req, res) => {
 
     serverGetInitial(userID).then(response => {
                                 // response = [ currentTimetable, [timetableList...], [tasks...], [projects...] ]
-                                // console.log(response);
                                 const prelimState = {
                                     auth: Immutable.fromJS(
                                         {
@@ -120,7 +121,8 @@ app.use((req, res) => {
                                             isWorking: false,
                                             projectList: response[3] || []
                                         }
-                                    )
+                                    ),
+                                    settings: Immutable.fromJS(!isEmpty(response[4]) ? response[4] : DEFAULT_SETTINGS)
                                 }
 
                                 const serverHistory = createMemoryHistory(req.url)

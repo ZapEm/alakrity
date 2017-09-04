@@ -67,7 +67,7 @@ export default function (app) {
                 'paths': true,
                 'guards': true
             }),
-            new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /en/),
+            new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /(en|de)/),
             new webpack.HotModuleReplacementPlugin(),
             new webpack.NoEmitOnErrorsPlugin()
         ]

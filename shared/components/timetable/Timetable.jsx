@@ -20,7 +20,9 @@ export default class Timetable extends React.Component {
         taskActions: PropTypes.objectOf(PropTypes.func).isRequired,
         editMode: PropTypes.bool.isRequired,
         timetableActions: PropTypes.object.isRequired,
+        settingsActions: PropTypes.object.isRequired,
         timetables: ImmutablePropTypes.map.isRequired,
+        settings: ImmutablePropTypes.map.isRequired,
         time: PropTypes.instanceOf(Date)
     }
 
@@ -35,8 +37,10 @@ export default class Timetable extends React.Component {
 
 
     render() {
-        const { date, tasks, taskActions, editMode, timetableActions, timetables, time } = this.props
+        const { date, tasks, taskActions, editMode, timetableActions, settingsActions, timetables, settings, time } = this.props
         const momentDate = moment.isMoment(date) ? date : moment(date)
+        const locale = settings.get('locale')
+        momentDate.locale(locale)
 
         return (
             <div className={(editMode ? 'tt-edit-mode ' : '') + 'tt-timetable w3-border-theme w3-card-4'}
@@ -49,11 +53,15 @@ export default class Timetable extends React.Component {
                 />
                 <HeaderRow
                     momentDate={momentDate}
+                    editMode={editMode}
+                    locale={locale}
+                    settingsActions={settingsActions}
                 />
                 <div className="tt-body">
                     <TimeColumn
                         timetable={timetables.get('timetable')}
                         time={time}
+                        locale={locale}
                     />
                     <ContentDnD
                         editMode={editMode}
@@ -63,6 +71,7 @@ export default class Timetable extends React.Component {
                         tasks={tasks}
                         taskActions={taskActions}
                         changeSlotProjectID={timetableActions.changeSlotProjectID}
+                        locale={locale}
                     />
                 </div>
             </div>

@@ -84,7 +84,7 @@ module.exports = {
                 NODE_ENV: '"production"'
             }
         }),
-        new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /en/),
+        new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /(en|de)/),
         // new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/),
         new webpack.optimize.UglifyJsPlugin()
     ]

@@ -34,7 +34,8 @@ export default class ContentDnD extends React.Component {
         projectColorMap: ImmutablePropTypes.map.isRequired,
         taskActions: PropTypes.objectOf(PropTypes.func).isRequired,
         changeSlotProjectID: PropTypes.func.isRequired,
-        connectDropTarget: PropTypes.func
+        connectDropTarget: PropTypes.func,
+        locale: PropTypes.string.isRequired
     }
 
     static contextTypes = {
@@ -44,7 +45,7 @@ export default class ContentDnD extends React.Component {
     render() {
         const {
             editMode, momentDate, timetables, tasks, taskActions, connectDropTarget,
-            changeSlotProjectID, projectColorMap
+            changeSlotProjectID, projectColorMap, locale
         } = this.props
 
         let momentDayDate = momentDate.clone().isoWeekday(1) // calculate this weeks mondays date from any day of the week.
@@ -53,6 +54,7 @@ export default class ContentDnD extends React.Component {
             const dayTasks = tasks.filter((task) => (moment(task.get('start')).isSame(momentDayDate, 'day')))
             columns.push(<Column key={i}
                                  editMode={editMode}
+                                 locale={locale}
                                  timetables={timetables}
                                  momentDayDate={momentDayDate.clone()}
                                  dayTasks={dayTasks}
@@ -71,6 +73,7 @@ export default class ContentDnD extends React.Component {
                 <CustomDragLayer
                     snapToGrid={true}
                     projectColorMap={projectColorMap}
+                    locale={locale}
                 />
                 {columns}
             </div>

@@ -7,13 +7,20 @@ export default class Logout extends React.Component {
         onLogoutClick: PropTypes.func.isRequired
     }
 
-    render() {
-        const { onLogoutClick } = this.props
+    handleLogout(e){
+        e.preventDefault()
+        this.props.onLogoutClick()
+    }
 
+    render() {
         return (
-            <button onClick={() => onLogoutClick()} className="w3-btn w3-theme-d4">
+            <a
+                className="w3-hover-theme w3-bar-item w3-center no-underline"
+                href=""
+                onClick={::this.handleLogout}
+            >
                 Logout
-            </button>
+            </a>
         )
     }
 }

@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import React, { Component } from 'react'
 import { DragLayer } from 'react-dnd'
 
 import shallowEqual from 'react-dnd/lib/utils/shallowEqual'
@@ -25,11 +25,8 @@ export default class CustomDragLayer extends Component {
         isDragging: PropTypes.bool,
         snapToGrid: PropTypes.bool.isRequired,
         projectColorMap: ImmutablePropTypes.map.isRequired,
-        monitor: PropTypes.object
-    }
-
-    shouldComponentUpdate(nextProps, nextState) {
-        return !arePropsEqual(nextProps, this.props) || !shallowEqual(nextState, this.state)
+        monitor: PropTypes.object,
+        locale: PropTypes.string.isRequired
     }
 
     constructor(props, context) {
@@ -42,6 +39,10 @@ export default class CustomDragLayer extends Component {
             isDragging: this.props.monitor.isDragging()
         }
 
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        return !arePropsEqual(nextProps, this.props) || !shallowEqual(nextState, this.state)
     }
 
     componentDidMount() {
@@ -109,7 +110,13 @@ export default class CustomDragLayer extends Component {
 
     renderItem(type, item) {
         const elements = {
-            [DndTypes.TASK]: <TaskItemDragPreview task={item} projectColorMap={this.props.projectColorMap}/>
+            [DndTypes.TASK]: (
+                <TaskItemDragPreview
+                    task={item}
+                    locale={this.props.locale}
+                    projectColorMap={this.props.projectColorMap}
+                />
+            )
         }
         return (elements[type] || null )
     }

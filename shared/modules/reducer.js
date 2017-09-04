@@ -6,6 +6,7 @@ import backend from './backend'
 import projects from './projects'
 import tasks from './tasks'
 import timetables from './timetables'
+import settings from './settings'
 
 
 export default optimist(combineReducers(
@@ -15,6 +16,7 @@ export default optimist(combineReducers(
         timetables,
         projects,
         tasks,
-        backend
+        backend,
+        settings
     }
 ))

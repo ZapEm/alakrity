@@ -9,12 +9,14 @@ export default class ModalContent extends React.Component {
 
     static propTypes = {
         modal: PropTypes.instanceOf(Modal),
-        projectColorMap: ImmutablePropTypes.map.isRequired
+        projectColorMap: ImmutablePropTypes.map.isRequired,
+        settings: ImmutablePropTypes.map.isRequired
     }
 
     render() {
-        const { modal, projectColorMap } = this.props
+        const { modal, projectColorMap, settings } = this.props
         const task = modal.task
+        const locale = settings.get('locale')
 
         return <div
             className="modal-middle w3-theme-l5"
@@ -23,6 +25,7 @@ export default class ModalContent extends React.Component {
                 <TaskPreview
                     projectColorMap={projectColorMap}
                     task={task.toJSON()}
+                    locale={locale}
                 />
             </div>
             <div className="modal-middle-right w3-padding">
