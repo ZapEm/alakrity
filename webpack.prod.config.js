@@ -1,8 +1,10 @@
-var path = require('path')
-var webpack = require('webpack')
-var ExtractTextPlugin = require('extract-text-webpack-plugin')
+const path = require('path')
+const webpack = require('webpack')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const clientConfig = require('config').get('client')
 const fs = require('fs')
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
+
 
 fs.writeFileSync(path.resolve(__dirname, 'config/client.json'), JSON.stringify(clientConfig))
 
@@ -79,13 +81,16 @@ module.exports = {
     },
     plugins: [
         new ExtractTextPlugin({ filename: 'style.css' }),
+        new LodashModuleReplacementPlugin({ // OptIn, see https://www.npmjs.com/package/lodash-webpack-plugin
+            'paths': true,
+            'guards': true
+        }),
         new webpack.DefinePlugin({
             'process.env': {
                 NODE_ENV: '"production"'
             }
         }),
         new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /(en|de)/),
-        // new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/),
         new webpack.optimize.UglifyJsPlugin()
     ]
 }
