@@ -1,14 +1,14 @@
-const path = require('path')
-const webpack = require('webpack')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const clientConfig = require('config').get('client')
-const fs = require('fs')
-const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
+var path = require('path')
+var webpack = require('webpack')
+var ExtractTextPlugin = require('extract-text-webpack-plugin')
+var clientConfig = require('config').get('client')
+var fs = require('fs')
+var LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
 
 
 fs.writeFileSync(path.resolve(__dirname, 'config/client.json'), JSON.stringify(clientConfig))
 
-const BABEL_QUERY = {
+var BABEL_QUERY = {
     presets: ['nodejs6', 'es2015', 'stage-0', 'react'],
     plugins: [
         ['lodash'],
