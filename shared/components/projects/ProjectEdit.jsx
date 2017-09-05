@@ -27,7 +27,7 @@ export default class ProjectEdit extends React.Component {
     handleColorPick(color) {
         this.setState(({ project, style }) => ({
                 project: project.set('color', color),
-                style: _.merge(style, {
+                style: _.merge({}, style, {
                     backgroundColor: color,
                     borderColor: tinycolor(color).brighten(-35)
                 })
