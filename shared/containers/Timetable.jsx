@@ -1,8 +1,5 @@
-import moment from 'moment'
 import PropTypes from 'prop-types'
 import React from 'react'
-import { DragDropContext } from 'react-dnd'
-import HTML5Backend from 'react-dnd-html5-backend'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -13,6 +10,7 @@ import TimetableView from '../components/timetable/TimetableView'
 import * as TaskActions from '../modules/tasks'
 import * as TimetableActions from '../modules/timetables'
 import * as SettingsActions from '../modules/settings'
+import { DEFAULT_TIMETABLE } from '../utils/defaultValues'
 
 @connect(state => ({
     auth: state.auth,
@@ -37,28 +35,14 @@ export default class Timetable extends React.Component {
     }
 
     componentDidMount() {
+        // creates a new timetable if needed
         if ( !this.props.timetables.get('timetableList').size ) {
             if ( typeof window !== 'undefined' ) {
-                this.createNewTimetable()
+                this.props.dispatch(TimetableActions.createTimetable(DEFAULT_TIMETABLE))
             }
         }
     }
 
-    createNewTimetable(tableNr = 0) {
-        const timetable = {
-            title: 'New Timetable' + (tableNr > 0 ? ` (${tableNr})` : ''),
-            start: 7,
-            end: 22,
-            steps: 2,
-            projectPeriods: {
-                selection: [[], [], [], [], [], [], []]
-            },
-            created: moment()
-        }
-
-        console.log('No timetable found. Creating new timetable!')
-        this.props.dispatch(TimetableActions.createTimetable(timetable))
-    }
 
     render() {
         const { tasks, dispatch, timetables, projects, backend, settings } = this.props

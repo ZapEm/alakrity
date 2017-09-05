@@ -5,11 +5,11 @@ import React from 'react'
 import { DragLayer, DragSource } from 'react-dnd'
 import { getEmptyImage } from 'react-dnd-html5-backend'
 import ImmutablePropTypes from 'react-immutable-proptypes'
+import { LOCALE_STRINGS } from '../../utils/constants'
 import { DndTypes } from '../../utils/enums'
 import newId from '../../utils/newId'
 import { getDurationDelta } from '../dnd/dndFunctions'
 import IconButton from '../misc/IconButton'
-import { LOCALE_STRINGS } from '../../utils/constants'
 
 
 const dragSource = {
@@ -55,7 +55,7 @@ export default class TaskEdit extends React.Component {
     // }
 
     static contextTypes = {
-        dragDropManager: PropTypes.object,
+        dragDropManager: PropTypes.object
     }
 
     constructor(props) {
@@ -89,7 +89,7 @@ export default class TaskEdit extends React.Component {
 
             if ( !this.oldDuration ) this.oldDuration = dragItem.duration
             const newDuration = +dragItem.duration + getDurationDelta(offsetDelta)
-            if ( newDuration !== this.oldDuration && newDuration > 0 && newDuration < 241 ) {
+            if ( newDuration !== this.oldDuration && newDuration > 0 && newDuration <= 300 ) {
                 this.oldDuration = newDuration
                 dragItem.changeDuration(newDuration)
             }
@@ -105,8 +105,8 @@ export default class TaskEdit extends React.Component {
         this.props.onSubmit(_.merge({}, this.state, { id: this.props.task.get('id') }))
     }
 
-    handleTextChange(e) {
-        this.setState({ text: e.target.value })
+    handleTitleChange(e) {
+        this.setState({ title: e.target.value })
     }
 
     render() {
@@ -143,10 +143,11 @@ export default class TaskEdit extends React.Component {
                             type="text"
                             autoFocus
                             placeholder="Enter title..."
-                            onChange={::this.handleTextChange}
-                            defaultValue={this.state.text}/>
+                            onChange={::this.handleTitleChange}
+                            defaultValue={this.state.title}/>
                     </div>
-                    {durationCutoff && <p className="task-item-info duration">{(this.state.duration / 60) + LOCALE_STRINGS[locale].hours}</p>}
+                    {durationCutoff &&
+                    <p className="task-item-info duration">{(this.state.duration / 60) + LOCALE_STRINGS[locale].hours}</p>}
                 </div>
 
                 {connectDragSource(<div
@@ -166,6 +167,12 @@ export default class TaskEdit extends React.Component {
                     borderColor: colors.dark
                 }}
             >
+                {!durationCutoff &&
+                <p
+                    className="cutoff-duration"
+                >{(this.state.duration / 60) + LOCALE_STRINGS[locale].hours}
+                </p>}
+
                 <IconButton
                     formID={formID}
                     iconName={'save'}

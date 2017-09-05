@@ -1,22 +1,29 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import newId from '../../utils/newId'
+import tinycolor from 'tinycolor2'
 import { PROJECT_COLORS } from '../../utils/constants'
+import newId from '../../utils/newId'
 
 
 export default class ProjectColorPicker extends React.Component {
 
     static propTypes = {
-        colors: PropTypes.array.isRequired,
+        currentColor: PropTypes.string,
         setColor: PropTypes.func.isRequired,
         label: PropTypes.string
     }
 
+    static defaultProps = {
+        currentColor: PROJECT_COLORS[0]
+    }
+
     constructor(props) {
         super(props)
+
+        const colorIndex = PROJECT_COLORS.indexOf(this.props.currentColor)
         this.state = {
             isActive: false,
-            pickedColor: 0
+            pickedColor: colorIndex !== -1 ? colorIndex : 0
         }
     }
 
@@ -61,32 +68,46 @@ export default class ProjectColorPicker extends React.Component {
                     onMouseDown={::this.handleColorClick}
                     style={
                         {
-                            backgroundColor: PROJECT_COLORS[i]
+                            backgroundColor: PROJECT_COLORS[i],
+                            border: ('solid 1px ' + tinycolor(PROJECT_COLORS[i]).brighten(-35))
                         }
                     }
                 />
             )
         }
         return <div className="project-color-picker">
-            <label htmlFor={this.id}>{label}</label><br/>
-            <button
-                id={this.id}
-                ref={(button) => this.colorPicker = button}
-                tabIndex={0}
-                onClick={e => e.preventDefault()}
-                onFocus={::this.expand}
-                onBlur={::this.collapse}
-                className="w3-btn w3-round tt-toolbar-color-option w3-dropdown-click"
-                style={
-                    {
-                        backgroundColor: PROJECT_COLORS[this.state.pickedColor]
+            <label>{label}
+                <div
+                    id={this.id}
+                    ref={(button) => this.colorPicker = button}
+                    tabIndex={0}
+                    onClick={e => e.preventDefault()}
+                    onFocus={::this.expand}
+                    onBlur={::this.collapse}
+                    className="w3-btn w3-round tt-toolbar-color-option w3-dropdown-click"
+                    style={
+                        {
+                            backgroundColor: tinycolor(PROJECT_COLORS[this.state.pickedColor]).brighten(10),
+                            border: ('solid 1px ' + tinycolor(PROJECT_COLORS[this.state.pickedColor]).brighten(-35)),
+                            display: 'block'
+                        }
                     }
-                }
-            />
+                />
+            </label>
+
             <div
-                className={`project-color-picker-content w3-dropdown-content w3-card-2
-                w3-round w3-border w3-border-theme ${this.state.isActive ? 'w3-show-inline-block' : ''}`}>
-                {colorButtons}
+                className={`w3-dropdown-content w3-card-2
+                w3-round ${this.state.isActive ? 'w3-show-inline-block' : ''}`}
+                style={{
+                    backgroundColor: tinycolor(PROJECT_COLORS[this.state.pickedColor]).brighten(10),
+                    border: ('solid 1px ' + tinycolor(PROJECT_COLORS[this.state.pickedColor]).brighten(-35))
+                }}
+            >
+                <div
+                    className="project-color-picker-content"
+                >
+                    {colorButtons}
+                </div>
             </div>
         </div>
     }

@@ -18,6 +18,7 @@ export default class TaskForm extends React.Component {
         if ( this.props.hasOwnProperty('task') ) {
             this.state = {
                 errors: [],
+                title: this.props.task.get('title') || '',
                 text: this.props.task.get('text') || '',
                 repeating: this.props.task.get('repeating') || false,
                 start: this.props.task.get('start') || null,
@@ -27,6 +28,7 @@ export default class TaskForm extends React.Component {
         } else {
             this.state = {
                 errors: [],
+                title: '',
                 text: '',
                 repeating: false,
                 start: null,

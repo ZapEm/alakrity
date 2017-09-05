@@ -71,7 +71,7 @@ export default class TaskItemDragPreview extends React.Component {
                         }
                     }>
                     <div className="task-item-info">
-                        <p className="task-item-info title">{task.text}</p>
+                        <p className="task-item-info title">{task.title}</p>
                         {durationCutoff &&
                         <p className="task-item-info duration">{(task.duration / 60) + LOCALE_STRINGS[locale].hours}</p>}
                     </div>

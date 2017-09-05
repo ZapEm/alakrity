@@ -1,4 +1,4 @@
-import * as Immutable from 'immutable'
+import Immutable from 'immutable'
 import { merge as _merge } from 'lodash/object'
 import moment from 'moment'
 import xss from 'xss'
@@ -43,6 +43,9 @@ export function createProject(projectInput) {
 }
 
 export function editProject(projectInput) {
+    if ( Immutable.Map.isMap(projectInput) ) {
+        projectInput = projectInput.toJS()
+    }
 
     projectInput.title = xss(projectInput.title)
     projectInput = _merge({}, projectInput, { lastEdited: moment() })

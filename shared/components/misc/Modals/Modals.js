@@ -17,7 +17,7 @@ export class ReminderModal extends Modal {
         super(task)
 
         this.type = MODAL_TYPES.REMINDER
-        this.headerTitle = 'Begin: ' + task.get('text')
+        this.headerTitle = 'Begin: ' + task.get('title')
         this.task = task
 
     }

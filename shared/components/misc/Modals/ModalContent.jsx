@@ -29,7 +29,7 @@ export default class ModalContent extends React.Component {
                 />
             </div>
             <div className="modal-middle-right w3-padding">
-                <p>{task.get('text')}</p>
+                <p>{task.get('title')}</p>
                 <p>End: {moment(task.get('start')).add(task.get('duration'), 'minutes').fromNow()}</p>
                 {/* TODO: fix when description is added */ !task.get('description') &&
                 <p>{task.get('description')} ...description here.</p>}

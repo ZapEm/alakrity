@@ -39,9 +39,10 @@ together {
         + created : datetime
         + lastEdited : datetime
         ....
-        + defaultTaskType : number
-        + tracked : bool
         + title : str
+        + description : str
+        + defaultTaskType : enum
+        + tracked : bool
         + color : hex
     }
 
@@ -52,10 +53,16 @@ together {
         + created : datetime
         + lastEdited : datetime
         ....
-        + type: number
-        + duration : int
-        + start : datetime
         + title : str
+        + description : str
+        + type: enum
+        + start : datetime
+        + duration : int
+        ..statistics..
+        + status : enum
+        + begun : datetime
+        + completed : datetime
+        + rating : number [0-5]
     }
 
 }

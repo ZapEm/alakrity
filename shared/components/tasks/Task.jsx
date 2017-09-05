@@ -103,7 +103,7 @@ export default class Task extends React.Component {
 
 
     handleSave(task) {
-        if ( task.text.length === 0 ) {
+        if ( task.title.length === 0 ) {
             this.props.taskActions.removeTask(task.id)
         } else {
             this.props.taskActions.editTask(task)
@@ -175,7 +175,7 @@ export default class Task extends React.Component {
                     )}
                 >
                     <div className="task-item-info">
-                        <p className="title">{task.get('text')}</p>
+                        <p className="title">{task.get('title')}</p>
                         {durationCutoff &&
                         <p className="duration">{(task.get('duration') / 60) + LOCALE_STRINGS[locale].hours}</p>}
                     </div>
