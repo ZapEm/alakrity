@@ -58,7 +58,7 @@ export default class Project extends React.Component {
             />
         } else {
             element = <div
-                className="project w3-card-2 w3-round-large w3-display-container"
+                className="project w3-card w3-padding w3-round-large w3-display-container"
                 style={style}
             >
                 <div className="project-title w3-large w3-center">

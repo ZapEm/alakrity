@@ -3,8 +3,8 @@
   vertical-align top
   width 100%
   height 100%
-  padding 8px
-  overflow hidden
+  // padding 8px
+  //overflow hidden
 
 .projects-list
   width 100%
@@ -20,11 +20,19 @@
   &.project-list-item-3rd
     padding 8px 0 0 0
 
-//.project-color-picker
-//  z-index 10
-
+.project-color-picker
+  position relative
+  //top -50px
+  //left 0
 
 .project-color-picker-content
+  position relative
+  z-index 10
+  top -31px
+  left -1px
+
+.project-color-picker-grid
+  position relative
   display grid
   grid-template-columns 1fr 1fr 1fr 1fr 1fr
   grid-template-rows 1fr 1fr
@@ -38,10 +46,5 @@
   padding-top 4px
   background-color white
 
-.project-input
-  max-width 100%
-  background-color rgba(255,255,255,0.8)
-
 .project-description-area
-  max-width 100%
-  background-color rgba(255,255,255,0.8)
+  resize none

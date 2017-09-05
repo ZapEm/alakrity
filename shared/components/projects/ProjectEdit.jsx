@@ -6,6 +6,7 @@ import tinycolor from 'tinycolor2'
 import newId from '../../utils/newId'
 import LabeledIconButton from '../misc/LabeledIconButton'
 import ProjectColorPicker from './ProjectColorPicker'
+import { TASK_TYPES } from '../../utils/constants'
 
 export default class ProjectEdit extends React.Component {
 
@@ -82,13 +83,13 @@ export default class ProjectEdit extends React.Component {
         const { style } = this.state
 
         return <form
-            className="project-form project w3-card-2 w3-display-container w3-card-2 w3-round-large"
+            className="project-form project w3-padding w3-card w3-display-container w3-round-large"
             onSubmit={::this.handleSubmit}
             style={style}
         >
 
             <label>
-                Name
+                Project Name
                 <input
                     ref={ref => this.titleInput = ref}
                     type="text"
@@ -106,10 +107,10 @@ export default class ProjectEdit extends React.Component {
                     id={this.state.formID + '_description'}
                     ref={ref => this.descriptionInput = ref}
                     type="text"
-                    rows={3}
+                    rows="3"
                     className="project-description-area project-input w3-input w3-round w3-border"
                     style={{ border: this.state.style.border }}
-                    placeholder="Project Description (optional)"
+                    placeholder="(Optional)"
                     value={this.state.project.get('description')}
                     onChange={::this.handleInputChange}
                 />
@@ -120,9 +121,18 @@ export default class ProjectEdit extends React.Component {
                 label={'Color'}
                 setColor={::this.handleColorPick}
             />
+
+            <label>Default Task Type
+                <select className="w3-select" name="option">
+                    <option value={TASK_TYPES.standard}>Standard</option>
+                    <option value={TASK_TYPES.oneTime}>Appointment</option>
+                    <option value={TASK_TYPES.repeating}>Repeating</option>
+                </select>
+            </label>
+
             {this.displayErrors(this.state.errors)}
 
-            <div className={'tt-form-line w3-display-bottom'}>
+            <div className={'w3-display-bottomright w3-padding'}>
                 <LabeledIconButton
                     iconName={'done'}
                     label={'Save'}

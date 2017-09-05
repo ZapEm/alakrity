@@ -93,22 +93,21 @@ export default class ProjectColorPicker extends React.Component {
                         }
                     }
                 />
+                <div
+                    className={`project-color-picker-content w3-dropdown-content w3-card-2 w3-round ${this.state.isActive ? 'w3-show-inline-block' : ''}`}
+                    style={{
+                        backgroundColor: tinycolor(PROJECT_COLORS[this.state.pickedColor]).brighten(10),
+                        border: ('solid 1px ' + tinycolor(PROJECT_COLORS[this.state.pickedColor]).brighten(-35))
+                    }}
+                >
+                    <div
+                        className="project-color-picker-grid"
+                    >
+                        {colorButtons}
+                    </div>
+                </div>
             </label>
 
-            <div
-                className={`w3-dropdown-content w3-card-2
-                w3-round ${this.state.isActive ? 'w3-show-inline-block' : ''}`}
-                style={{
-                    backgroundColor: tinycolor(PROJECT_COLORS[this.state.pickedColor]).brighten(10),
-                    border: ('solid 1px ' + tinycolor(PROJECT_COLORS[this.state.pickedColor]).brighten(-35))
-                }}
-            >
-                <div
-                    className="project-color-picker-content"
-                >
-                    {colorButtons}
-                </div>
-            </div>
         </div>
     }
 }
