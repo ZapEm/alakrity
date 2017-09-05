@@ -92,7 +92,7 @@ export default class ProjectEdit extends React.Component {
                 <input
                     ref={ref => this.titleInput = ref}
                     type="text"
-                    className="w3-input w3-round w3-border"
+                    className="project-input w3-input w3-round w3-border"
                     style={{ border: this.state.style.border }}
                     placeholder="Project Name"
                     value={this.state.project.get('title')}
@@ -107,7 +107,7 @@ export default class ProjectEdit extends React.Component {
                     ref={ref => this.descriptionInput = ref}
                     type="text"
                     rows={3}
-                    className="project-description-area w3-input w3-round w3-border"
+                    className="project-description-area project-input w3-input w3-round w3-border"
                     style={{ border: this.state.style.border }}
                     placeholder="Project Description (optional)"
                     value={this.state.project.get('description')}

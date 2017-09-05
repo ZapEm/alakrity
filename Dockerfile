@@ -16,13 +16,15 @@ RUN npm -q install
 # Bundle app source
 COPY . $APPDIR
 # ???
-RUN chown -R nobody:nogroup $APPDIR && chmod -R a-w $APPDIR && ls -ld
+# RUN chown -R alakrity:alakrity $APPDIR && chmod -R a-w $APPDIR && ls -ld
+
+# USER alakrity
 
 # Certs
 RUN mkdir -p /etc/certs/prod /etc/certs/staging
 VOLUME /etc/certs
 
-USER nobody
+# USER alakrity
 
 # Build app from source
 RUN npm run build
