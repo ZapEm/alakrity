@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "start-prod": "set NODE_ENV=production&& npm run db-setup&& set NODE_PATH=$NODE_PATH:./shared&& node --harmony .",
-    "start": "set NODE_PATH=$NODE_PATH:./shared&& node --harmony .",
+    "start": "set NODE_ENV=production&& npm run db-setup&& set NODE_PATH=$NODE_PATH:./shared&& node --harmony .",
     "startall": "set NODE_ENV=development&& set NODE_PATH=$NODE_PATH:./shared&& node --harmony .",
     "start2": "node --harmony .",
     "dbtool": "set NODE_ENV=development&& chateau -f chateau.config.js",
