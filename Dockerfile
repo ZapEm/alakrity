@@ -9,8 +9,7 @@ WORKDIR $APPDIR
 
 # Install app dependencies
 COPY package.json $APPDIR
-ENV NODE_ENV production
-RUN npm install
+RUN npm -q install
 
 # Bundle app source
 COPY . $APPDIR
