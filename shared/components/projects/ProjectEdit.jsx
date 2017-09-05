@@ -4,6 +4,7 @@ import React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import tinycolor from 'tinycolor2'
 import newId from '../../utils/newId'
+import LabeledIconButton from '../misc/LabeledIconButton'
 import ProjectColorPicker from './ProjectColorPicker'
 
 export default class ProjectEdit extends React.Component {
@@ -81,7 +82,7 @@ export default class ProjectEdit extends React.Component {
         const { style } = this.state
 
         return <form
-            className="project-form task-form project w3-card-2 w3-display-container w3-card-2 w3-round-large"
+            className="project-form project w3-card-2 w3-display-container w3-card-2 w3-round-large"
             onSubmit={::this.handleSubmit}
             style={style}
         >
@@ -92,7 +93,7 @@ export default class ProjectEdit extends React.Component {
                     ref={ref => this.titleInput = ref}
                     type="text"
                     className="w3-input w3-round w3-border"
-                    style={{border: this.state.style.border}}
+                    style={{ border: this.state.style.border }}
                     placeholder="Project Name"
                     value={this.state.project.get('title')}
                     onChange={::this.handleInputChange}
@@ -105,8 +106,9 @@ export default class ProjectEdit extends React.Component {
                     id={this.state.formID + '_description'}
                     ref={ref => this.descriptionInput = ref}
                     type="text"
-                    className="w3-input w3-round w3-border"
-                    style={{border: this.state.style.border}}
+                    rows={3}
+                    className="project-description-area w3-input w3-round w3-border"
+                    style={{ border: this.state.style.border }}
                     placeholder="Project Description (optional)"
                     value={this.state.project.get('description')}
                     onChange={::this.handleInputChange}
@@ -118,11 +120,14 @@ export default class ProjectEdit extends React.Component {
                 label={'Color'}
                 setColor={::this.handleColorPick}
             />
-
-            <button className="w3-btn-floating">
-                {'Save'}
-            </button>
             {this.displayErrors(this.state.errors)}
+
+            <div className={'tt-form-line w3-display-bottom'}>
+                <LabeledIconButton
+                    iconName={'done'}
+                    label={'Save'}
+                />
+            </div>
         </form>
     }
 }
