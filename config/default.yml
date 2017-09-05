@@ -8,7 +8,7 @@ rethinkdbdash:
     db: alakrity_db
 express: &EXP
   host: localhost
-  protocol: http
+  protocol: https
   port: 3000
   api: /api/0/
 auth:
