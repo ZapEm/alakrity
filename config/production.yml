@@ -6,7 +6,7 @@ rethinkdbdash:
   - host: rethinkdb
     port: 28015
     db: alakrity_db
-express: &EXP
+express:
   host: alakrity
   protocol: https
   port: 3000
@@ -15,4 +15,4 @@ auth:
   jwtExpiresIn: 7d
   jwtSecret: b9GnojlIVvIpqSwGLqm$%t2wSIH8oQYm
 client: # These Values are send to the client and are therefore not secure!
-  api: *EXP # from the express settings.
+  apiUrl: https://alakrity.treehaus.space/api/0/

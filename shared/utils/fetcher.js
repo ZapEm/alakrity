@@ -10,10 +10,12 @@ axios.defaults.timeout = 5000
 let apiCfg = {}
 if ( typeof window === 'undefined' ) {
     apiCfg = require('config').get('express')
+    axios.defaults.baseURL = `${apiCfg.protocol}://${apiCfg.host}:${apiCfg.port}${apiCfg.api}`
 } else {
-    apiCfg = require('config').api // via webpack alias and config/client.json file
+    apiCfg = require('config') // via webpack alias and config/client.json file
+    axios.defaults.baseURL = apiCfg.apiUrl
 }
-axios.defaults.baseURL = `${apiCfg.protocol}://${apiCfg.host}:${apiCfg.port}${apiCfg.api}`
+
 
 //     // const serverCfg = config.get('express');
 //     // axios.defaults.baseURL = 'http://' + serverCfg.get('host') + ':' + serverCfg.get('port') + serverCfg.get('api');
