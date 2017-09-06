@@ -28,13 +28,16 @@ export function loadProjects() {
     }
 }
 
-export function createProject(projectInput) {
+export function createProject(projectInput, { editing } = {}) {
     projectInput.title = xss(projectInput.title)
     projectInput.created = moment()
 
     return {
         type: CREATE,
-        payload: _merge({}, projectInput, { id: newId('TmpProjectID_') /*tempID(projectInput.created)*/ }),
+        payload: _merge({}, projectInput, {
+            id: newId('TmpProjectID_'),
+            editing: !!editing
+        }),
         meta: {
             promise: fetch.post('projects', { data: projectInput }),
             optimist: true
@@ -134,9 +137,9 @@ export default function reducer(state = initialState, action) {
             return ((state.getIn(['projectList', -1, 'id']) === action.meta.payload.id)
                 ? state.setIn(['projectList', -1, 'id'], action.payload.data.id)
                 :
-                    state.set('projectList', state.get('projectList').map((task) => ((task.get('id') === action.meta.payload.id)
+                    state.set('projectList', state.get('projectList').map((project) => ((project.get('id') === action.meta.payload.id)
                         ? Immutable.Map(action.payload.data)
-                        : task))))
+                        : project))))
                 .set('isWorking', false)
 
 

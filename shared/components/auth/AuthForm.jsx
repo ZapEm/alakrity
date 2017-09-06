@@ -18,7 +18,7 @@ export default class AuthForm extends React.Component {
     }
 
     handleToggle(e) {
-        e.preventDefault()
+        if ( e ) { e.preventDefault() }
         this.setState({ display: this.state.display === 'login' ? 'create' : 'login' })
     }
 
@@ -45,6 +45,7 @@ export default class AuthForm extends React.Component {
                    <h3 className="w3-text-theme">Create new account</h3>
                    <CreateAccount
                        createUser={authActions.createUser}
+                       toggle={::this.handleToggle}
                    />
                    <div className="w3-border-bottom w3-border-theme w3-padding"/>
                    <div className="auth-form-right">

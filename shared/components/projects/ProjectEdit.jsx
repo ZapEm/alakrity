@@ -3,17 +3,17 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import tinycolor from 'tinycolor2'
+import { TASK_TYPES } from '../../utils/constants'
 import newId from '../../utils/newId'
 import LabeledIconButton from '../misc/LabeledIconButton'
 import ProjectColorPicker from './ProjectColorPicker'
-import { TASK_TYPES } from '../../utils/constants'
 
 export default class ProjectEdit extends React.Component {
 
     static propTypes = {
         onSubmit: PropTypes.func.isRequired,
-        project: ImmutablePropTypes.map.isRequired,
-        style: PropTypes.object
+        onCancel: PropTypes.func.isRequired,
+        project: ImmutablePropTypes.map.isRequired
     }
 
     constructor(props) {
@@ -21,37 +21,26 @@ export default class ProjectEdit extends React.Component {
         this.state = {
             formID: newId('pjt-edit_'),
             errors: [],
-            project: this.props.project,
-            style: this.props.style
+            project: this.props.project
         }
     }
 
     handleColorPick(color) {
-        this.setState(({ project, style }) => ({
-                project: project.set('color', color),
-                style: _.merge({}, style, {
-                    backgroundColor: color,
-                    borderColor: tinycolor(color).brighten(-35)
-                })
+        this.setState(({ project }) => ({
+                project: project.set('color', color)
             })
         )
     }
 
     handleSubmit(e) {
         e.preventDefault()
-        let errors = []
-        if ( this.state.project.get('title').length === 0 ) {
-            errors.push('You have not entered a project name!')
-        }
+        this.props.onSubmit(this.state.project)
 
-        if ( errors.length > 0 ) {
-            this.setState(_.merge({}, this.state, { errors: errors }))
-        } else {
-            this.props.onSubmit(this.state.project)
-            this.setState({
-                errors: []
-            })
-        }
+    }
+
+    handleCancel(e) {
+        e.preventDefault()
+        this.props.onCancel()
     }
 
     handleInputChange(e) {
@@ -66,24 +55,16 @@ export default class ProjectEdit extends React.Component {
         }))
     }
 
-    /**
-     * Creates an array of html elements from an error list
-     * @param errors {Array} array of strings with error messages
-     * @returns {Array}
-     */
-    displayErrors(errors = []) {
-        let errorElements = []
-        for ( let [index, error] of errors.entries() ) {
-            errorElements.push(<span className="input-error" key={'error_' + index}>{error}</span>)
-        }
-        return errorElements
-    }
-
     render() {
-        const { style } = this.state
+        const color = this.state.project.get('color')
+
+        const style = {
+            backgroundColor: color,
+            border: 'solid 1px ' + tinycolor(color).brighten(-35)
+        }
 
         return <form
-            className="project-form project w3-padding w3-card w3-display-container w3-round-large"
+            className="project-edit project w3-padding w3-card w3-display-container w3-round-large"
             onSubmit={::this.handleSubmit}
             style={style}
         >
@@ -92,12 +73,14 @@ export default class ProjectEdit extends React.Component {
                 Project Name
                 <input
                     ref={ref => this.titleInput = ref}
+                    autoFocus="autofocus"
                     type="text"
-                    className="project-input w3-input w3-round w3-border"
-                    style={{ border: this.state.style.border }}
+                    className="project-input w3-input w3-round"
+                    style={{ border: style.border }}
                     placeholder="Project Name"
                     value={this.state.project.get('title')}
                     onChange={::this.handleInputChange}
+                    required={'required'}
                 />
             </label>
 
@@ -108,34 +91,45 @@ export default class ProjectEdit extends React.Component {
                     ref={ref => this.descriptionInput = ref}
                     type="text"
                     rows="3"
-                    className="project-description-area project-input w3-input w3-round w3-border"
-                    style={{ border: this.state.style.border }}
+                    className="project-description-area project-input w3-input w3-round"
+                    style={{ border: style.border }}
                     placeholder="(Optional)"
                     value={this.state.project.get('description')}
                     onChange={::this.handleInputChange}
                 />
             </label>
 
-            <ProjectColorPicker
-                currentColor={this.state.project.get('color')}
-                label={'Color'}
-                setColor={::this.handleColorPick}
-            />
 
-            <label>Default Task Type
-                <select className="w3-select" name="option">
-                    <option value={TASK_TYPES.standard}>Standard</option>
-                    <option value={TASK_TYPES.oneTime}>Appointment</option>
-                    <option value={TASK_TYPES.repeating}>Repeating</option>
-                </select>
-            </label>
-
-            {this.displayErrors(this.state.errors)}
-
+            <div className="project-line w3-display-container">
+                <ProjectColorPicker
+                    currentColor={this.state.project.get('color')}
+                    label={'Color'}
+                    setColor={::this.handleColorPick}
+                />
+                {/*<div className="tt-form-spacer"/>*/}
+                <label className="project-task-type-label">Default Task Type
+                    <select
+                        className="w3-select w3-round w3-border-theme project-task-type-select"
+                        style={{ border: style.border }}
+                        name="option"
+                    >
+                        <option value={TASK_TYPES.standard}>Standard</option>
+                        <option value={TASK_TYPES.oneTime}>Appointment</option>
+                        <option value={TASK_TYPES.repeating}>Repeating</option>
+                    </select>
+                </label>
+            </div>
             <div className={'w3-display-bottomright w3-padding'}>
                 <LabeledIconButton
                     iconName={'done'}
                     label={'Save'}
+                />
+            </div>
+            <div className="w3-display-bottomleft w3-padding">
+                <LabeledIconButton
+                    iconName={'clear'}
+                    label={'Cancel'}
+                    onClick={::this.handleCancel}
                 />
             </div>
         </form>

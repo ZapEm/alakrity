@@ -24,6 +24,7 @@ export default class ProjectsList extends React.Component {
                         value={project.get('id')}
                         project={project}
                         editable={true}
+                        editing={!!project.get('editing')}
                         projectActions={projectActions}
                     />
                 </li>
@@ -34,7 +35,7 @@ export default class ProjectsList extends React.Component {
             </li>
         }
 
-        return <ul className="projects-list w3-card-4 w3-padding w3-round-large w3-border w3-border-theme w3-margin-top">
+        return <ul className="projects-list">
             {projectElements}
         </ul>
     }

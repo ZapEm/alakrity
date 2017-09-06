@@ -29,7 +29,7 @@ export default class Navbar extends React.Component {
     render() {
         const { isWorking, isAuthenticated, message, logout, currentPath, taskList, backendActions } = this.props
         return (
-            <div className="w3-row w3-top w3-theme-l4">
+            <div className="w3-row w3-top w3-theme-l4 w3-card">
                 <nav id="navbar" style={{ maxWidth: '1200px' }}>
                     <div className="w3-bar w3-large w3-theme-d1">
                         {isAuthenticated

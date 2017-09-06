@@ -62,8 +62,8 @@ export default class ProjectColorPicker extends React.Component {
             colorButtons.push(
                 <button
                     key={'color_' + i}
-                    className={'w3-btn w3-round tt-toolbar-color-option' + (i === this.state.pickedColor ?
-                                                                            ' tt-tco-selected' : '')}
+                    className={'w3-btn w3-round project-color-picker-option' + (i === this.state.pickedColor ?
+                                                                                ' tt-tco-selected' : '')}
                     value={i}
                     onMouseDown={::this.handleColorClick}
                     style={
@@ -76,25 +76,27 @@ export default class ProjectColorPicker extends React.Component {
             )
         }
         return <div className="project-color-picker">
-            <label>{label}
+            <div><label>{label}</label>
                 <div
                     id={this.id}
-                    ref={(button) => this.colorPicker = button}
+                    ref={ref => this.colorPicker = ref}
                     tabIndex={0}
                     onClick={e => e.preventDefault()}
                     onFocus={::this.expand}
                     onBlur={::this.collapse}
-                    className="w3-btn w3-round tt-toolbar-color-option w3-dropdown-click"
+                    className={'w3-btn w3-dropdown-click w3-round project-color-picker-option'}
                     style={
                         {
                             backgroundColor: tinycolor(PROJECT_COLORS[this.state.pickedColor]).brighten(10),
                             border: ('solid 1px ' + tinycolor(PROJECT_COLORS[this.state.pickedColor]).brighten(-35)),
-                            display: 'block'
+                            display: !this.state.isActive ? 'block' : 'hidden'
                         }
                     }
                 />
                 <div
-                    className={`project-color-picker-content w3-dropdown-content w3-card-2 w3-round ${this.state.isActive ? 'w3-show-inline-block' : ''}`}
+                    className={`project-color-picker-content w3-dropdown-content w3-card-2 w3-round ${this.state.isActive ?
+                                                                                                      'w3-show-inline-block' :
+                                                                                                      ''}`}
                     style={{
                         backgroundColor: tinycolor(PROJECT_COLORS[this.state.pickedColor]).brighten(10),
                         border: ('solid 1px ' + tinycolor(PROJECT_COLORS[this.state.pickedColor]).brighten(-35))
@@ -106,8 +108,7 @@ export default class ProjectColorPicker extends React.Component {
                         {colorButtons}
                     </div>
                 </div>
-            </label>
-
+            </div>
         </div>
     }
 }

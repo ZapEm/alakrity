@@ -1,5 +1,10 @@
 import { TASK_TYPES } from './constants'
+import * as _ from 'lodash/object'
 
+
+export function thaw(frozenObject) {
+    return _.merge({}, frozenObject)
+}
 
 export const DEFAULT_TASK = Object.freeze(
     {

@@ -3,7 +3,7 @@ import * as _ from 'lodash/object'
 import PropTypes from 'prop-types'
 import React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
-import { DEFAULT_PROJECT } from '../../utils/defaultValues'
+import { DEFAULT_PROJECT, thaw } from '../../utils/defaultValues'
 import newId from '../../utils/newId'
 import ProjectColorPicker from './ProjectColorPicker'
 
@@ -15,7 +15,7 @@ export default class ProjectForm extends React.Component {
     }
 
     static defaultProps = {
-        project: Immutable.fromJS(DEFAULT_PROJECT)
+        project: Immutable.fromJS(thaw(DEFAULT_PROJECT))
     }
 
     constructor(props) {
@@ -77,7 +77,7 @@ export default class ProjectForm extends React.Component {
         const { project } = this.props
 
         return <form
-            className="project-form w3-container w3-card-2 w3-round-large w3-border w3-border-theme w3-leftbar w3-rightbar"
+            className="project-edit w3-container w3-card-2 w3-round-large w3-border w3-border-theme w3-leftbar w3-rightbar"
             onSubmit={::this.handleSubmit}>
 
             <label htmlFor={this.state.formID + '_title'}>Name</label>

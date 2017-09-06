@@ -9,7 +9,21 @@
 .projects-list
   width 100%
   display block
+
+.projects-view
   background-color white
+  min-height 300px
+
+//.projects-sidebar
+//  position fixed
+
+.project-line
+  display grid
+  grid-template-columns 1fr 4fr
+
+.project-task-type-label
+  position relative
+  grid-column 2
 
 .project-list-item
   display inline-block
@@ -26,10 +40,10 @@
   //left 0
 
 .project-color-picker-content
-  position relative
+  position absolute
+  padding 4px
+  transform translate(-3px, -37px)
   z-index 10
-  top -31px
-  left -1px
 
 .project-color-picker-grid
   position relative
@@ -37,14 +51,23 @@
   grid-template-columns 1fr 1fr 1fr 1fr 1fr
   grid-template-rows 1fr 1fr
 
+.project-color-picker-option
+  background-color white
+  margin 4px
+  padding 0
+  width 26px
+  height 26px
+  border solid 1px $theme
 
 .project-selector
-  flex 1
+  padding 4px
 
-.project-form
+.project-edit
   margin-bottom 4px
   padding-top 4px
   background-color white
+  border-left-width 6px
+  border-right-width 6px
 
 .project-description-area
   resize none

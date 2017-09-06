@@ -23,7 +23,7 @@ export default class ProjectsView extends React.Component {
         const { projects, projectActions } = this.props
 
         return (
-            <div className="projects-view">
+            <div className="projects-view w3-card-4 w3-padding w3-round-large w3-border w3-border-theme">
                 <ProjectsList
                     projectList={projects.get('projectList')}
                     projectActions={projectActions}

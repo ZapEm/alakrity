@@ -12,17 +12,19 @@ export default class Project extends React.Component {
     static propTypes = {
         project: ImmutablePropTypes.map.isRequired,
         projectActions: PropTypes.objectOf(PropTypes.func), // required if editable is true!
-        editable: PropTypes.bool
+        editable: PropTypes.bool,
+        editing: PropTypes.bool
     }
 
     static defaultPropTypes = {
-        editable: false
+        editable: false,
+        editing: false
     }
 
-    constructor() {
-        super()
+    constructor(props) {
+        super(props)
         this.state = {
-            editing: false
+            editing: this.props.editing
         }
     }
 
@@ -39,6 +41,11 @@ export default class Project extends React.Component {
         this.setState({ editing: false })
     }
 
+    handleCancel() {
+        this.setState({ editing: false })
+    }
+
+
     render() {
         const { project, editable, projectActions } = this.props
 
@@ -49,10 +56,10 @@ export default class Project extends React.Component {
 
         let element
         if ( this.state.editing ) {
-            style.borderLeftWidth = '6px'
-            style.borderRightWidth = '6px'
+
             element = <ProjectEdit
-                onSubmit={project => this.handleSave(project)}
+                onSubmit={::this.handleSave}
+                onCancel={::this.handleCancel}
                 project={project}
                 style={style}
             />
@@ -61,9 +68,10 @@ export default class Project extends React.Component {
                 className="project w3-card w3-padding w3-round-large w3-display-container"
                 style={style}
             >
-                <div className="project-title w3-large w3-center">
+                <h4 className="project-title w3-large w3-center">
                     {project.get('title')}
-                </div>
+                </h4>
+                <p>{project.get('description')}</p>
                 <div className="task-item-buttons w3-display-hover w3-display-topright">
                     {editable &&
                     <IconButton

@@ -6,14 +6,17 @@ export default class CreateAccount extends React.Component {
 
     static propTypes = {
         createUser: PropTypes.func.isRequired,
-        errorMessage: PropTypes.string
+        errorMessage: PropTypes.string,
+        toggle: PropTypes.func.isRequired
     }
 
-    handleSubmit() {
+    handleSubmit(e) {
+        e.preventDefault()
         this.props.createUser({
             userID: this.userRef.value.trim(),
             password: this.pwRef.value.trim()
         })
+        this.props.toggle()
     }
 
     render() {
@@ -22,7 +25,7 @@ export default class CreateAccount extends React.Component {
         return (
             <form
                 className="auth-form-create"
-                onSubmit={() => this.handleSubmit()}
+                onSubmit={::this.handleSubmit}
             >
                 <input
                     className="auth-form-input w3-input"

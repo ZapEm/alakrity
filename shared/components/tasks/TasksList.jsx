@@ -59,7 +59,7 @@ export default class TasksList extends React.Component {
     }
 
     getFilter(selection) {
-        const projectID = this.state.project.get('id')
+        const projectID = this.state.project ? this.state.project.get('id') : ''
         switch (selection) {
             case TaskListFilters.UNASSIGNED:
                 return (task) => ( task.get('projectID') === projectID && !task.get('start') )
@@ -109,7 +109,7 @@ export default class TasksList extends React.Component {
         }
 
         return (
-            <div className={(sidebar ? 'task-list-view-sidebar' :
+            <div className={(sidebar ? 'layout-sidebar' :
                              'task-list-view') + ' w3-card-4 w3-padding w3-border w3-border-theme w3-round-large'}>
                 <ProjectSelector
                     projectList={projectList}

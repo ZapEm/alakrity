@@ -5,12 +5,13 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import Spinner from '../components/misc/Spinner'
 import TasksList from '../components/tasks/TasksList'
-import EditTimetableForm from '../components/timetable/EditTimetableForm'
+import EditTimetableForm from '../components/timetable/TimetableEditSidebar'
 import TimetableView from '../components/timetable/TimetableView'
 import * as TaskActions from '../modules/tasks'
 import * as TimetableActions from '../modules/timetables'
 import * as SettingsActions from '../modules/settings'
-import { DEFAULT_TIMETABLE } from '../utils/defaultValues'
+import { DEFAULT_TIMETABLE, thaw } from '../utils/defaultValues'
+
 
 @connect(state => ({
     auth: state.auth,
@@ -38,7 +39,7 @@ export default class Timetable extends React.Component {
         // creates a new timetable if needed
         if ( !this.props.timetables.get('timetableList').size ) {
             if ( typeof window !== 'undefined' ) {
-                this.props.dispatch(TimetableActions.createTimetable(DEFAULT_TIMETABLE))
+                this.props.dispatch(TimetableActions.createTimetable(thaw(DEFAULT_TIMETABLE)))
             }
         }
     }
@@ -74,7 +75,7 @@ export default class Timetable extends React.Component {
                         />
                     </div>
                     {(!editMode) ?
-                     <div className="col px300">
+                     <div className="col sidebar">
                          <TasksList
                              taskList={tasks.get('taskList')}
                              projectList={projectList}
@@ -86,7 +87,7 @@ export default class Timetable extends React.Component {
                          />
                      </div>
                         :
-                     <div className="col px300">
+                     <div className="col sidebar">
                          <EditTimetableForm
                              onSave={bindActionCreators(TimetableActions.saveTimetable, dispatch)}
                              onRemove={bindActionCreators(TimetableActions.removeTimetable, dispatch)}

@@ -44,7 +44,7 @@ export default class Tasks extends React.Component {
                         />
 
                     </div>
-                    <div className="col px300">
+                    <div className="col sidebar">
                         <TaskForm
                             onSubmit={bindActionCreators(TaskActions.createTask, dispatch)}
                             textLabel="Enter new task name"

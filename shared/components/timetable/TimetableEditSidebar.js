@@ -5,7 +5,7 @@ import ImmutablePropTypes from 'react-immutable-proptypes'
 import IconButton from '../misc/IconButton'
 import ProjectPeriodPicker from './parts/ProjectPeriodPicker'
 
-export default class EditTimetableForm extends React.Component {
+export default class TimetableEditSidebar extends React.Component {
     static propTypes = {
         onSave: PropTypes.func.isRequired,
         onRemove: PropTypes.func.isRequired,
@@ -93,7 +93,7 @@ export default class EditTimetableForm extends React.Component {
 
         return (
             <div
-                className="tt-form-wrapper w3-display-container "
+                className="tt-edit-sidebar w3-display-container "
             >
                 <form
                     className="tt-form w3-padding w3-card-4 w3-round-large w3-border w3-border-theme w3-leftbar w3-rightbar"

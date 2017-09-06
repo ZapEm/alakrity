@@ -6,6 +6,7 @@ import { bindActionCreators } from 'redux'
 import ProjectsView from '../components/projects/ProjectsView'
 import * as ProjectActions from '../modules/projects'
 import * as TaskActions from '../modules/tasks'
+import ProjectsSidebar from '../components/projects/ProjectsSidebar'
 
 
 @connect(state => ({
@@ -41,8 +42,11 @@ export default class Projects extends React.Component {
                         />
 
                     </div>
-                    <div className="col px300">
-
+                    <div className="col sidebar">
+                        <ProjectsSidebar
+                            projectActions={bindActionCreators(ProjectActions, dispatch)}
+                            projectList={projects.get('projectList')}
+                        />
                     </div>
                 </div>
             </div>
