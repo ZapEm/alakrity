@@ -163,13 +163,14 @@ export default function reducer(state = initialState, action) {
         case SAVE:
             return state.withMutations(state => {
                     state.set('timetable', Immutable.fromJS(action.payload))
-                         .update('timetableList', list => list.map(
-                             (item) => (item.get('id') === action.payload.id) ? Immutable.Map(
-                                 {
-                                     title: action.payload.title,
-                                     id: action.payload.id
-                                 }
-                             ) : item
+                         .set('timetableList', state.get('timetableList').map((item) =>
+                                 (item.get('id') === action.payload.get('id')) ?
+                                 Immutable.Map(
+                                     {
+                                         title: action.payload.get('title'),
+                                         id: action.payload.get('id')
+                                     }
+                                 ) : item
                              )
                          )
                          .set('isWorking', true)

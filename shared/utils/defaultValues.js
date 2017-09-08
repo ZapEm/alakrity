@@ -6,6 +6,8 @@ export function thaw(frozenObject) {
     return _.merge({}, frozenObject)
 }
 
+export const TASK_MAX_DURATION = 300
+
 export const DEFAULT_TASK = Object.freeze(
     {
         // id,

@@ -22,20 +22,27 @@
 .welcome
   background-color white
 
+.navbar-button
+  transition color .3s, background-color .3s
+  &:active
+    background-image radial-gradient(rgba(255, 255, 255, 0.2), transparent)
+
 .labeled-icon-button
 .icon-button
   display inline-block
   align-self center
   padding 0
   margin 4px
-  background none
-  border none
+  background-color rgba(255,255,255,.93)
+  transition color .3s, background-color .3s
   text-align center
   text-decoration none
   cursor pointer
   -webkit-appearance none
   &:not(.disabled):hover
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12) !important
+  &:not(.disabled):active
+    background-image radial-gradient(rgba(255, 255, 255, 0.3), transparent)
 
 .icon-button-wrapper
   display inline-block

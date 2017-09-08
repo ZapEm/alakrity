@@ -31,7 +31,7 @@ export default class ProjectsList extends React.Component {
             )
         } else {
             projectElements = <li key={'noProjectsItem'}>
-                {'Please create a project!'}
+                <h4>{'Please create a project!'}</h4>
             </li>
         }
 

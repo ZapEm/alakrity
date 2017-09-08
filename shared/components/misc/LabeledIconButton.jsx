@@ -22,13 +22,14 @@ export default class LabeledIconButton extends React.Component {
                       (typeof dangerLevel === 'string') ? dangerLevel :
                       DANGER_LEVELS.DEFAULT.both
 
-        style.backgroundColor = 'rgba(255,255,255,0.8)'
+        //style.backgroundColor = 'rgba(255,255,255,1)'
         style.border = '1px solid'
         if ( disabled ) {
             style.cursor = 'help'
         }
 
         let button = <button
+            type="button"
             className={'labeled-icon-button w3-round ' + (!disabled ? dangerLevel :
                                                           DANGER_LEVELS.DISABLED.both + ' disabled')}
             style={style}

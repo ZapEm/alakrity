@@ -42,7 +42,7 @@ export default class Projects extends React.Component {
                         />
 
                     </div>
-                    <div className="col sidebar">
+                    <div id="sidebar" className="col sidebar">
                         <ProjectsSidebar
                             projectActions={bindActionCreators(ProjectActions, dispatch)}
                             projectList={projects.get('projectList')}

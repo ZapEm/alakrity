@@ -1,6 +1,8 @@
 import * as Immutable from 'immutable'
+import moment from 'moment'
 import tinycolor from 'tinycolor2'
-import { SPECIAL_PROJECTS } from './constants'
+import { SPECIAL_PROJECTS, TASK_TYPES } from './constants'
+import { TaskListFilters } from './enums'
 
 /**
  * Extract and adjust the project colors then return as immutable map
@@ -36,4 +38,41 @@ export function getProjectColorMap(projectList) {
     )
 
     return Immutable.fromJS(colorMap)
+}
+
+export function getTaskListFilter(selection, projectID, filterByMoment) {
+
+    // all projects: project | projectID = false
+
+    switch (selection) {
+        case TaskListFilters.UNASSIGNED:
+            return (task) => ( ( !projectID || task.get('projectID') === projectID ) && !task.get('start') )
+
+        case TaskListFilters.NOT_THIS_WEEK:
+            return (task) => ( ( !projectID || task.get('projectID') === projectID )
+                && ( !filterByMoment
+                    || !task.get('start')
+                    || filterByMoment.isoWeek() !== moment(task.get('start')).isoWeek()) )
+
+        case TaskListFilters.UPCOMING:
+            return (task) => {
+                const start = task.get('start')
+                const now = moment()
+                return ( ( !projectID || task.get('projectID') === projectID )
+                    && start && moment(start).isAfter(now))
+            }
+
+        case TaskListFilters.ALL:
+        default:
+            return (task) => ( !projectID || task.get('projectID') === projectID )
+    }
+}
+
+export const taskDayFilters = {
+    [TASK_TYPES.standard]: (task, date) => (moment(task.get('start')).isSame(date, 'day')),
+    [TASK_TYPES.oneTime]: (task, date) => (moment(task.get('start')).isSame(date, 'day')),
+    [TASK_TYPES.repeating]: (task, date) => {
+        const taskStartMoment = moment(task.get('start'))
+        return (!taskStartMoment.isAfter(date) && taskStartMoment.isoWeekday() === date.isoWeekday())
+    }
 }

@@ -36,26 +36,26 @@ export default class Navbar extends React.Component {
                             ? [<Link
                                    key={'timetable'} style={{ width: '15%' }}
                                    className={(currentPath === '/' ? 'w3-theme-l1' :
-                                               'w3-hover-theme') + ' w3-bar-item w3-center no-underline'}
+                                               'w3-hover-theme') + ' navbar-button w3-bar-item w3-center no-underline'}
                                    to={'/'}
                                >Timetable</Link>,
                                <Link
                                    key={'tasks'} style={{ width: '15%' }}
                                    className={(currentPath === '/tasks' ? 'w3-theme-l1' :
-                                               'w3-hover-theme') + ' w3-bar-item w3-center no-underline'}
+                                               'w3-hover-theme') + ' navbar-button w3-bar-item w3-center no-underline'}
                                    to={'/tasks'}
                                >Tasks</Link>,
                                <Link
                                    key={'projects'} style={{ width: '15%' }}
                                    className={(currentPath === '/projects' ? 'w3-theme-l1' :
-                                               'w3-hover-theme') + ' w3-bar-item w3-center no-underline'}
+                                               'w3-hover-theme') + ' navbar-button w3-bar-item w3-center no-underline'}
                                    to={'/projects'}
                                >Projects</Link>
                             ] :
                          <Link
                              key={'login'} style={{ width: '15%' }}
                              className={(currentPath === '/login' ? 'w3-theme-l1' :
-                                         'w3-hover-theme') + ' w3-bar-item w3-center no-underline'}
+                                         'w3-hover-theme') + ' navbar-button w3-bar-item w3-center no-underline'}
                              to={'/login'}
                          >Login</Link>
                         }

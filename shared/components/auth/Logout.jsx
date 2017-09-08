@@ -15,7 +15,7 @@ export default class Logout extends React.Component {
     render() {
         return (
             <a
-                className="w3-hover-theme w3-bar-item w3-center no-underline"
+                className="navbar-button w3-hover-theme w3-bar-item w3-center no-underline"
                 href=""
                 onClick={::this.handleLogout}
             >

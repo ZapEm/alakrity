@@ -1,10 +1,10 @@
 import classNames from 'classnames'
+import Immutable from 'immutable'
+import * as _ from 'lodash/object'
 import PropTypes from 'prop-types'
 import React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
-import Immutable from 'immutable'
 import { LOCALE_STRINGS, TASK_TYPES } from '../../utils/constants'
-import * as _ from 'lodash/object'
 
 export default class TaskItemDragPreview extends React.Component {
 
@@ -34,7 +34,7 @@ export default class TaskItemDragPreview extends React.Component {
         })).toJSON()
 
         this.state = {
-            colors: !this.props.task.type ?
+            colors: this.props.task.type !== TASK_TYPES.oneTime ?
                     _.omit(colors, ['special']) :
                     colors.special
         }
@@ -60,8 +60,9 @@ export default class TaskItemDragPreview extends React.Component {
                     className={classNames('task-item', {
                         'w3-card': notDragging,
                         'w3-card-4': !notDragging,
+                        'animate-drag-pop': !notDragging,
                         'w3-round-large': !(task.type === TASK_TYPES.repeating),
-                        'special': task.type > TASK_TYPES.standard
+                        'special': task.type === TASK_TYPES.oneTime
                     })}
 
                     style={

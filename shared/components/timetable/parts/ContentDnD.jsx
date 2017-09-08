@@ -8,6 +8,7 @@ import { DndTypes } from '../../../utils/enums'
 import { getTargetDate } from '../../dnd/dndFunctions'
 import CustomDragLayer from '../../dnd/TimetableDragLayer'
 import Column from './Column'
+import { taskDayFilters } from '../../../utils/helpers'
 
 let contentTarget = {
     drop(props, monitor) {
@@ -51,7 +52,7 @@ export default class ContentDnD extends React.Component {
         let momentDayDate = momentDate.clone().isoWeekday(1) // calculate this weeks mondays date from any day of the week.
         let columns = []
         for ( let i = 0; i < 7; i++ ) {
-            const dayTasks = tasks.filter((task) => (moment(task.get('start')).isSame(momentDayDate, 'day')))
+            const dayTasks = tasks.filter((task) => (taskDayFilters[task.get('type')](task, momentDayDate)))
             columns.push(<Column key={i}
                                  editMode={editMode}
                                  locale={locale}

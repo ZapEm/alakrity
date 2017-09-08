@@ -1,4 +1,5 @@
 import classNames from 'classnames'
+import Immutable from 'immutable'
 import * as _ from 'lodash/object'
 import { merge as _merge } from 'lodash/object'
 import PropTypes from 'prop-types'
@@ -11,7 +12,6 @@ import { DANGER_LEVELS, LOCALE_STRINGS, TASK_TYPES } from '../../utils/constants
 import { DndTypes } from '../../utils/enums'
 import IconButton from '../misc/IconButton'
 import TaskEdit from './TaskEdit'
-import Immutable from 'immutable'
 
 const dragSource = {
     canDrag(props) {
@@ -58,6 +58,7 @@ export default class Task extends React.Component {
         taskActions: PropTypes.objectOf(PropTypes.func),
         editable: PropTypes.bool,
         draggable: PropTypes.bool,
+        dragShadow: PropTypes.bool,
         scaled: PropTypes.bool,
         connectDragSource: PropTypes.func,
         connectDragPreview: PropTypes.func,
@@ -114,12 +115,12 @@ export default class Task extends React.Component {
 
     render() {
         const {
-            task, taskActions: { removeTask }, editable, draggable, connectDragSource, isDragging, liWrapper,
+            task, taskActions: { removeTask }, editable, draggable, connectDragSource, isDragging, dragShadow, liWrapper,
             projectColorMap, locale
         } = this.props
 
 
-        if ( isDragging ) {
+        if ( isDragging && !dragShadow ) {
             return null
         }
 
@@ -137,7 +138,7 @@ export default class Task extends React.Component {
             }
         })).toJSON()
 
-        const itemColors = !task.get('type') ?
+        const itemColors = task.get('type') !== TASK_TYPES.oneTime ?
                            _.omit(colors, ['special']) :
                            colors.special
 
@@ -157,21 +158,18 @@ export default class Task extends React.Component {
         } else {
             element =
                 <div
-                    className={classNames('task-item', 'w3-card', 'w3-display-container', {
-                            'w3-round-large': !(task.get('projectType') === TASK_TYPES.repeating),
-                            'special': task.get('projectType') > TASK_TYPES.standard
+                    className={classNames('task-item', 'w3-card', 'w3-display-container',
+                        {
+                            'dragging': isDragging,
+                            'w3-round-large': !((task.get('type') === TASK_TYPES.repeating)),
+                            'special': task.get('type') === TASK_TYPES.oneTime
                         }
                     )
                     }
                     style={_merge({}, {
                             backgroundColor: itemColors.normal,
                             borderColor: itemColors.dark
-                        }, dragStyle, isDragging ?
-                        {
-                            pointerEvents: 'none',
-                            opacity: 0.6,
-                            zIndex: 1
-                        } : {}
+                        }, dragStyle
                     )}
                 >
                     <div className="task-item-info">
@@ -179,21 +177,23 @@ export default class Task extends React.Component {
                         {durationCutoff &&
                         <p className="duration">{(task.get('duration') / 60) + LOCALE_STRINGS[locale].hours}</p>}
                     </div>
-                    <div className="task-item-buttons w3-display-hover w3-display-topright">
-                        {editable &&
+                    {editable && !isDragging &&
+                    <div className="task-item-buttons w3-display-hover">
+                        <IconButton
+                            iconName={'check_circle'}
+                            onClick={() => removeTask(task.get('id'))}
+                            dangerLevel={DANGER_LEVELS.DANGER}
+                            style={{ float: 'left' }}
+                            unarmedDangerLevel={DANGER_LEVELS.WARN.hover}
+                            unarmedIconName={'delete_forever'}
+                        />
                         <IconButton
                             iconName={'edit'}
                             onClick={::this.handleEditClick}
+                            style={{ float: 'right' }}
                         />
-                        }
-                        {editable &&
-                        <IconButton
-                            iconName={'delete_forever'}
-                            onClick={() => removeTask(task.get('id'))}
-                            dangerLevel={DANGER_LEVELS.DANGER}
-                        />
-                        }
-                    </div>
+
+                    </div>}
                 </div>
             element = connectDragSource((liWrapper) ? <li
                 className={liWrapper.className}

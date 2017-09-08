@@ -29,7 +29,7 @@ export default class Login extends React.Component {
                             felis. Sed eget libero quis libero consectetur dictum sed eget justo. </p>
                     </div>
                 </div>
-                <div className="col sidebar">
+                <div id="sidebar" className="col sidebar">
                     <div className="login-sidebar w3-card-4 w3-padding w3-border w3-border-theme w3-round-large">
                         <AuthForm
                             authActions={bindActionCreators(authActions, dispatch)}

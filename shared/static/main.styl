@@ -1,5 +1,4 @@
 @import './w3_v4.css';
-@import './customScroll.css';
 @import './theme-colors.styl';
 @import './layout.styl';
 @import './timetable.styl';
@@ -7,6 +6,8 @@
 @import './misc.styl';
 @import './react-tabs.styl';
 @import './tasks.styl';
+@import './animations.styl';
+@import './customScroll.css';
 
 color-working = #ffd449
 color-idle = #90ee90
@@ -88,38 +89,4 @@ ul
   border-left-color $theme-color-1
   -webkit-animation spin 2s ease infinite
   animation spin 2s ease infinite
-
-@-webkit-keyframes spin
-  0%
-    transform rotate(0deg)
-    background-color $theme-color-2
-  25%
-    transform rotate(90deg)
-    background-color $theme-color-1
-  50%
-    transform rotate(180deg)
-    background-color $theme-color-4
-  75%
-    transform rotate(270deg)
-    background-color $theme-color-3
-  100%
-    transform rotate(360deg)
-    background-color $theme-color-2
-
-@keyframes spin
-  0%
-    transform rotate(0deg)
-    background-color $theme-color-2
-  25%
-    transform rotate(90deg)
-    background-color $theme-color-1
-  50%
-    transform rotate(180deg)
-    background-color $theme-color-4
-  75%
-    transform rotate(270deg)
-    background-color $theme-color-3
-  100%
-    transform rotate(0deg)
-    background-color $theme-color-2
 

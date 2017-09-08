@@ -100,34 +100,96 @@
   border solid 1px $theme-d2
   box-shadow 0 0 0 1.5px $theme !important
 
-.tt-controls
-  transition background-image 0.5s ease-in-out
+.tt-controls-wrapper
+  position relative
   height 35px
-  padding 4px
+  width 100%
+
+.tt-controls
+  display grid
+  grid-template-columns 4fr 1fr 2fr 1fr 4fr
+  align-items center
+  justify-items center
+  transition background-image 0.5s ease-in-out
+  width 100%
+  height 35px
+
+.tt-controls-left
+  justify-self start
+  margin-left 16px
+
+.tt-controls-middle-l
+  justify-self end
+
+.tt-controls-middle-r
+  justify-self start
+
+.tt-controls-right
+  justify-self end
+  margin-right 16px
+  margin-bottom 1px
+
+.tt-controls-visible
+.tt-controls-invisible
+  position absolute
+  top 0
+  left 0
+  right 0
+  bottom 0
+
+.tt-controls-visible
+  animation controls-fade-in 0.7s normal ease
+
+.tt-controls-invisible
+  animation controls-fade-out 0.7s normal ease
+  opacity 0
+  visibility 0
+  pointer-events none
+
+.tt-controls-hide-initial
+  opacity 0
+  visibility 0
+  pointer-events none
 
 .tt-controls-edit-mode
-  transition background 0.5s ease-in-out
+  display grid
+  grid-template-columns 1fr 3fr 1fr
+  position absolute
+  top 0
+  left 0
+  height 100%
+  width 100%
   border-top-left-radius 5px
   border-top-right-radius 5px
   background-color $theme-l5
-  background-image repeating-linear-gradient(135deg, transparent, transparent 20px, $theme-l7 21px, $theme-l7 40px)
 
 .tt-controls-edit-mode-text
-  margin 0
-  padding-bottom 4px
-  color $theme-d5
-  letter-spacing 2px
-  text-shadow: -1px -1px 0 $theme-l7, 1px -1px 0 $theme-l7, -1px 1px 0 $theme-l7, 1px 1px 0 $theme-l7;
+  grid-column 2
+  text-align center
+  line-height 35px
+  margin -2px 0 2px 0
+  color $theme-d3
+  font-weight 400
+  letter-spacing 3px
 
-.tt-controls-text
-  margin 0 4px
+.tt-controls-edit-mode-done
+  padding-right 16px
+  align-self center
+  justify-self end
+
+.tt-controls-label
   display inline-block
-  transform translateY(-7px)
+  margin 0 4px
+  transform translateY(-5px)
+
+.timetable-sidebar
+  display flex
+  flex-direction column
+  justify-content flex-start
 
 .tt-edit-sidebar
   box-sizing border-box
   position relative
-
 
 .tt-form
   height 100%

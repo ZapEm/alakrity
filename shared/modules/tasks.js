@@ -2,7 +2,7 @@ import * as Immutable from 'immutable'
 import { merge as _merge } from 'lodash/object'
 import moment from 'moment'
 import xss from 'xss'
-import { REJECTED_NAME as FAILURE, RESOLVED_NAME as SUCCESS } from '../utils/constants'
+import { REJECTED_NAME as FAILURE, RESOLVED_NAME as SUCCESS, TASK_TYPES } from '../utils/constants'
 import fetch from '../utils/fetcher'
 import newId from '../utils/newId'
 import { LOGIN, LOGOUT } from './auth'
@@ -42,12 +42,13 @@ export function createTask(taskInput) {
     }
 }
 
-export function quickAddTask(projectID) {
+export function quickAddTask(project) {
+    if ( !Immutable.Map.isMap(project) ) {project = Immutable.Map(project)}
 
     const taskInput = {
         text: '',
-        projectID,
-        repeating: false,
+        projectID: project.get('id'),
+        type: project.get('defaultTaskType') ? project.get('defaultTaskType') : TASK_TYPES.standard,
         created: moment(),
         duration: 120,
         start: null

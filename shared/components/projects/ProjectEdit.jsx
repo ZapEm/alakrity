@@ -15,7 +15,6 @@ export default class ProjectEdit extends React.Component {
         onCancel: PropTypes.func.isRequired,
         project: ImmutablePropTypes.map.isRequired
     }
-
     constructor(props) {
         super(props)
         this.state = {
@@ -32,9 +31,16 @@ export default class ProjectEdit extends React.Component {
         )
     }
 
+    handleSelect(e){
+        e.preventDefault()
+        this.setState({
+            project: this.state.project.set('defaultTaskType', +e.target.value)
+        })
+    }
+
     handleSubmit(e) {
         e.preventDefault()
-        this.props.onSubmit(this.state.project)
+        this.props.onSubmit(this.state.project.set('id', this.props.project.get('id')))
 
     }
 
@@ -109,9 +115,11 @@ export default class ProjectEdit extends React.Component {
                 {/*<div className="tt-form-spacer"/>*/}
                 <label className="project-task-type-label">Default Task Type
                     <select
-                        className="w3-select w3-round w3-border-theme project-task-type-select"
+                        className="w3-select project-input w3-round w3-border-theme project-task-type-select"
                         style={{ border: style.border }}
                         name="option"
+                        onChange={::this.handleSelect}
+                        defaultValue={this.state.project.get('defaultTaskType')}
                     >
                         <option value={TASK_TYPES.standard}>Standard</option>
                         <option value={TASK_TYPES.oneTime}>Appointment</option>
@@ -123,6 +131,7 @@ export default class ProjectEdit extends React.Component {
                 <LabeledIconButton
                     iconName={'done'}
                     label={'Save'}
+                    onClick={::this.handleSubmit}
                 />
             </div>
             <div className="w3-display-bottomleft w3-padding">

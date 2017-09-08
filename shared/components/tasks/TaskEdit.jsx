@@ -6,6 +6,7 @@ import { DragLayer, DragSource } from 'react-dnd'
 import { getEmptyImage } from 'react-dnd-html5-backend'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import { LOCALE_STRINGS } from '../../utils/constants'
+import { TASK_MAX_DURATION } from '../../utils/defaultValues'
 import { DndTypes } from '../../utils/enums'
 import newId from '../../utils/newId'
 import { getDurationDelta } from '../dnd/dndFunctions'
@@ -89,7 +90,7 @@ export default class TaskEdit extends React.Component {
 
             if ( !this.oldDuration ) this.oldDuration = dragItem.duration
             const newDuration = +dragItem.duration + getDurationDelta(offsetDelta)
-            if ( newDuration !== this.oldDuration && newDuration > 0 && newDuration <= 300 ) {
+            if ( newDuration !== this.oldDuration && newDuration > 0 && newDuration <= TASK_MAX_DURATION ) {
                 this.oldDuration = newDuration
                 dragItem.changeDuration(newDuration)
             }
@@ -107,6 +108,20 @@ export default class TaskEdit extends React.Component {
 
     handleTitleChange(e) {
         this.setState({ title: e.target.value })
+    }
+
+    handleKeyDown(e) {
+
+        // ArrowUp
+        if ( e.keyCode === 40 && (this.state.duration + 30 <= TASK_MAX_DURATION) ) {
+            e.preventDefault()
+            this.setState({ duration: this.state.duration + 30 })
+        }
+        // ArrowDown
+        if ( e.keyCode === 38 && (this.state.duration - 30 >= 30) ) {
+            e.preventDefault()
+            this.setState({ duration: this.state.duration - 30 })
+        }
     }
 
     render() {
@@ -139,9 +154,11 @@ export default class TaskEdit extends React.Component {
                         className="task-item-info"
                     >
                         <input
-                            className="w3-input task-item-title-edit"
+                            className="w3-input task-item-title-edit w3-round"
                             type="text"
+                            required
                             autoFocus
+                            onKeyDownCapture={::this.handleKeyDown}
                             placeholder="Enter title..."
                             onChange={::this.handleTitleChange}
                             defaultValue={this.state.title}/>
@@ -161,7 +178,7 @@ export default class TaskEdit extends React.Component {
                 }
             </form>
             <div
-                className="task-item-edit-buttons"
+                className={'task-item-edit-buttons' + (durationCutoff ? ' cutoff' : '')}
                 style={{
                     backgroundColor: colors.light,
                     borderColor: colors.dark
@@ -172,25 +189,22 @@ export default class TaskEdit extends React.Component {
                     className="cutoff-duration"
                 >{(this.state.duration / 60) + LOCALE_STRINGS[locale].hours}
                 </p>}
-
-                <IconButton
-                    formID={formID}
-                    iconName={'save'}
-                />
-                <IconButton
-                    style={{
-                        display: 'block',
-                        marginTop: 0
-                    }}
-                    iconName={'clear'}
-                />
-                <IconButton
-                    style={{
-                        display: 'block',
-                        marginTop: 0
-                    }}
-                    iconName={'content_paste'}
-                />
+                <div className="ti-edit-btn-line w3-display-bottommiddle">
+                    <IconButton
+                        iconName={'clear'}
+                        tooltip='Cancel'
+                    />
+                    <IconButton
+                        iconName={'content_paste'}
+                        tooltip="Details"
+                    />
+                    <IconButton
+                        formID={formID}
+                        tooltip="Save"
+                        iconName={'save'}
+                        onClick={::this.handleSubmit}
+                    />
+                </div>
             </div>
         </div>
     }

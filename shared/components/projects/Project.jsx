@@ -72,21 +72,22 @@ export default class Project extends React.Component {
                     {project.get('title')}
                 </h4>
                 <p>{project.get('description')}</p>
-                <div className="task-item-buttons w3-display-hover w3-display-topright">
-                    {editable &&
+                {editable &&
+                <div className="project-item-buttons w3-display-hover w3-display-topright">
                     <IconButton
-                        iconName={'edit'}
-                        onClick={::this.handleEditClick}
-                    />
-                    }
-                    {editable &&
-                    <IconButton
-                        iconName={'delete_forever'}
+                        iconName={'check_circle'}
+                        style={{float: 'left'}}
                         onClick={() => projectActions.removeProject(project.get('id'))}
                         dangerLevel={DANGER_LEVELS.DANGER}
+                        unarmedDangerLevel={DANGER_LEVELS.WARN.hover}
+                        unarmedIconName={'delete_forever'}
                     />
-                    }
-                </div>
+                    <IconButton
+                        iconName={'edit'}
+                        style={{float: 'right'}}
+                        onClick={::this.handleEditClick}
+                    />
+                </div>}
             </div>
         }
 

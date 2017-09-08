@@ -3,37 +3,49 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import tinycolor from 'tinycolor2'
-import { SPECIAL_PROJECTS } from '../../utils/constants'
 
 export default class ProjectSelector extends React.Component {
 
     static propTypes = {
         projectList: ImmutablePropTypes.list.isRequired,
-        selectProject: PropTypes.func.isRequired
+        selectProject: PropTypes.func.isRequired,
+        withAllOption: PropTypes.bool
+    }
+
+    static defaultProps = {
+        withAllOption: false
     }
 
     constructor(props) {
         super(props)
         this.state = {
             isActive: false,
-            currentProject: this.props.projectList.first() ? this.props.projectList.first() :
-                            Immutable.fromJS({ color: '#FFFFFF' })
+            currentProject: false
         }
     }
 
     handleSelectProject(e) {
         e.preventDefault()
-        const currentProject = this.props.projectList.get(e.target.value)
+        const currentProject = e.target.value !== '_ALL_PROJECTS' ? this.props.projectList.get(e.target.value) : false
 
         this.setState({ currentProject: currentProject })
         this.props.selectProject(currentProject)
     }
 
     render() {
-        const { projectList } = this.props
+        const { projectList, withAllOption } = this.props
 
         const disabled = (projectList.size === 0) ? 'A project needs to be created first.' : false
         let projectSelectOptions = []
+        if ( withAllOption ) {
+            projectSelectOptions.push(
+                <option
+                    className="project-selector-option"
+                    key={'_ALL_PROJECTS'}
+                    value={'_ALL_PROJECTS'}
+                    style={{ backgroundColor: 'white' }}
+                >{'< ALL PROJECTS >'}</option>)
+        }
         if ( !disabled ) {
             let i = 0
             for ( const project of projectList ) {
@@ -73,9 +85,9 @@ export default class ProjectSelector extends React.Component {
             name="option"
             style={{
                 backgroundColor: this.state.currentProject ?
-                                 tinycolor(this.state.currentProject.get('color')).brighten(10) : 'none',
+                                 tinycolor(this.state.currentProject.get('color')).brighten(10) : 'white',
                 border: this.state.currentProject ?
-                        'solid 1px ' + tinycolor(this.state.currentProject.get('color')).brighten(-35) : 'none'
+                        'solid 1px ' + tinycolor(this.state.currentProject.get('color')).brighten(-35) : 'solid 1px #777777'
             }}
             disabled={disabled}
         >

@@ -54,23 +54,23 @@ export const TASK_TYPES = Object.freeze(
 export const DANGER_LEVELS = Object.freeze(
     {
         DEFAULT: {
-            both: 'w3-text-theme w3-hover-theme',
-            hover: 'w3-text-theme w3-hover-theme'
+            both: ' w3-text-theme w3-hover-theme ',
+            hover: ' w3-text-theme w3-hover-theme '
         },
         SAFE: {
-            both: 'w3-text-green w3-hover-green',
-            hover: 'w3-text-theme w3-hover-green'
+            both: ' w3-text-green w3-hover-green ',
+            hover: ' w3-text-theme w3-hover-green '
         },
         WARN: {
-            both: 'w3-text-deep-orange w3-hover-deep-orange',
-            hover: 'w3-text-theme w3-hover-deep-orange'
+            both: ' w3-text-deep-orange w3-hover-deep-orange ',
+            hover: ' w3-text-theme w3-hover-deep-orange '
         },
         DANGER: {
-            both: 'w3-text-pink w3-hover-pink',
-            hover: 'w3-text-theme w3-hover-pink'
+            both: ' w3-text-pink w3-hover-pink ',
+            hover: ' w3-text-theme w3-hover-pink '
         },
         DISABLED: {
-            both: 'w3-text-gray'
+            both: ' w3-text-gray '
         }
     }
 )

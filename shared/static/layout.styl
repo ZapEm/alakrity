@@ -7,7 +7,7 @@
   position relative
   padding-top 43px
   max-width 1200px
-  min-height 100%
+  //min-height 100%
   margin-left auto
   margin-right auto
   background-color $theme-l7
@@ -19,17 +19,22 @@
 
 .row
   display table
-  position relative
+  position absolute
   vertical-align top
   padding 8px
+  top 43px
   //background-color #fff
   .col
     display table-cell
     position relative
     vertical-align top
     padding 8px
+    top 0
+    bottom 8px
     &.sidebar
       position fixed
+      margin-top 8px
+      top 43px
       width 292px
     &.px900
       width 892px
@@ -41,4 +46,6 @@
 
 .layout-sidebar
   position relative
+  max-height 100%
+  min-height 276px
   background-color white

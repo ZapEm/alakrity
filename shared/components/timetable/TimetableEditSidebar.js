@@ -1,7 +1,8 @@
-import moment from 'moment'
 import PropTypes from 'prop-types'
 import React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
+import { DEFAULT_TIMETABLE, thaw } from '../../utils/defaultValues'
+import newId from '../../utils/newId'
 import IconButton from '../misc/IconButton'
 import ProjectPeriodPicker from './parts/ProjectPeriodPicker'
 
@@ -17,7 +18,9 @@ export default class TimetableEditSidebar extends React.Component {
 
     constructor(props) {
         super(props)
-        this.state = {}
+        this.state = {
+            _update: true
+        }
     }
 
     componentWillMount() {
@@ -28,51 +31,53 @@ export default class TimetableEditSidebar extends React.Component {
         )
     }
 
+    componentWillUnmount() {
+        this.setState({ _update: true })
+    }
+
     componentWillReceiveProps(nextProps) {
         if ( this.props.timetables.get('timetable') !== nextProps.timetables.get('timetable') ) {
             this.setState({ timetable: nextProps.timetables.get('timetable') })
         }
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return nextState._update
+    }
+
     handleSubmit(e) {
         e.preventDefault()
+        this.setState({ _update: false })
         this.props.onSave(this.props.timetables.get('timetable').merge(this.state.timetable))
     }
 
     handleTitleChange(e) {
+        e.preventDefault()
         this.setState({ timetable: this.state.timetable.merge({ title: e.target.value }) })
     }
 
     handleSelectTimetable(e) {
-        console.log('## Loading Timetable (ID):', e.target.value)
+        e.preventDefault()
         this.props.timetableActions.loadTimetable(e.target.value)
     }
 
     createNewTimetable(e) {
         e.preventDefault()
-        const tableNr = this.props.timetables.get('timetableList').size + 1 | '0'
-        const timetable = {
-            title: 'New Timetable' + (tableNr > 0 ? ` (${tableNr})` : ''),
-            start: 7,
-            end: 22,
-            steps: 2,
-            projectPeriods: {
-                selection: [[], [], [], [], [], [], []]
-            },
-            created: moment()
-        }
 
-        console.log('No timetable found. Creating new timetable!')
-        this.props.timetableActions.createTimetable(timetable)
+        if ( typeof window !== 'undefined' ) {
+            this.props.timetableActions.createTimetable(thaw(DEFAULT_TIMETABLE))
+        }
     }
 
 
     handleStartChange(e) {
+        e.preventDefault()
         this.setState({ start: +e.target.value })
         this.props.timetableActions.changeTimetable(this.props.timetables.get('timetable').merge({ start: +e.target.value }))
     }
 
     handleEndChange(e) {
+        e.preventDefault()
         this.setState({ end: +e.target.value })
         this.props.timetableActions.changeTimetable(this.props.timetables.get('timetable').merge({ end: +e.target.value }))
     }
@@ -81,8 +86,6 @@ export default class TimetableEditSidebar extends React.Component {
     render() {
         const { textLabel, timetables, timetableActions, projectList } = this.props
         const timetable = timetables.get('timetable')
-        let saveText = 'done'
-
 
         const sortedTimetableList = timetables.get('timetableList').sort((a, b) => a.get('title').localeCompare(b.get('title')), { numeric: true })
         let dropdownOptions = []
@@ -91,11 +94,14 @@ export default class TimetableEditSidebar extends React.Component {
             dropdownOptions.push(<option key={k++} value={tt.get('id')}>{tt.get('title')}</option>)
         }
 
+        const titleID = newId('tt_title_')
+
         return (
             <div
                 className="tt-edit-sidebar w3-display-container "
             >
                 <form
+                    id="tt-edit-form"
                     className="tt-form w3-padding w3-card-4 w3-round-large w3-border w3-border-theme w3-leftbar w3-rightbar"
                     onSubmit={::this.handleSubmit}
                 >
@@ -128,10 +134,10 @@ export default class TimetableEditSidebar extends React.Component {
                     <div className="w3-border-bottom w3-margin-top w3-margin-bottom w3-border-theme"/>
 
                     <div className="tt-form-line">
-                        <label className="tt-form-label" htmlFor="tt_title">Title</label>
+                        <label className="tt-form-label" htmlFor={titleID}>Title</label>
                         <input
                             className='tt-form-input tt-title-field w3-input'
-                            id="tt_title"
+                            id={titleID}
                             type="text"
                             placeholder={textLabel}
                             value={this.state.timetable.get('title')}
@@ -194,10 +200,6 @@ export default class TimetableEditSidebar extends React.Component {
                         setCurrentProject={timetableActions.setCurrentProject}
                         projectList={projectList}
                         currentProjectID={timetables.get('currentProjectID')}
-                    />
-
-                    <IconButton
-                        iconName={saveText}
                     />
                 </form>
             </div>

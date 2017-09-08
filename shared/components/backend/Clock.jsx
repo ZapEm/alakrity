@@ -15,41 +15,52 @@ export default class Clock extends React.Component {
         this.state = {
             time: new Date()
         }
+        this.currentMinute = this.state.time.getMinutes()
+        this.initial = true
+    }
+
+    componentWillUpdate(nextProps, nextState) {
+        return nextState.time !== this.state.time
     }
 
     componentWillMount() {
-        this.timerID = setInterval(() => this.tick(), 1000)
+        if ( typeof window !== 'undefined') {
+            this.timerID = setInterval(() => this.tick(), 1000)
+            this._isMounted = true
+        }
     }
 
     componentWillUnmount() {
-        clearInterval(this.timerID)
+        if ( typeof window !== 'undefined' ) {
+            clearInterval(this.timerID)
+            this._isMounted = false
+        }
     }
 
     tick() {
 
-        const time = new Date()
-        if ( this.clockRef ) {
-            this.setState({
-                time: time
-            })
+        this.time = new Date()
 
+        if ( this._isMounted ) {
+            this.setState({
+                time: this.time
+            })
         }
 
         // do once per minute...
-        if ( !this.currentMinute || time.getMinutes() !== this.currentMinute ) {
-            this.currentMinute = time.getMinutes()
-
-            this.props.backendActions.updateUpcomingTasks(this.props.taskList, time, 10)
-            this.props.backendActions.setTime(time)
+        if ( this.initial || this.time.getMinutes() !== this.currentMinute ) {
+            this.currentMinute = this.time.getMinutes()
+            this.props.backendActions.updateUpcomingTasks(this.props.taskList, this.time, 10)
+            this.props.backendActions.setTime(this.time)
+            this.initial = false
         }
     }
 
     render() {
         return <div
             className="clock"
-            ref={ref => this.clockRef = ref}
         >
-            <span className="w3-large w3-theme-d1">{this.state.time.toLocaleTimeString()}</span>
+            <span className="w3-large w3-theme-d1">{this.state.time.toLocaleTimeString('de')}</span>
         </div>
     }
 }

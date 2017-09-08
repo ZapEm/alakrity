@@ -4,12 +4,12 @@ import ImmutablePropTypes from 'react-immutable-proptypes'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import Spinner from '../components/misc/Spinner'
-import TasksList from '../components/tasks/TasksList'
+import TasksSidebarView from '../components/tasks/TasksSidebarView'
 import EditTimetableForm from '../components/timetable/TimetableEditSidebar'
 import TimetableView from '../components/timetable/TimetableView'
+import * as SettingsActions from '../modules/settings'
 import * as TaskActions from '../modules/tasks'
 import * as TimetableActions from '../modules/timetables'
-import * as SettingsActions from '../modules/settings'
 import { DEFAULT_TIMETABLE, thaw } from '../utils/defaultValues'
 
 
@@ -74,20 +74,16 @@ export default class Timetable extends React.Component {
                             settingsActions={bindActionCreators(SettingsActions, dispatch)}
                         />
                     </div>
-                    {(!editMode) ?
-                     <div className="col sidebar">
-                         <TasksList
+                    <div id="sidebar" className="col sidebar">
+                        {(!editMode) ?
+                         <TasksSidebarView
                              taskList={tasks.get('taskList')}
                              projectList={projectList}
                              locale={locale}
-                             draggable={true}
                              filterByMoment={timetables.get('currentWeek')}
                              taskActions={bindActionCreators(TaskActions, dispatch)}
-                             sidebar={true}
                          />
-                     </div>
-                        :
-                     <div className="col sidebar">
+                            :
                          <EditTimetableForm
                              onSave={bindActionCreators(TimetableActions.saveTimetable, dispatch)}
                              onRemove={bindActionCreators(TimetableActions.removeTimetable, dispatch)}
@@ -96,8 +92,8 @@ export default class Timetable extends React.Component {
                              timetables={timetables}
                              projectList={projectList}
                          />
-                     </div>
-                    }
+                        }
+                    </div>
                 </div>
             </div>
         )

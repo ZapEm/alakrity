@@ -1,5 +1,5 @@
 import Immutable from 'immutable'
-import { merge as _merge } from 'lodash/object'
+import * as _ from 'lodash/object'
 import moment from 'moment'
 import xss from 'xss'
 import { REJECTED_NAME as FAILURE, RESOLVED_NAME as SUCCESS } from '../utils/constants'
@@ -34,7 +34,7 @@ export function createProject(projectInput, { editing } = {}) {
 
     return {
         type: CREATE,
-        payload: _merge({}, projectInput, {
+        payload: _.merge({}, projectInput, {
             id: newId('TmpProjectID_'),
             editing: !!editing
         }),
@@ -51,7 +51,9 @@ export function editProject(projectInput) {
     }
 
     projectInput.title = xss(projectInput.title)
-    projectInput = _merge({}, projectInput, { lastEdited: moment() })
+    projectInput.editing = false
+    projectInput = _.merge({}, projectInput, { lastEdited: moment() })
+
 
     if ( !projectInput.id || projectInput.id.startsWith('TEMP_ID_') ) {
         return {
@@ -64,7 +66,7 @@ export function editProject(projectInput) {
         type: EDIT,
         payload: projectInput,
         meta: {
-            promise: fetch.post('projects', { id: projectInput.id, data: projectInput }),
+            promise: fetch.post('projects', { id: projectInput.id, data: _.omit(projectInput, ['editing']) }),
             optimist: true
         }
     }

@@ -1,0 +1,59 @@
+@keyframes controls-fade-in
+  from
+    opacity 0
+    visibility 0
+  to
+    opacity 1
+    visibility 1
+
+
+@keyframes controls-fade-out
+  from
+    opacity 1
+    visibility 1
+  to
+    opacity 0
+    visibility 0
+
+
+@keyframes spin
+  0%
+    transform rotate(0deg)
+    background-color $theme-color-2
+  25%
+    transform rotate(90deg)
+    background-color $theme-color-1
+  50%
+    transform rotate(180deg)
+    background-color $theme-color-4
+  75%
+    transform rotate(270deg)
+    background-color $theme-color-3
+  100%
+    transform rotate(0deg)
+    background-color $theme-color-2
+
+@keyframes slide-in
+  from
+    transform translateY(-50px)
+    opacity 0
+  to
+    transform translateY(0px)
+    opacity 1
+
+
+//@keyframes pop-out
+//  to
+//    transform scale(1.05, 1.05)
+
+
+@keyframes bounce
+  40%
+    transform scale(.80, .80)
+
+.animate-arming
+  animation bounce normal forwards 0.4s// ease-out
+
+.animate-drag-pop
+  transform scale(1.01, 1.01)
+  //animation pop-out 0.07s normal forwards ease-out

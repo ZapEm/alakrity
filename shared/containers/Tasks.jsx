@@ -6,6 +6,7 @@ import { bindActionCreators } from 'redux'
 import TaskForm from '../components/tasks/TaskForm'
 import TasksList from '../components/tasks/TasksList'
 import * as TaskActions from '../modules/tasks'
+import TasksView from '../components/tasks/TasksView'
 
 
 @connect(state => ({
@@ -35,16 +36,14 @@ export default class Tasks extends React.Component {
             <div className="react-container">
                 <div className="row">
                     <div className="col px900">
-                        <TasksList
+                        <TasksView
+                            locale={locale}
+                            taskActions={bindActionCreators(TaskActions, dispatch)}
                             taskList={tasks.get('taskList')}
                             projectList={projectList}
-                            locale={locale}
-                            draggable={false}
-                            taskActions={bindActionCreators(TaskActions, dispatch)}
                         />
-
                     </div>
-                    <div className="col sidebar">
+                    <div id="sidebar" className="col sidebar">
                         <TaskForm
                             onSubmit={bindActionCreators(TaskActions.createTask, dispatch)}
                             textLabel="Enter new task name"
