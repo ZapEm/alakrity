@@ -46,7 +46,7 @@ export default class TasksSidebarView extends React.Component {
 
     handleQuickAddTask(e) {
         e.preventDefault()
-        this.props.taskActions.quickAddTask(this.state.project.get('id'))
+        this.props.taskActions.quickAddTask(this.state.project)
     }
 
     changeProject(project) {

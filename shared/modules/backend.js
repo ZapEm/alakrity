@@ -15,7 +15,7 @@ const UPDATE_UPCOMING_TASKS = 'alakrity/backend/UPDATE_UPCOMING_TASKS'
  * Action Creators:
  * */
 
-export function setTime(time) {
+export function setCurrentTime(time) {
     return {
         type: SET_TIME,
         payload: time

@@ -19,7 +19,8 @@ export default class TasksSidebarView extends React.Component {
         projectList: ImmutablePropTypes.list.isRequired,
         taskActions: PropTypes.objectOf(PropTypes.func).isRequired,
         filterByMoment: MomentPropTypes.momentObj.isRequired,
-        locale: PropTypes.string.isRequired
+        locale: PropTypes.string.isRequired,
+        projectColorMap: ImmutablePropTypes.map.isRequired
     }
 
     static defaultProps = {
@@ -30,8 +31,7 @@ export default class TasksSidebarView extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            project: false,
-            projectColorMap: getProjectColorMap(this.props.projectList)
+            project: false
         }
     }
 
@@ -43,7 +43,6 @@ export default class TasksSidebarView extends React.Component {
 
     handleFilterChange(e) {
         this.setState({ filterRadioSelection: e.target.value })
-        console.log(e.target.value)
     }
 
     handleQuickAddTask(e) {
@@ -56,20 +55,20 @@ export default class TasksSidebarView extends React.Component {
     }
 
     render() {
-        const { taskActions, taskList, projectList, locale } = this.props
+        const { taskActions, taskList, projectList, locale, projectColorMap } = this.props
 
         const projectID = this.state.project ? this.state.project.get('id') : false
         const filter = getTaskListFilter(this.state.filterRadioSelection, projectID , this.props.filterByMoment)
 
         return (
-            <div className={'layout-sidebar w3-card-4 w3-padding w3-border w3-border-theme w3-round-large'}>
-                <div className="timetable-sidebar">
-                    <ProjectSelector
-                        projectList={projectList}
-                        specialProjects={Immutable.fromJS([SPECIAL_PROJECTS.ONE_TIME])}
-                        selectProject={::this.changeProject}
-                        withAllOption={true}
-                    />
+            <div className={'flex-column tt-edit-sidebar w3-card-4 w3-padding w3-border w3-border-theme w3-round-large'}>
+                {/*<div className="timetable-sidebar">*/}
+                <div className="flex-item-rigid"><ProjectSelector
+                    projectList={projectList}
+                    specialProjects={Immutable.fromJS([SPECIAL_PROJECTS.ONE_TIME])}
+                    selectProject={::this.changeProject}
+                    withAllOption={true}
+                />
                     <div className="tt-form-line">
                         <LabeledIconButton
                             disabled={!this.state.project ? 'Select a project first' : false}
@@ -78,6 +77,7 @@ export default class TasksSidebarView extends React.Component {
                             onClick={::this.handleQuickAddTask}
                         />
                     </div>
+
                     <form
                         className="w3-center w3-border-bottom w3-margin-top w3-border-theme"
                         onChange={::this.handleFilterChange}
@@ -106,16 +106,18 @@ export default class TasksSidebarView extends React.Component {
                             {'All'}
                         </label>
                     </form>
+                </div>
                     <TasksList
                         taskList={taskList.filter(filter)}
                         taskActions={taskActions}
-                        projectColorMap={this.state.projectColorMap}
+                        projectColorMap={projectColorMap}
                         locale={locale}
                         sidebar={true}
                         draggable={true}
                         columns={2}
+                        addClassNames={'flex-item-shrinkable'}
                     />
-                </div>
+                {/*</div>*/}
             </div>
         )
     }

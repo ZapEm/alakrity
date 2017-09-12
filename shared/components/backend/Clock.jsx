@@ -51,7 +51,7 @@ export default class Clock extends React.Component {
         if ( this.initial || this.time.getMinutes() !== this.currentMinute ) {
             this.currentMinute = this.time.getMinutes()
             this.props.backendActions.updateUpcomingTasks(this.props.taskList, this.time, 10)
-            this.props.backendActions.setTime(this.time)
+            this.props.backendActions.setCurrentTime(this.time)
             this.initial = false
         }
     }

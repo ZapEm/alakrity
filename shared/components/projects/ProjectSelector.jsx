@@ -58,16 +58,6 @@ export default class ProjectSelector extends React.Component {
                     >{project.get('title')}</option>
                 )
             }
-            // for ( const project of Object.values(SPECIAL_PROJECTS) ) {
-            //     projectSelectOptions.push(
-            //         <option
-            //             className="project-selector-option"
-            //             key={project.key}
-            //             value={project.key}
-            //             style={{ backgroundColor: project.light }}
-            //         >{project.title}</option>
-            //     )
-            // }
 
         } else {
             projectSelectOptions.push(
@@ -80,7 +70,7 @@ export default class ProjectSelector extends React.Component {
 
         return <select
             onChange={::this.handleSelectProject}
-            className={'project-selector w23-border-theme w3-round w3-select' + (disabled ? ' w3-text-gray' :
+            className={'project-selector w3-round w3-select' + (disabled ? ' w3-text-gray' :
                                                                                  '')}
             name="option"
             style={{

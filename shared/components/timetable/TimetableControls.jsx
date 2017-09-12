@@ -100,7 +100,7 @@ export default class TimetableControls extends React.Component {
                             iconName={'edit'}
                             tooltip="Edit or change timetable"
                             onClick={::this.handleEditClick}
-                            label="Change Schedule"
+                            label="Basic Schedule"
                         />
                     </div>
                 </div>
@@ -110,7 +110,7 @@ export default class TimetableControls extends React.Component {
                     'tt-controls-hide-initial': initial && !editMode
                 })}>
                     <div className="tt-controls-edit-mode">
-                        <h3 className="tt-controls-edit-mode-text">Change Schedule</h3>
+                        <h3 className="tt-controls-edit-mode-text">Basic Schedule</h3>
                         <div className="tt-controls-edit-mode-done">
                             <LabeledIconButton
                                 iconName={'done'}

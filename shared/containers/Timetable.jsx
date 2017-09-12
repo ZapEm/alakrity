@@ -11,6 +11,8 @@ import * as SettingsActions from '../modules/settings'
 import * as TaskActions from '../modules/tasks'
 import * as TimetableActions from '../modules/timetables'
 import { DEFAULT_TIMETABLE, thaw } from '../utils/defaultValues'
+import { getProjectColorMap } from '../utils/helpers'
+import { TASK_TYPES } from '../utils/constants'
 
 
 @connect(state => ({
@@ -35,6 +37,11 @@ export default class Timetable extends React.Component {
         dispatch: PropTypes.func
     }
 
+    constructor(props) {
+        super(props)
+        this.state = { projectColorMap: getProjectColorMap(this.props.projects.get('projectList')) }
+    }
+
     componentDidMount() {
         // creates a new timetable if needed
         if ( !this.props.timetables.get('timetableList').size ) {
@@ -50,7 +57,13 @@ export default class Timetable extends React.Component {
         const locale = settings.get('locale')
         const editMode = timetables.get('editMode')
         const projectList = projects.get('projectList')
-
+        
+        const preFilter = (editMode) 
+            ? (task) => task.get('type') === TASK_TYPES.repeating 
+            : (task) => task.get('type') !== TASK_TYPES.repeating
+        const preFilteredTasks = tasks.get('taskList').filter(preFilter)
+        
+        
         if ( !timetables.get('timetable').size ) {
             return <div style={{ margin: 'auto' }}>
                 <Spinner status={'WORKING'}/>
@@ -72,16 +85,18 @@ export default class Timetable extends React.Component {
                             taskActions={bindActionCreators(TaskActions, dispatch)}
                             timetableActions={bindActionCreators(TimetableActions, dispatch)}
                             settingsActions={bindActionCreators(SettingsActions, dispatch)}
+                            projectColorMap={this.state.projectColorMap}
                         />
                     </div>
                     <div id="sidebar" className="col sidebar">
                         {(!editMode) ?
                          <TasksSidebarView
-                             taskList={tasks.get('taskList')}
+                             taskList={preFilteredTasks}
                              projectList={projectList}
                              locale={locale}
                              filterByMoment={timetables.get('currentWeek')}
                              taskActions={bindActionCreators(TaskActions, dispatch)}
+                             projectColorMap={this.state.projectColorMap}
                          />
                             :
                          <EditTimetableForm
@@ -91,6 +106,10 @@ export default class Timetable extends React.Component {
                              textLabel={'Enter Timetable Name...'}
                              timetables={timetables}
                              projectList={projectList}
+                             projectColorMap={this.state.projectColorMap}
+                             taskActions={bindActionCreators(TaskActions, dispatch)}
+                             locale={locale}
+                             taskList={preFilteredTasks}
                          />
                         }
                     </div>

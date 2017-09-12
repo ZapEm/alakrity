@@ -7,15 +7,8 @@
       <excludeFolder url="file://$MODULE_DIR$/temp" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
     </content>
+    <content url="file://$MODULE_DIR$/node_modules" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="react-DefinitelyTyped" level="application" />
-    <orderEntry type="library" name="node-DefinitelyTyped" level="application" />
-    <orderEntry type="library" name="immutable-DefinitelyTyped" level="application" />
-    <orderEntry type="library" name="react-autosuggest-DefinitelyTyped" level="application" />
-    <orderEntry type="library" name="react-dnd-DefinitelyTyped" level="application" />
-    <orderEntry type="library" name="react-redux-DefinitelyTyped" level="application" />
-    <orderEntry type="library" name="react-router-DefinitelyTyped" level="application" />
-    <orderEntry type="library" name="redux-DefinitelyTyped" level="application" />
   </component>
 </module>

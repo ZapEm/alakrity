@@ -1,3 +1,4 @@
+import classNames from 'classnames'
 import PropTypes from 'prop-types'
 import React from 'react'
 import CustomScroll from 'react-custom-scroll'
@@ -14,30 +15,34 @@ export default class TasksList extends React.Component {
         locale: PropTypes.string.isRequired,
         draggable: PropTypes.bool,
         sidebar: PropTypes.bool,
-        columns: PropTypes.number
+        columns: PropTypes.number,
+        editMode: PropTypes.bool,
+        addClassNames: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.string])
     }
 
     static defaultProps = {
         sidebar: false,
         draggable: false,
+        editMode: false,
+        addClassNames: [],
         columns: 1
     }
 
 
-    componentDidMount() {
-        this.sidebarRef = document.getElementById('sidebar')
-
-        this.intervalID = setInterval(() => {
-            this.containerRef.style.height = (this.sidebarRef.clientHeight - this.containerRef.offsetTop - 24) + 'px'
-        }, 100)
-    }
-
-    componentWillUnmount() {
-        clearInterval(this.intervalID)
-    }
+    // componentDidMount() {
+    //     this.sidebarRef = document.getElementById('sidebar')
+    //
+    //     this.intervalID = setInterval(() => {
+    //         this.containerRef.style.height = (this.sidebarRef.clientHeight - this.containerRef.offsetTop - 24) + 'px'
+    //     }, 100)
+    // }
+    //
+    // componentWillUnmount() {
+    //     clearInterval(this.intervalID)
+    // }
 
     render() {
-        const { draggable, taskActions, taskList, locale, projectColorMap, columns, sidebar } = this.props
+        const { draggable, taskActions, taskList, locale, projectColorMap, columns, sidebar, editMode, addClassNames } = this.props
 
         let taskItems = []
         let columnTally = []
@@ -57,6 +62,7 @@ export default class TasksList extends React.Component {
                         dragShadow={true}
                         editable={true}
                         locale={locale}
+                        editMode={editMode}
                         liWrapper={
                             {
                                 className: 'task-list-item',
@@ -84,8 +90,10 @@ export default class TasksList extends React.Component {
 
         return (
             <div
-                className={(sidebar ? 'task-list-container-sidebar' : 'task-list-container')}
-                ref={ref => this.containerRef = ref}
+                className={classNames(addClassNames, {
+                    'task-list-container-sidebar': sidebar,
+                    'task-list-container': !sidebar
+                })}
             >
                 <CustomScroll
                     heightRelativeToParent={'100%'}

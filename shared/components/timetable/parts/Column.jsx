@@ -64,6 +64,7 @@ export default class Column extends React.Component {
                     draggable={true}
                     taskActions={taskActions}
                     locale={locale}
+                    editMode={editMode}
                     liWrapper={
                         {
                             className: 'tt-task-item',

@@ -15,6 +15,12 @@ import TaskEdit from './TaskEdit'
 
 const dragSource = {
     canDrag(props) {
+        if(!props.editMode && props.task.get('type') === TASK_TYPES.repeating){
+            if(confirm('Repeating tasks can only be moved while in the "Basic Schedule" view.\n\nDo you want to create an exception for this week?')){
+                alert('Well, too bad. Exceptions are not implemented, yet.') //TODO: exceptions for repeating tasks
+            }
+            return false
+        }
         return props.draggable
     },
 
@@ -64,7 +70,12 @@ export default class Task extends React.Component {
         connectDragPreview: PropTypes.func,
         isDragging: PropTypes.bool,
         liWrapper: PropTypes.object,
-        locale: PropTypes.string.isRequired
+        locale: PropTypes.string.isRequired,
+        editMode: PropTypes.bool
+    }
+
+    static defaultProps = {
+        editMode: false
     }
 
     static contextTypes = {

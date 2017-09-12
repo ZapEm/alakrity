@@ -23,21 +23,22 @@ export default class Timetable extends React.Component {
         settingsActions: PropTypes.object.isRequired,
         timetables: ImmutablePropTypes.map.isRequired,
         settings: ImmutablePropTypes.map.isRequired,
-        time: PropTypes.instanceOf(Date)
+        time: PropTypes.instanceOf(Date),
+        projectColorMap: ImmutablePropTypes.map.isRequired
     }
 
-    constructor(props) {
-        super(props)
-        this.state = { projectColorMap: undefined }
-    }
-
-    componentWillMount() {
-        this.setState({ projectColorMap: getProjectColorMap(this.props.projectList) })
-    }
+    // constructor(props) {
+    //     super(props)
+    //     this.state = { projectColorMap: undefined }
+    // }
+    //
+    // componentWillMount() {
+    //     this.setState({ projectColorMap: getProjectColorMap(this.props.projectList) })
+    // }
 
 
     render() {
-        const { date, tasks, taskActions, editMode, timetableActions, settingsActions, timetables, settings, time } = this.props
+        const { date, tasks, taskActions, editMode, timetableActions, settingsActions, timetables, settings, time, projectColorMap } = this.props
         const momentDate = moment.isMoment(date) ? date : moment(date)
         const locale = settings.get('locale')
         momentDate.locale(locale)
@@ -66,7 +67,7 @@ export default class Timetable extends React.Component {
                     <ContentDnD
                         editMode={editMode}
                         timetables={timetables}
-                        projectColorMap={this.state.projectColorMap}
+                        projectColorMap={projectColorMap}
                         momentDate={momentDate}
                         tasks={tasks}
                         taskActions={taskActions}

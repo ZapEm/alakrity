@@ -1,9 +1,13 @@
+import Immutable from 'immutable'
 import PropTypes from 'prop-types'
 import React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import { DEFAULT_TIMETABLE, thaw } from '../../utils/defaultValues'
+import { TaskListFilters } from '../../utils/enums'
+import { getTaskListFilter } from '../../utils/helpers'
 import newId from '../../utils/newId'
 import IconButton from '../misc/IconButton'
+import TasksList from '../tasks/TasksList'
 import ProjectPeriodPicker from './parts/ProjectPeriodPicker'
 
 export default class TimetableEditSidebar extends React.Component {
@@ -13,7 +17,15 @@ export default class TimetableEditSidebar extends React.Component {
         timetableActions: PropTypes.object.isRequired,
         timetables: ImmutablePropTypes.map.isRequired,
         projectList: ImmutablePropTypes.list.isRequired,
-        textLabel: PropTypes.string
+        textLabel: PropTypes.string,
+        projectColorMap: ImmutablePropTypes.map.isRequired,
+        taskList: ImmutablePropTypes.list,
+        taskActions: PropTypes.objectOf(PropTypes.func).isRequired,
+        locale: PropTypes.string.isRequired
+    }
+
+    defaultProps = {
+        taskList: Immutable.List()
     }
 
     constructor(props) {
@@ -26,10 +38,12 @@ export default class TimetableEditSidebar extends React.Component {
     componentWillMount() {
         this.setState(
             {
-                timetable: this.props.timetables.get('timetable')
+                timetable: this.props.timetables.get('timetable'),
+                filterRadioSelection: TaskListFilters.UNASSIGNED
             }
         )
     }
+
 
     componentWillUnmount() {
         this.setState({ _update: true })
@@ -82,9 +96,13 @@ export default class TimetableEditSidebar extends React.Component {
         this.props.timetableActions.changeTimetable(this.props.timetables.get('timetable').merge({ end: +e.target.value }))
     }
 
+    handleFilterChange(e) {
+        this.setState({ filterRadioSelection: e.target.value })
+    }
+
 
     render() {
-        const { textLabel, timetables, timetableActions, projectList } = this.props
+        const { textLabel, timetables, timetableActions, projectList, projectColorMap, taskActions, taskList, locale } = this.props
         const timetable = timetables.get('timetable')
 
         const sortedTimetableList = timetables.get('timetableList').sort((a, b) => a.get('title').localeCompare(b.get('title')), { numeric: true })
@@ -98,11 +116,11 @@ export default class TimetableEditSidebar extends React.Component {
 
         return (
             <div
-                className="tt-edit-sidebar w3-display-container "
+                className="flex-column tt-edit-sidebar w3-padding w3-card-4 w3-round-large w3-border w3-border-theme"
             >
                 <form
                     id="tt-edit-form"
-                    className="tt-form w3-padding w3-card-4 w3-round-large w3-border w3-border-theme w3-leftbar w3-rightbar"
+                    className="tt-form flex-item-rigid"
                     onSubmit={::this.handleSubmit}
                 >
                     <select
@@ -193,17 +211,61 @@ export default class TimetableEditSidebar extends React.Component {
                         />
                         <span className="tt-form-time-sign">:00</span>
                     </div>
-
-                    <div className="w3-border-bottom w3-margin-top w3-margin-bottom w3-border-theme"/>
-
-                    <ProjectPeriodPicker
-                        setCurrentProject={timetableActions.setCurrentProject}
-                        projectList={projectList}
-                        currentProjectID={timetables.get('currentProjectID')}
-                    />
                 </form>
+                {/*<div className="flex-item-rigid w3-border-bottom w3-margin-top w3-margin-bottom w3-border-theme"/>*/}
+                {/*<div className="flex-item-flexible">*/}
+                <ProjectPeriodPicker
+                    setCurrentProject={timetableActions.setCurrentProject}
+                    projectList={projectList}
+                    currentProjectID={timetables.get('currentProjectID')}
+                />
+                {/*</div>*/}
+
+                {/*<div className="flex-item-rigid w3-border-bottom w3-margin-top w3-margin-bottom w3-border-theme"/>*/}
+
+                <div className="flex-item-rigid">
+                    <label>Repeating Tasks</label>
+                    <form
+                        className="w3-center"
+                        onChange={::this.handleFilterChange}
+                    >
+                        <label className="task-list-filter-label">
+                            <input
+                                className="task-list-filter-radio"
+                                type="radio"
+                                name="tasklist_filter"
+                                value={TaskListFilters.UNASSIGNED}
+                                checked={this.state.filterRadioSelection === TaskListFilters.UNASSIGNED}
+                                readOnly
+                            />
+                            {'Unassigned'}
+                        </label>
+                        <label className="task-list-filter-label">
+                            <input
+                                className="task-list-filter-radio"
+                                type="radio"
+                                name="tasklist_filter"
+                                value={TaskListFilters.ALL}
+                                checked={this.state.filterRadioSelection === TaskListFilters.ALL}
+                                readOnly
+                            />
+                            {'All'}
+                        </label>
+                    </form>
+                </div>
+                <TasksList
+                    addClassNames={'flex-item-shrinkable'}
+                    taskList={taskList.filter(getTaskListFilter(this.state.filterRadioSelection))}
+                    taskActions={taskActions}
+                    projectColorMap={projectColorMap}
+                    locale={locale}
+                    sidebar={true}
+                    draggable={true}
+                    editMode={true}
+                    columns={2}
+                />
+
             </div>
         )
     }
-
 }

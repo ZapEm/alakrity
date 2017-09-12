@@ -28,32 +28,40 @@ export default class Navbar extends React.Component {
 
     render() {
         const { isWorking, isAuthenticated, message, logout, currentPath, taskList, backendActions } = this.props
+        const style = { width: '15%' }
+
         return (
             <div className="w3-row w3-top w3-theme-l4 w3-card">
                 <nav id="navbar" style={{ maxWidth: '1200px' }}>
                     <div className="w3-bar w3-large w3-theme-d1">
                         {isAuthenticated
                             ? [<Link
-                                   key={'timetable'} style={{ width: '15%' }}
+                                   key={'timetable'} style={style}
                                    className={(currentPath === '/' ? 'w3-theme-l1' :
                                                'w3-hover-theme') + ' navbar-button w3-bar-item w3-center no-underline'}
                                    to={'/'}
                                >Timetable</Link>,
                                <Link
-                                   key={'tasks'} style={{ width: '15%' }}
+                                   key={'tasks'} style={style}
                                    className={(currentPath === '/tasks' ? 'w3-theme-l1' :
                                                'w3-hover-theme') + ' navbar-button w3-bar-item w3-center no-underline'}
                                    to={'/tasks'}
                                >Tasks</Link>,
                                <Link
-                                   key={'projects'} style={{ width: '15%' }}
+                                   key={'projects'} style={style}
                                    className={(currentPath === '/projects' ? 'w3-theme-l1' :
                                                'w3-hover-theme') + ' navbar-button w3-bar-item w3-center no-underline'}
                                    to={'/projects'}
-                               >Projects</Link>
+                               >Projects</Link>,
+                               <Link
+                                   key={'statistics'} style={style}
+                                   className={(currentPath === '/statistics' ? 'w3-theme-l1' :
+                                               'w3-hover-theme') + ' navbar-button w3-bar-item w3-center no-underline'}
+                                   to={'/statistics'}
+                               >Statistics</Link>
                             ] :
                          <Link
-                             key={'login'} style={{ width: '15%' }}
+                             key={'login'} style={style}
                              className={(currentPath === '/login' ? 'w3-theme-l1' :
                                          'w3-hover-theme') + ' navbar-button w3-bar-item w3-center no-underline'}
                              to={'/login'}

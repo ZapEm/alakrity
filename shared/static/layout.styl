@@ -23,7 +23,6 @@
   vertical-align top
   padding 8px
   top 43px
-  //background-color #fff
   .col
     display table-cell
     position relative
@@ -35,6 +34,7 @@
       position fixed
       margin-top 8px
       top 43px
+      bottom 8px
       width 292px
     &.px900
       width 892px
@@ -49,3 +49,20 @@
   max-height 100%
   min-height 276px
   background-color white
+
+.flex-column
+  display flex
+  position fixed
+  top 0
+  bottom 0
+  left 0
+  flex-direction column
+  justify-items stretch
+
+.flex-item-shrinkable
+  position relative
+  flex 0 1 60%
+  overflow hidden
+
+.flex-item-rigid
+  flex 0
