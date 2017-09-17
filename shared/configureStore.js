@@ -1,7 +1,7 @@
 import { routerMiddleware, syncHistoryWithStore } from 'react-router-redux'
 import { applyMiddleware, compose, createStore } from 'redux'
-import { createLogger } from 'redux-logger'
 import optimistPromiseMiddleware from 'redux-optimist-promise'
+import thunkMiddleware from 'redux-thunk'
 import DevTools from '../shared/containers/devTools'
 import reducer from '../shared/modules/reducer'
 import { REJECTED_NAME, RESOLVED_NAME } from './utils/constants'
@@ -13,6 +13,7 @@ export default function configureStore(baseHistory, initialState, isServer = fal
     let enhancer = compose(
         applyMiddleware(
             routerMiddleware(baseHistory),
+            thunkMiddleware,
             optimistPromiseMiddleware(
                 {
                     resolvedName: RESOLVED_NAME,
@@ -26,26 +27,40 @@ export default function configureStore(baseHistory, initialState, isServer = fal
 
     if ( process.env.NODE_ENV !== 'production' ) {
         if ( !isServer ) {
+            const { createLogger } = require('redux-logger')
             const loggerMiddleware = createLogger({
                 level: 'info',
                 collapsed: true
             })
 
             enhancer = compose(
-                applyMiddleware(loggerMiddleware, routerMiddleware(baseHistory), optimistPromiseMiddleware({
-                    resolvedName: RESOLVED_NAME,
-                    rejectedName: REJECTED_NAME,
-                    throwOnReject: false
-                }), myMiddlewares.authErrorLogout()),
+                applyMiddleware(
+                    loggerMiddleware,
+                    routerMiddleware(baseHistory),
+                    thunkMiddleware,
+                    optimistPromiseMiddleware(
+                        {
+                            resolvedName: RESOLVED_NAME,
+                            rejectedName: REJECTED_NAME,
+                            throwOnReject: false
+                        }
+                    ),
+                    myMiddlewares.authErrorLogout()),
                 DevTools.instrument()
             )
         } else {
             enhancer = compose(
-                applyMiddleware(routerMiddleware(baseHistory), optimistPromiseMiddleware({
-                    resolvedName: RESOLVED_NAME,
-                    rejectedName: REJECTED_NAME,
-                    throwOnReject: false
-                }), myMiddlewares.authErrorLogout()),
+                applyMiddleware(
+                    routerMiddleware(baseHistory),
+                    thunkMiddleware,
+                    optimistPromiseMiddleware(
+                        {
+                            resolvedName: RESOLVED_NAME,
+                            rejectedName: REJECTED_NAME,
+                            throwOnReject: false
+                        }
+                    ),
+                    myMiddlewares.authErrorLogout()),
                 DevTools.instrument()
             )
         }

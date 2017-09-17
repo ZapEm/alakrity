@@ -7,9 +7,19 @@ const HALF_CELL_WIDTH = CELL_WIDTH / 2
 const HALF_CELL_HEIGHT = CELL_HEIGHT / 2
 
 export function getTargetDate(offset) {
-    return moment(document.elementFromPoint(offset.x + HALF_CELL_WIDTH, offset.y + HALF_CELL_HEIGHT).getAttribute('datetime'))
-}
 
+
+    let element = document.elementFromPoint(offset.x + HALF_CELL_WIDTH, offset.y + HALF_CELL_HEIGHT)
+    let iteration = 1
+    while ( iteration < 20 && (element.className && element.className.includes('task-item')) ) {
+        element = document.elementFromPoint(offset.x + HALF_CELL_WIDTH, offset.y + (iteration * CELL_HEIGHT) + HALF_CELL_HEIGHT)
+        iteration++
+    }
+    if ( element.hasAttribute('datetime') ) {
+        return moment(element.getAttribute('datetime'))
+    }
+    return false
+}
 
 /**
  * DnD snap functions

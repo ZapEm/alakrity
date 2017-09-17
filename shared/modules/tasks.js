@@ -6,14 +6,16 @@ import { REJECTED_NAME as FAILURE, RESOLVED_NAME as SUCCESS, TASK_TYPES } from '
 import fetch from '../utils/fetcher'
 import newId from '../utils/newId'
 import { LOGIN, LOGOUT } from './auth'
+import { taskDayFilters } from '../utils/helpers'
 //import { generateTempIDfromDate as tempID } from '../utils/tempID'
 
 // action types:
 const LOAD = 'alakrity/tasks/LOAD'
-const CREATE = 'alakrity/tasks/CREATE'
-const QUICK_ADD = 'alakrity/tasks/QUICK_ADD'
-const EDIT = 'alakrity/tasks/EDIT'
-const REMOVE = 'alakrity/tasks/REMOVE'
+export const CREATE = 'alakrity/tasks/CREATE'
+export const QUICK_ADD = 'alakrity/tasks/QUICK_ADD'
+export const EDIT = 'alakrity/tasks/EDIT'
+export const REMOVE = 'alakrity/tasks/REMOVE'
+export const BEGIN = 'alakrity/tasks/BEGIN'
 
 // action creators:
 
@@ -86,6 +88,35 @@ export function editTask(taskInput) {
         meta: {
             promise: fetch.post('tasks', { id: taskInput.id, data: taskInput }),
             optimist: true
+        }
+    }
+}
+
+// thunk
+export function editTaskStart(newTask) {
+    return (dispatch, getState) => { // can have getState
+        const newStart = moment(newTask.start)
+        const newEnd = newStart.clone().add(newTask.duration, 'm')
+
+        const sameDayTasks = getState().tasks.get('taskList').filter((task) => (taskDayFilters[task.get('type')](task, newStart)))
+
+        console.log(sameDayTasks.toJS())
+
+        const found = sameDayTasks.find(
+                (task) => {
+                    const taskStart = moment(task.get('start'))
+                    const taskEnd = taskStart.clone().add(task.get('duration'), 'm')
+
+                    return (
+                        (task.get('id') !== newTask.id) &&
+                        (newStart.isBetween(taskStart, taskEnd, 'm', '()') || newEnd.isBetween(taskStart, taskEnd, 'm', '()'))
+                    )
+                },
+                null, // context
+                false // default, if nothing is found
+            )
+        if ( !found ) {
+            return dispatch(editTask(newTask))
         }
     }
 }

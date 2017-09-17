@@ -16,15 +16,6 @@ if ( typeof window === 'undefined' ) {
     axios.defaults.baseURL = apiCfg.apiUrl
 }
 
-
-//     // const serverCfg = config.get('express');
-//     // axios.defaults.baseURL = 'http://' + serverCfg.get('host') + ':' + serverCfg.get('port') + serverCfg.get('api');
-//     axios.defaults.baseURL = 'http://localhost:3000/api/0/'
-// } else {
-//     api = transit.fromJSON(window.__CONFIG__).api
-//     axios.defaults.baseURL = `${apiCfg.protocol}://${apiCfg.host}:${apiCfg.port}${apiCfg.api}`
-// }
-
 const methods = ['get', 'post', 'delete']
 
 class ApiFetcher {

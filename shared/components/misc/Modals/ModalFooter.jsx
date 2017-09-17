@@ -56,7 +56,7 @@ export default class ModalFooter extends React.Component {
                     iconName="save"//"slideshow"
                     label="Save"
                     dangerLevel={DANGER_LEVELS.SAFE.hover}
-                    onClick={::this.handleAccept}
+                    onClick={::this.handleBegin}
                 />,
                 <LabeledIconButton
                     key={1}

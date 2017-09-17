@@ -15,8 +15,8 @@ import TaskEdit from './TaskEdit'
 
 const dragSource = {
     canDrag(props) {
-        if(!props.editMode && props.task.get('type') === TASK_TYPES.repeating){
-            if(confirm('Repeating tasks can only be moved while in the "Basic Schedule" view.\n\nDo you want to create an exception for this week?')){
+        if ( !props.editMode && props.task.get('type') === TASK_TYPES.repeating ) {
+            if ( confirm('Repeating tasks can only be moved while in the "Basic Schedule" view.\n\nDo you want to create an exception for this week?') ) {
                 alert('Well, too bad. Exceptions are not implemented, yet.') //TODO: exceptions for repeating tasks
             }
             return false
@@ -33,7 +33,7 @@ const dragSource = {
         if ( !monitor.didDrop() ) {
             // You can check whether the drop was successful
             // or if the drag ended but nobody handled the drop
-            props.taskActions.editTask(_merge(monitor.getItem(), { start: null }))
+            props.taskActions.editTask(_merge({}, monitor.getItem(), { start: null }))
             return
         }
 
@@ -47,7 +47,9 @@ const dragSource = {
         const dropResult = monitor.getDropResult()
 
         // This is a good place to call some action
-        props.taskActions.editTask(_merge(task, { start: dropResult.droppedAt }))
+        if ( dropResult ) {
+            props.taskActions.editTaskStart(_merge(task, { start: dropResult.droppedAt }))
+        }
     }
 }
 
@@ -71,7 +73,8 @@ export default class Task extends React.Component {
         isDragging: PropTypes.bool,
         liWrapper: PropTypes.object,
         locale: PropTypes.string.isRequired,
-        editMode: PropTypes.bool
+        editMode: PropTypes.bool,
+        editTaskStart: PropTypes.func
     }
 
     static defaultProps = {
@@ -169,19 +172,24 @@ export default class Task extends React.Component {
         } else {
             element =
                 <div
-                    className={classNames('task-item', 'w3-card', 'w3-display-container',
-                        {
-                            'dragging': isDragging,
-                            'w3-round-large': !((task.get('type') === TASK_TYPES.repeating)),
-                            'special': task.get('type') === TASK_TYPES.oneTime
-                        }
-                    )
+                    className={
+                        classNames('task-item', 'w3-card', 'w3-display-container',
+                            {
+                                'dragging': isDragging,
+                                'w3-round-large': !((task.get('type') === TASK_TYPES.repeating)),
+                                'special': task.get('type') === TASK_TYPES.oneTime
+                            }
+                        )
                     }
-                    style={_merge({}, {
-                            backgroundColor: itemColors.normal,
-                            borderColor: itemColors.dark
-                        }, dragStyle
-                    )}
+                    style={
+                        _merge({}, {
+                                backgroundColor: itemColors.normal,
+                                borderColor: itemColors.dark
+                            }, dragStyle
+                        )
+                    }
+                    // data-start={task.get('start')}
+                    // data-duration={task.get('duration')}
                 >
                     <div className="task-item-info">
                         <p className="title">{task.get('title')}</p>

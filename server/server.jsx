@@ -158,14 +158,11 @@ app.use((req, res) => {
                                         </Provider>
                                     )
 
-                                    const clientConfig = JSON.stringify(transit.toJSON(config.get('client')))
-
                                     // Send the rendered page back to the client with the initial state
                                     const initialStateTransit = JSON.stringify(transit.toJSON(store.getState()))
                                     res.render('index', {
                                         isProd: (!isDev),
                                         html: html,
-                                        config: clientConfig,
                                         initialState: initialStateTransit
                                     })
                                 })
