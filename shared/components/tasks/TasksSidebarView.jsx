@@ -10,7 +10,7 @@ import { getTaskListFilter } from '../../utils/helpers'
 import LabeledIconButton from '../misc/LabeledIconButton'
 import ProjectSelector from '../projects/ProjectSelector'
 import TasksList from './TasksList'
-import MascotContainer from '../misc/MascotContainer'
+import MascotContainer from '../misc/mascot/MascotContainer'
 
 
 export default class TasksSidebarView extends React.Component {

@@ -31,9 +31,10 @@ module.exports = {
     ],
     resolve: {
         modules: ['node_modules', 'shared'],
-        extensions: ['.js', '.jsx', '.styl', '.css', '.ico', '.svg', '.json'],
+        extensions: ['.js', '.jsx', '.styl', '.css', '.ico', '.svg', '.json', '.png'],
         alias: {
-            config: path.resolve(__dirname, 'config/client.json')
+            config: path.resolve(__dirname, 'config/client.json'),
+            img: path.resolve(__dirname, 'shared/static/img/')
         }
     },
     output: {

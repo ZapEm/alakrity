@@ -1,5 +1,5 @@
 import * as Immutable from 'immutable'
-import { ReminderModal } from '../components/misc/Modals/Modals'
+import { ReminderModal } from '../components/misc/modals/Modals'
 import { REJECTED_NAME as FAILURE, RESOLVED_NAME as SUCCESS } from '../utils/constants'
 import { MASCOT_STATUS, TASK_STATUS } from '../utils/enums'
 import { LOGIN, LOGOUT } from './auth'

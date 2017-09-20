@@ -5,6 +5,28 @@
     "react"
   ],
   "plugins": [
+    [
+      "module-resolver",
+      {
+        "root": [
+          "./shared"
+        ],
+        "extensions": [
+          ".js",
+          ".jsx",
+          ".styl",
+          ".css",
+          ".ico",
+          ".svg",
+          ".json",
+          ".png"
+        ],
+        "alias": {
+          "utils": "./utils",
+          "png": "./shared/static/png"
+        }
+      }
+    ],
     "lodash",
     "transform-decorators-legacy",
     "transform-class-properties",

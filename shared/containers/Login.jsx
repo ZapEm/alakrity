@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import AuthForm from '../components/auth/AuthForm'
 import * as authActions from '../modules/auth'
-import MascotContainer from '../components/misc/MascotContainer'
+import MascotContainer from '../components/misc/mascot/MascotContainer'
 import { MASCOT_STATUS } from '../utils/enums'
 
 

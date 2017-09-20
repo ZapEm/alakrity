@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import * as React from 'react'
 import { connect } from 'react-redux'
-import { MASCOT_STATUS } from '../../utils/enums'
+import { MASCOT_STATUS } from '/utils/enums'
 import { getMascotImage } from './ImgMaps'
 
 
@@ -32,7 +32,7 @@ export default class MascotContainer extends React.Component {
 
         const img = getMascotImage(status)
 
-        return <div className="mascot-container w3-border-bottom w3-border-theme w3-margin-bottom">
+        return <div className="mascot-container w3-margin-bottom">
             {img}
         </div>
     }
