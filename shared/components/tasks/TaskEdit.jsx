@@ -5,7 +5,7 @@ import React from 'react'
 import { DragLayer, DragSource } from 'react-dnd'
 import { getEmptyImage } from 'react-dnd-html5-backend'
 import ImmutablePropTypes from 'react-immutable-proptypes'
-import { LOCALE_STRINGS } from '../../utils/constants'
+import { LOCALE_STRINGS, TASK_TYPES } from '../../utils/constants'
 import { TASK_MAX_DURATION } from '../../utils/defaultValues'
 import { DndTypes } from '../../utils/enums'
 import newId from '../../utils/newId'
@@ -39,7 +39,7 @@ export default class TaskEdit extends React.Component {
     static propTypes = {
         task: ImmutablePropTypes.map.isRequired,
         onSubmit: PropTypes.func.isRequired,
-        // removeTask: PropTypes.func,
+        onCancel: PropTypes.func.isRequired,
         editTask: PropTypes.func,
         connectDragSource: PropTypes.func,
         connectDragPreview: PropTypes.func,
@@ -62,7 +62,7 @@ export default class TaskEdit extends React.Component {
     constructor(props) {
         super(props)
         this.handleOffsetChange = this.handleOffsetChange.bind(this)
-        this.state = props.task.toJSON()
+        this.state = props.task.toJS()
     }
 
     componentDidMount() {
@@ -106,6 +106,16 @@ export default class TaskEdit extends React.Component {
         this.props.onSubmit(_.merge({}, this.state, { id: this.props.task.get('id') }))
     }
 
+    handleCancel(e) {
+        e.preventDefault()
+        this.props.onCancel()
+    }
+
+    handleDetails(e) {
+        e.preventDefault()
+        console.log('OPEN DETAILS')
+    }
+
     handleTitleChange(e) {
         this.setState({ title: e.target.value })
     }
@@ -142,7 +152,10 @@ export default class TaskEdit extends React.Component {
             <form
                 id={formID}
                 onSubmit={::this.handleSubmit}
-                className="task-item task-item-edit w3-card w3-round-large w3-display-container"
+                className={
+                    'task-item task-item-edit w3-card w3-display-container' +
+                    (!this.state.type || this.state.type !== TASK_TYPES.repeating ? ' w3-round-large' : '')
+                }
                 style={
                     _.merge({}, colorStyle, {
                         height: this.state.duration / 20 + 'rem'
@@ -152,9 +165,11 @@ export default class TaskEdit extends React.Component {
                 <div className="task-item-info">
                     <div
                         className="task-item-info"
+                        style={{ pointerEvents: 'all' }}
                     >
                         <input
                             className="w3-input task-item-title-edit w3-round"
+                            form={formID}
                             type="text"
                             required
                             autoFocus
@@ -193,16 +208,18 @@ export default class TaskEdit extends React.Component {
                     <IconButton
                         iconName={'clear'}
                         tooltip='Cancel'
+                        onClick={::this.handleCancel}
                     />
                     <IconButton
                         iconName={'content_paste'}
                         tooltip="Details"
+                        onClick={::this.handleDetails}
                     />
                     <IconButton
                         formID={formID}
                         tooltip="Save"
                         iconName={'save'}
-                        onClick={::this.handleSubmit}
+                        //onClick={::this.handleSubmit}
                     />
                 </div>
             </div>

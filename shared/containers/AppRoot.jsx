@@ -10,6 +10,7 @@ import ModalComponent from '../components/misc/Modals/ModalComponent'
 import Navbar from '../components/misc/Navbar'
 import { logout } from '../modules/auth'
 import * as backendActions from '../modules/backend'
+import * as taskActions from '../modules/tasks'
 import { checkWorking } from '../utils/stateChecks'
 
 
@@ -54,6 +55,7 @@ export default class AppRoot extends React.Component {
                     modalsOM={backend.get('modalsOM')}
                     projectList={projectList}
                     backendActions={bindActionCreators(backendActions, dispatch)}
+                    taskActions={bindActionCreators(taskActions, dispatch)}
                 />}
                 <Navbar
                     isAuthenticated={isAuthenticated}

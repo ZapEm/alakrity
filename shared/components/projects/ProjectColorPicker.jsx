@@ -76,7 +76,7 @@ export default class ProjectColorPicker extends React.Component {
             )
         }
         return <div className="project-color-picker">
-            <div><label>{label}</label>
+            <div className="project-color-picker-item"><label>{label}</label>
                 <div
                     id={this.id}
                     ref={ref => this.colorPicker = ref}
@@ -98,7 +98,7 @@ export default class ProjectColorPicker extends React.Component {
                                                                                                       'w3-show-inline-block' :
                                                                                                       ''}`}
                     style={{
-                        backgroundColor: tinycolor(PROJECT_COLORS[this.state.pickedColor]).brighten(10),
+                        //backgroundColor: tinycolor(PROJECT_COLORS[this.state.pickedColor]).brighten(10),
                         border: ('solid 1px ' + tinycolor(PROJECT_COLORS[this.state.pickedColor]).brighten(-35))
                     }}
                 >

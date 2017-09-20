@@ -7,6 +7,7 @@ import { TASK_TYPES } from '../../utils/constants'
 import newId from '../../utils/newId'
 import LabeledIconButton from '../misc/LabeledIconButton'
 import ProjectColorPicker from './ProjectColorPicker'
+import ProjectTypeSelector from './ProjectTypeSelector'
 
 export default class ProjectEdit extends React.Component {
 
@@ -15,6 +16,7 @@ export default class ProjectEdit extends React.Component {
         onCancel: PropTypes.func.isRequired,
         project: ImmutablePropTypes.map.isRequired
     }
+
     constructor(props) {
         super(props)
         this.state = {
@@ -31,11 +33,18 @@ export default class ProjectEdit extends React.Component {
         )
     }
 
-    handleSelect(e){
+    handleSelect(e) {
         e.preventDefault()
         this.setState({
             project: this.state.project.set('defaultTaskType', +e.target.value)
         })
+    }
+
+    handleTypeSelect(typeKey){
+        this.setState(({ project }) => ({
+            project: project.set('type', typeKey)
+        })
+        )
     }
 
     handleSubmit(e) {
@@ -63,10 +72,11 @@ export default class ProjectEdit extends React.Component {
 
     render() {
         const color = this.state.project.get('color')
+        const darkColor = tinycolor(color).brighten(-35)
 
         const style = {
             backgroundColor: color,
-            border: 'solid 1px ' + tinycolor(color).brighten(-35)
+            border: 'solid 1px ' + darkColor
         }
 
         return <form
@@ -75,20 +85,48 @@ export default class ProjectEdit extends React.Component {
             style={style}
         >
 
-            <label>
-                Project Name
-                <input
-                    ref={ref => this.titleInput = ref}
-                    autoFocus="autofocus"
-                    type="text"
-                    className="project-input w3-input w3-round"
-                    style={{ border: style.border }}
-                    placeholder="Project Name"
-                    value={this.state.project.get('title')}
-                    onChange={::this.handleInputChange}
-                    required={'required'}
+            <div className="project-line">
+                <label>
+                    Project Name
+                    <input
+                        ref={ref => this.titleInput = ref}
+                        autoFocus="autofocus"
+                        type="text"
+                        className="project-input w3-input w3-round"
+                        style={{ border: style.border }}
+                        placeholder="Project Name"
+                        value={this.state.project.get('title')}
+                        onChange={::this.handleInputChange}
+                        required={'required'}
+                    />
+                </label>
+                <ProjectTypeSelector
+                    style={{ color: darkColor, border: style.border }}
+                    typeKey={this.state.project.get('type')}
+                    onSelect={::this.handleTypeSelect}
                 />
-            </label>
+            </div>
+
+            <div className="project-line w3-display-container">
+                <label className="project-task-type-label">Default Task Type
+                    <select
+                        className="w3-select project-input w3-round project-task-type-select"
+                        style={{ border: style.border }}
+                        name="option"
+                        onChange={::this.handleSelect}
+                        defaultValue={this.state.project.get('defaultTaskType')}
+                    >
+                        <option value={TASK_TYPES.standard}>Standard</option>
+                        <option value={TASK_TYPES.oneTime}>Appointment</option>
+                        <option value={TASK_TYPES.repeating}>Repeating</option>
+                    </select>
+                </label>
+                <ProjectColorPicker
+                    currentColor={this.state.project.get('color')}
+                    label={'Color'}
+                    setColor={::this.handleColorPick}
+                />
+            </div>
 
             <label>
                 Description
@@ -105,28 +143,6 @@ export default class ProjectEdit extends React.Component {
                 />
             </label>
 
-
-            <div className="project-line w3-display-container">
-                <ProjectColorPicker
-                    currentColor={this.state.project.get('color')}
-                    label={'Color'}
-                    setColor={::this.handleColorPick}
-                />
-                {/*<div className="tt-form-spacer"/>*/}
-                <label className="project-task-type-label">Default Task Type
-                    <select
-                        className="w3-select project-input w3-round w3-border-theme project-task-type-select"
-                        style={{ border: style.border }}
-                        name="option"
-                        onChange={::this.handleSelect}
-                        defaultValue={this.state.project.get('defaultTaskType')}
-                    >
-                        <option value={TASK_TYPES.standard}>Standard</option>
-                        <option value={TASK_TYPES.oneTime}>Appointment</option>
-                        <option value={TASK_TYPES.repeating}>Repeating</option>
-                    </select>
-                </label>
-            </div>
             <div className={'w3-display-bottomright w3-padding'}>
                 <LabeledIconButton
                     iconName={'done'}

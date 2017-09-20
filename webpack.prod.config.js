@@ -9,25 +9,18 @@ var LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
 fs.writeFileSync(path.resolve(__dirname, 'config/client.json'), JSON.stringify(clientConfig))
 
 var BABEL_QUERY = {
-    presets: ['nodejs6', 'es2015', 'stage-0', 'react'],
+    presets: [
+        'nodejs6',
+        'es2015',
+        'stage-0',
+        'react'
+    ],
     plugins: [
         ['lodash'],
         ['transform-object-rest-spread'],
         ['transform-class-properties'],
         ['transform-decorators-legacy'],
         ['transform-es2015-parameters']
-        // [
-        //     'react-transform',
-        //     {
-        //         transforms: [
-        //             {
-        //                 transform: 'react-transform-hmr',
-        //                 imports:    ['react'],
-        //                 locals:     ['module']
-        //             }
-        //         ]
-        //     }
-        // ]
     ]
 }
 
@@ -64,7 +57,7 @@ module.exports = {
                 })
             },
             {
-                test: /\.(jpg|jpeg|gif|png|ico|svg)$/,
+                test: /\.(jpg|jpeg|gif|png|ico)$/,
                 exclude: /node_modules/,
                 loader: 'file-loader',
                 options: {

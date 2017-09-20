@@ -1,4 +1,7 @@
 import * as Immutable from 'immutable'
+import { STATISTIC_TYPES } from '../utils/enums'
+import fetch from '../utils/fetcher'
+import moment from 'moment'
 //import { ReminderModal } from '../components/misc/Modals/Modals'
 
 
@@ -6,52 +9,95 @@ import * as Immutable from 'immutable'
  * Action Types:
  * */
 
-const SET_TIME = 'alakrity/backend/SET_TIME'
-const ADD_MODAL = 'alakrity/backend/ADD_MODAL'
-const REMOVE_MODAL = 'alakrity/backend/REMOVE_MODAL'
-const UPDATE_UPCOMING_TASKS = 'alakrity/backend/UPDATE_UPCOMING_TASKS'
+const LOAD = 'alakrity/statistics/LOAD'
+const CREATE = 'alakrity/statistics/CREATE'
+const RECORD = 'alakrity/statistics/RECORD'
+const EDIT = 'alakrity/statistics/EDIT'
+const REMOVE = 'alakrity/statistics/REMOVE'
+const LOAD_GLOBAL = 'alakrity/statistics/LOAD'
+const BEGIN_TASK = 'alakrity/statistics/BEGIN_TASK'
 
 /**
  * Action Creators:
  * */
 
-export function record(time) {
+export function loadStatistics() {
     return {
-        type: SET_TIME,
-        payload: time
-    }
-}
-
-export function addModal(modal) {
-    return {
-        type: ADD_MODAL,
-        payload: modal
-    }
-}
-
-export function updateUpcomingTasks(taskList, time, lookahead = 10) {
-    if ( taskList ) {
-
-        const lookAheadDate = new Date(time.getTime() + (lookahead * 3600000))
-        taskList = taskList.filter((task) => {
-            const startTime = new Date(task.get('start'))
-            return ( startTime >= time && startTime < lookAheadDate)
-        })
-
-        // create an OrderedMap in taskList order, with task.id as key and Modal-obj as value
-        const modals = Immutable.OrderedMap(taskList.map((task) => [task.get('id'), new ReminderModal(task)]))
-
-        return {
-            type: UPDATE_UPCOMING_TASKS,
-            payload: modals
+        type: LOAD,
+        meta: {
+            promise: fetch.get('statistics'),
+            optimist: false
         }
     }
 }
 
-export function removeModal(modal) {
+export function loadGlobalStatistics() {
     return {
-        type: REMOVE_MODAL,
-        payload: modal.id
+        type: LOAD_GLOBAL,
+        meta: {
+            promise: fetch.get('globalstatistics'),
+            optimist: false
+        }
+    }
+}
+
+// export function createStatistic(statistic) {
+//     return {
+//         type: CREATE,
+//         payload: statistic,
+//         meta: {
+//             promise: fetch.post('statistics', { data: statistic }),
+//             optimist: false
+//         }
+//     }
+// }
+
+export function recordStatistic(statistic) {
+    return {
+        type: RECORD,
+        payload: statistic,
+        meta: {
+            promise: fetch.post('statistics', { data: statistic }),
+            optimist: false
+        }
+    }
+}
+
+// export function editStatistic(statistic) {
+//     return {
+//         type: EDIT,
+//         payload: statistic,
+//         meta: {
+//             promise: fetch.post('statistics', { id: statistic.id, data: statistic }),
+//             optimist: false
+//         }
+//     }
+// }
+
+export function removeStatistic(id) {
+    return {
+        type: REMOVE,
+        payload: id,
+        meta: {
+            promise: fetch.delete('statistics', { id: id }),
+            optimist: false
+        }
+    }
+}
+
+
+/**
+ * Thunks:
+ * */
+export function recordBeginTask(task) {
+    return (dispatch) => {
+        return dispatch(recordStatistic(
+            {
+                type: STATISTIC_TYPES.TASK,
+                id: 'task_' + task.id,
+                beginDiff: task.started.diff(task.start, 'minutes')
+            }
+        ))
     }
 }
 
@@ -60,21 +106,15 @@ export function removeModal(modal) {
  * Reducer:
  * */
 const initialState = Immutable.fromJS({
-    time: false,
-    modalsOM: Immutable.OrderedMap()
+    tasks: {
+        number: 0
+    }
 })
 
 export default function reducer(state = initialState, action) {
     switch (action.type) {
-        case SET_TIME:
-            return state.set('time', action.payload)
-
-        case UPDATE_UPCOMING_TASKS:
-        case ADD_MODAL:
-            return state.withMutations((state) => state.set('modalsOM', state.get('modalsOM').merge(action.payload)))
-
-        case REMOVE_MODAL:
-            return state.deleteIn(['modalsOM', action.payload])
+        case BEGIN_TASK:
+            return state.set('tasks', action.payload)
 
         default:
             return state

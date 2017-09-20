@@ -17,13 +17,15 @@ export default class IconButton extends React.Component {
         dangerLevel: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
         style: PropTypes.object,
         unarmedDangerLevel: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
-        unarmedIconName: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
+        unarmedIconName: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
+        noSubmit: PropTypes.bool
     }
 
 
     static defaultProps = {
         unarmedDangerLevel: false,
         unarmedIconName: false,
+        noSubmit: false,
         disabled: false,
         tooltip: '',
         style: {}
@@ -38,12 +40,14 @@ export default class IconButton extends React.Component {
     }
 
     handleClick(e) {
-        if(!this.timeOut) {
+        if ( !this.timeOut ) {
             if ( this.props.unarmedDangerLevel && !this.state.armed ) {
                 this.timeOut = true
                 e.preventDefault()
                 this.setState({ armed: true })
-                setTimeout(()=>{this.timeOut = false}, 400)
+                setTimeout(() => {
+                    this.timeOut = false
+                }, 400)
             } else {
                 if ( this.props.onClick ) {
                     this.props.onClick(e)
@@ -59,22 +63,21 @@ export default class IconButton extends React.Component {
     }
 
     render() {
-        const { iconName, formID, label, unarmedDangerLevel, unarmedIconName, style: oldStyle, disabled, tooltip } = this.props
-        let { dangerLevel } = this.props
+        const {
+            iconName, formID, label, unarmedDangerLevel, unarmedIconName,
+            style: oldStyle, dangerLevel: oldDangerLevel, disabled, tooltip, noSubmit
+        } = this.props
         const { staged, armed } = this.state
 
-        dangerLevel = (typeof dangerLevel === 'object' && dangerLevel.both) ? dangerLevel.both :
-                      (typeof dangerLevel === 'string') ? dangerLevel :
-                      DANGER_LEVELS.DEFAULT.both
+        const dangerLevel = (typeof oldDangerLevel === 'object' && oldDangerLevel.both) ? oldDangerLevel.both :
+                            (typeof oldDangerLevel === 'string') ? oldDangerLevel :
+                            DANGER_LEVELS.DEFAULT.both
 
 
         const style = _.merge({}, oldStyle, {
-            border: '1px solid'
+            border: '1px solid',
+            ...disabled && { cursor: 'help' }
         })
-
-        if ( disabled ) {
-            style.cursor = 'help'
-        }
 
         let id = ''
         if ( label ) {
@@ -84,7 +87,7 @@ export default class IconButton extends React.Component {
         //if (staged) console.log('stage0', !disabled && staged && !armed, '.. armed', !disabled && (!staged || armed))
 
         let button = <button
-            type="button"
+            type={noSubmit ? 'button' : 'submit'}
             form={formID}
             className={classNames('material-icons', 'icon-button w3-round',
                 {

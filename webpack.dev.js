@@ -8,12 +8,17 @@ import prodCfg from './webpack.prod.config.js'
 Object.assign = assign
 
 const BABEL_QUERY = {
-    presets: ['nodejs6', 'stage-0', 'react'],
+    presets: [
+        'nodejs6',
+        'stage-0',
+        'react'
+    ],
     plugins: [
         ['lodash'],
         ['transform-object-rest-spread'],
         ['transform-class-properties'],
         ['transform-decorators-legacy'],
+        ['transform-es2015-parameters'],
         [
             'react-transform',
             {
@@ -53,7 +58,7 @@ export default function (app) {
                     ]
                 },
                 {
-                    test: /\.(jpg|jpeg|gif|png|ico|svg)$/,
+                    test: /\.(jpg|jpeg|gif|png|ico)$/,
                     exclude: /node_modules/,
                     loader: 'file-loader',
                     options: {

@@ -10,9 +10,9 @@ import TimetableView from '../components/timetable/TimetableView'
 import * as SettingsActions from '../modules/settings'
 import * as TaskActions from '../modules/tasks'
 import * as TimetableActions from '../modules/timetables'
+import { TASK_TYPES } from '../utils/constants'
 import { DEFAULT_TIMETABLE, thaw } from '../utils/defaultValues'
 import { getProjectColorMap } from '../utils/helpers'
-import { TASK_TYPES } from '../utils/constants'
 
 
 @connect(state => ({
@@ -57,13 +57,13 @@ export default class Timetable extends React.Component {
         const locale = settings.get('locale')
         const editMode = timetables.get('editMode')
         const projectList = projects.get('projectList')
-        
-        const preFilter = (editMode) 
-            ? (task) => task.get('type') === TASK_TYPES.repeating 
+
+        const preFilter = (editMode)
+            ? (task) => task.get('type') === TASK_TYPES.repeating
             : (task) => task.get('type') !== TASK_TYPES.repeating
         const preFilteredTasks = tasks.get('taskList').filter(preFilter)
-        
-        
+
+
         if ( !timetables.get('timetable').size ) {
             return <div style={{ margin: 'auto' }}>
                 <Spinner status={'WORKING'}/>

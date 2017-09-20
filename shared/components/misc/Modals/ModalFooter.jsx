@@ -9,13 +9,15 @@ export default class ModalFooter extends React.Component {
 
     static propTypes = {
         modal: PropTypes.instanceOf(Modal),
-        backendActions: PropTypes.objectOf(PropTypes.func).isRequired,
+        taskActions: PropTypes.objectOf(PropTypes.func).isRequired,
+        backendActions: PropTypes.objectOf(PropTypes.func),
         updateModal: PropTypes.func
     }
 
     handleBegin(e) {
         e.preventDefault()
-        this.props.backendActions.removeModal(this.props.modal)
+        this.props.taskActions.beginTask(this.props.modal.task)
+        //this.props.backendActions.removeModal(this.props.modal)
         this.props.updateModal()
     }
 

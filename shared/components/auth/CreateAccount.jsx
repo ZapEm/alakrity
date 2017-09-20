@@ -31,12 +31,16 @@ export default class CreateAccount extends React.Component {
                     className="auth-form-input w3-input"
                     type="text"
                     ref={userRef => this.userRef = userRef}
-                    placeholder="Username"/>
+                    placeholder="Username"
+                    required
+                />
                 <input
                     className="auth-form-input w3-input"
                     type="password"
                     ref={pwRef => this.pwRef = pwRef}
-                    placeholder="Password"/>
+                    placeholder="Password"
+                    required
+                />
 
                 <div className="auth-form-right">
                     <LabeledIconButton

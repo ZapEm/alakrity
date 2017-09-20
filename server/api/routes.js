@@ -4,6 +4,7 @@ import * as tasks from './tasks'
 import * as timetables from './timetables'
 import * as users from './users'
 import * as settings from './settings'
+import * as statistics from './statistics'
 // import { Router } from 'express'
 import { authMiddleware } from './utils/authentication'
 
@@ -36,6 +37,12 @@ export default function getRouters(express) {
     routerWithAuth.post('/timetables', timetables.addTimetable)
     routerWithAuth.post('/timetables/:id', timetables.saveTimetable)
     routerWithAuth.delete('/timetables/:id', timetables.removeTimetable)
+
+    routerWithAuth.get('/statistics', statistics.getStatistics)
+    routerWithAuth.post('/statistics', statistics.recordStatistic)
+    //routerWithAuth.post('/statistics/:id', statistics.editStatistic)
+    routerWithAuth.delete('/statistics/:id', statistics.removeStatistic)
+    router.get('/globalstatistics', statistics.getGlobalStatistics)
 
     return { router, routerWithAuth }
 }

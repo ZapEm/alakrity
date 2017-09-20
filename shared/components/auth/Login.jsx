@@ -26,12 +26,17 @@ export default class Login extends React.Component {
                     className="auth-form-input w3-input"
                     type="text"
                     ref={username => this.username = username}
-                    placeholder="Username" autoFocus/>
+                    placeholder="Username"
+                    autoFocus
+                    required
+                />
                 <input
                     className="auth-form-input w3-input"
                     type="password"
                     ref={password => this.password = password}
-                    placeholder="Password"/>
+                    placeholder="Password"
+                    required
+                />
                 <div className="auth-form-right">
                     <LabeledIconButton
                         style={{
@@ -40,7 +45,7 @@ export default class Login extends React.Component {
                         }}
                         label="Login"
                         iconName="lock_open"
-                        onClick={::this.handleSubmit}
+                        //onClick={::this.handleSubmit}
                     />
                 </div>
             </form>

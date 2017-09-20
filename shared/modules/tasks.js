@@ -1,21 +1,27 @@
-import * as Immutable from 'immutable'
+import Immutable from 'immutable'
 import { merge as _merge } from 'lodash/object'
 import moment from 'moment'
 import xss from 'xss'
 import { REJECTED_NAME as FAILURE, RESOLVED_NAME as SUCCESS, TASK_TYPES } from '../utils/constants'
+import { TASK_STATUS } from '../utils/enums'
 import fetch from '../utils/fetcher'
+import { taskDayFilters } from '../utils/helpers'
 import newId from '../utils/newId'
 import { LOGIN, LOGOUT } from './auth'
-import { taskDayFilters } from '../utils/helpers'
-//import { generateTempIDfromDate as tempID } from '../utils/tempID'
+
+import * as backendActions from './backend'
+import * as statistics from './statistics'
+
 
 // action types:
+
 const LOAD = 'alakrity/tasks/LOAD'
 export const CREATE = 'alakrity/tasks/CREATE'
 export const QUICK_ADD = 'alakrity/tasks/QUICK_ADD'
 export const EDIT = 'alakrity/tasks/EDIT'
 export const REMOVE = 'alakrity/tasks/REMOVE'
 export const BEGIN = 'alakrity/tasks/BEGIN'
+
 
 // action creators:
 
@@ -44,13 +50,22 @@ export function createTask(taskInput) {
     }
 }
 
-export function quickAddTask(project) {
+export function quickAddTask(project, typeFilter = 'default') {
     if ( !Immutable.Map.isMap(project) ) {project = Immutable.Map(project)}
+
+    const Types = {
+        'default': project.get('defaultTaskType') ? project.get('defaultTaskType') : TASK_TYPES.standard,
+        'repeating': TASK_TYPES.repeating,
+        'notRepeating': (project.get('defaultTaskType') && project.get('defaultTaskType') !== TASK_TYPES.repeating)
+            ? project.get('defaultTaskType')
+            : TASK_TYPES.standard
+
+    }
 
     const taskInput = {
         text: '',
         projectID: project.get('id'),
-        type: project.get('defaultTaskType') ? project.get('defaultTaskType') : TASK_TYPES.standard,
+        type: Types[typeFilter],
         created: moment(),
         duration: 120,
         start: null
@@ -70,6 +85,9 @@ export function quickAddTask(project) {
 }
 
 export function editTask(taskInput) {
+    if ( Immutable.Map.isMap(taskInput) ) {
+        taskInput = taskInput.toJS()
+    }
 
     taskInput.text = xss(taskInput.text)
     taskInput = _merge({}, taskInput, { lastEdited: moment() })
@@ -92,34 +110,6 @@ export function editTask(taskInput) {
     }
 }
 
-// thunk
-export function editTaskStart(newTask) {
-    return (dispatch, getState) => { // can have getState
-        const newStart = moment(newTask.start)
-        const newEnd = newStart.clone().add(newTask.duration, 'm')
-
-        const sameDayTasks = getState().tasks.get('taskList').filter((task) => (taskDayFilters[task.get('type')](task, newStart)))
-
-        console.log(sameDayTasks.toJS())
-
-        const found = sameDayTasks.find(
-                (task) => {
-                    const taskStart = moment(task.get('start'))
-                    const taskEnd = taskStart.clone().add(task.get('duration'), 'm')
-
-                    return (
-                        (task.get('id') !== newTask.id) &&
-                        (newStart.isBetween(taskStart, taskEnd, 'm', '()') || newEnd.isBetween(taskStart, taskEnd, 'm', '()'))
-                    )
-                },
-                null, // context
-                false // default, if nothing is found
-            )
-        if ( !found ) {
-            return dispatch(editTask(newTask))
-        }
-    }
-}
 
 export function removeTask(id) {
 
@@ -137,6 +127,58 @@ export function removeTask(id) {
             promise: fetch.delete('tasks', { id: id }),
             optimist: true
         }
+    }
+}
+
+
+// thunks (meta actions):
+
+export function editTaskStart(newTask) {
+    return (dispatch, getState) => {
+        const newStart = moment(newTask.start)
+        const newEnd = newStart.clone().add(newTask.duration, 'm')
+
+        const sameDayTasks = getState().tasks.get('taskList').filter((task) => (taskDayFilters[task.get('type')](task, newStart)))
+
+        const found = sameDayTasks.find(
+            (task) => {
+                const taskStart = moment(task.get('start'))
+                const taskEnd = taskStart.clone().add(task.get('duration'), 'm')
+
+                return (
+                    (task.get('id') !== newTask.id) &&
+                    (newStart.isBetween(taskStart, taskEnd, 'm', '()') || newEnd.isBetween(taskStart, taskEnd, 'm', '()'))
+                )
+            },
+            null, // context
+            false // default, if nothing is found
+        )
+        if ( !found ) {
+            return dispatch(editTask(newTask))
+        }
+    }
+}
+
+export function beginTask(tmpTask) {
+
+    if ( Immutable.Map.isMap(tmpTask) ) {
+        tmpTask = tmpTask.toJS()
+    }
+
+    return (dispatch, getState) => {
+
+        const task = _merge({}, tmpTask, {
+            status: TASK_STATUS.ACTIVE,
+            started: moment()
+        })
+
+        return dispatch(editTask(task))
+            .then(Promise.all([
+                    dispatch(backendActions.updateModals()),
+                    dispatch(statistics.recordBeginTask(task))
+                ])
+            )
+
     }
 }
 

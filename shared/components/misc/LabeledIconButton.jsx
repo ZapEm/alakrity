@@ -1,3 +1,4 @@
+import * as _ from 'lodash/object'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { DANGER_LEVELS } from '../../utils/constants'
@@ -11,11 +12,19 @@ export default class LabeledIconButton extends React.Component {
         disabled: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
         onClick: PropTypes.func,
         dangerLevel: PropTypes.string,
-        style: PropTypes.object
+        style: PropTypes.object,
+        noSubmit: PropTypes.bool
+    }
+
+    static defaultProps = {
+        disabled: false,
+        noSubmit: false,
+        style: {},
+        tooltip: ''
     }
 
     render() {
-        const { iconName, label, onClick, style = {}, disabled = false, tooltip = '' } = this.props
+        const { iconName, label, onClick, disabled, tooltip, noSubmit, style: oldStyle } = this.props
         let { dangerLevel } = this.props
 
         dangerLevel = (typeof dangerLevel === 'object' && dangerLevel.both) ? dangerLevel.both :
@@ -23,13 +32,13 @@ export default class LabeledIconButton extends React.Component {
                       DANGER_LEVELS.DEFAULT.both
 
         //style.backgroundColor = 'rgba(255,255,255,1)'
-        style.border = '1px solid'
-        if ( disabled ) {
-            style.cursor = 'help'
-        }
+        const style = _.merge({}, oldStyle, {
+            border: '1px solid',
+            ...disabled && { cursor: 'help' }
+        })
 
         let button = <button
-            type="button"
+            type={noSubmit ? 'button' : 'submit'}
             className={'labeled-icon-button w3-round ' + (!disabled ? dangerLevel :
                                                           DANGER_LEVELS.DISABLED.both + ' disabled')}
             style={style}

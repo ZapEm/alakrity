@@ -22,7 +22,8 @@ let TABLES = [
     { name: 'users' },
     { name: 'tasks', secIndex: ['userID', 'projectID'] },
     { name: 'timetables', secIndex: 'userID' },
-    { name: 'projects', secIndex: 'userID' }
+    { name: 'projects', secIndex: 'userID' },
+    { name: 'statistics', secIndex: ['userID', 'type'] }
 ]
 
 dbSetup()

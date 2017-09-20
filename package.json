@@ -73,6 +73,7 @@
     "redux-optimist-promise": "^0.8.0",
     "redux-thunk": "^2.2.0",
     "rethinkdbdash": "^2.3.31",
+    "svg-inline-loader": "^0.8.0",
     "tinycolor2": "^1.4.1",
     "transit-immutable-js": "^0.7.0",
     "transit-js": "^0.8.846",

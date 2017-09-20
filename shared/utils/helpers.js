@@ -73,6 +73,10 @@ export const taskDayFilters = {
     [TASK_TYPES.oneTime]: (task, date) => (moment(task.get('start')).isSame(date, 'day')),
     [TASK_TYPES.repeating]: (task, date) => {
         const taskStartMoment = moment(task.get('start'))
-        return (taskStartMoment.isSameOrAfter(date, 'day') && taskStartMoment.isoWeekday() === date.isoWeekday())
+        return (taskStartMoment.isSameOrBefore(date, 'day') && taskStartMoment.isoWeekday() === date.isoWeekday())
     }
+}
+
+export function getRandomItem(array){
+    return array[Math.floor(Math.random()*array.length)]
 }

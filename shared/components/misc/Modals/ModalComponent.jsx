@@ -12,6 +12,7 @@ export default class ModalComponent extends React.Component {
     static propTypes = {
         modalsOM: ImmutablePropTypes.orderedMap.isRequired,
         backendActions: PropTypes.objectOf(PropTypes.func).isRequired,
+        taskActions: PropTypes.objectOf(PropTypes.func).isRequired,
         projectList: ImmutablePropTypes.list.isRequired,
         settings: ImmutablePropTypes.map.isRequired
     }
@@ -30,14 +31,13 @@ export default class ModalComponent extends React.Component {
         })
     }
 
-    componentWillUpdate() {
-        if ( this.state.modalKey === '' && this.props.modalsOM.size > 0 ) {
+    componentWillUpdate(nextProps) {
+        if ( this.state.modalKey === '' && nextProps.modalsOM.size > 0 ) {
             this.setState({
-                modalKey: this.props.modalsOM.keySeq().first()
+                modalKey: nextProps.modalsOM.keySeq().first()
             })
         }
     }
-
 
     handleNext(e) {
         e.preventDefault()
@@ -68,7 +68,7 @@ export default class ModalComponent extends React.Component {
     }
 
     render() {
-        const { modalsOM, backendActions, settings } = this.props
+        const { modalsOM, settings, taskActions, backendActions } = this.props
         const { modalKey } = this.state
 
         if ( modalKey === '' ) {
@@ -99,6 +99,7 @@ export default class ModalComponent extends React.Component {
 
                     <ModalFooter
                         modal={currentModal}
+                        taskActions={taskActions}
                         backendActions={backendActions}
                         updateModal={::this.updateModal}
                     />

@@ -7,6 +7,7 @@ import { TaskListFilters } from '../../utils/enums'
 import { getTaskListFilter } from '../../utils/helpers'
 import newId from '../../utils/newId'
 import IconButton from '../misc/IconButton'
+import LabeledIconButton from '../misc/LabeledIconButton'
 import TasksList from '../tasks/TasksList'
 import ProjectPeriodPicker from './parts/ProjectPeriodPicker'
 
@@ -30,7 +31,9 @@ export default class TimetableEditSidebar extends React.Component {
 
     constructor(props) {
         super(props)
+        const currentProjectID = this.props.timetables.get('currentProjectID')
         this.state = {
+            project: this.props.projectList.find((pro) => pro.get('id') === currentProjectID, null, false),
             _update: true
         }
     }
@@ -51,18 +54,32 @@ export default class TimetableEditSidebar extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if ( this.props.timetables.get('timetable') !== nextProps.timetables.get('timetable') ) {
-            this.setState({ timetable: nextProps.timetables.get('timetable') })
+            const currentProjectID = this.props.timetables.get('currentProjectID')
+            this.setState({
+                timetable: nextProps.timetables.get('timetable'),
+                project: this.props.projectList.find((pro) => pro.get('id') === currentProjectID, null, false)
+            })
         }
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return nextState._update
+        return nextState._update || this.props.timetables !== nextProps.timetables
     }
 
     handleSubmit(e) {
         e.preventDefault()
         this.setState({ _update: false })
         this.props.onSave(this.props.timetables.get('timetable').merge(this.state.timetable))
+    }
+
+    handleQuickAddTask(e) {
+        e.preventDefault()
+        //const project = this.props.projectList.find((pro) => pro.get('id') === this.props.timetables.get('currentProjectID'), null, false)
+        if ( this.state.project ) {
+            this.props.taskActions.quickAddTask(this.state.project, 'repeating')
+        } else {
+            alert('Special work periods (Buffer, Break, ...) can not have tasks.')
+        }
     }
 
     handleTitleChange(e) {
@@ -100,9 +117,17 @@ export default class TimetableEditSidebar extends React.Component {
         this.setState({ filterRadioSelection: e.target.value })
     }
 
+    handleSelectProjectPeriod(projectID) {
+        this.setState({
+            project: this.props.projectList.find((pro) => pro.get('id') === projectID, null, false),
+            _update: true
+        })
+        this.props.timetableActions.setCurrentProject(projectID)
+    }
+
 
     render() {
-        const { textLabel, timetables, timetableActions, projectList, projectColorMap, taskActions, taskList, locale } = this.props
+        const { textLabel, timetables, projectList, projectColorMap, taskActions, taskList, locale } = this.props
         const timetable = timetables.get('timetable')
 
         const sortedTimetableList = timetables.get('timetableList').sort((a, b) => a.get('title').localeCompare(b.get('title')), { numeric: true })
@@ -215,7 +240,7 @@ export default class TimetableEditSidebar extends React.Component {
                 {/*<div className="flex-item-rigid w3-border-bottom w3-margin-top w3-margin-bottom w3-border-theme"/>*/}
                 {/*<div className="flex-item-flexible">*/}
                 <ProjectPeriodPicker
-                    setCurrentProject={timetableActions.setCurrentProject}
+                    setCurrentProject={::this.handleSelectProjectPeriod}
                     projectList={projectList}
                     currentProjectID={timetables.get('currentProjectID')}
                 />
@@ -225,6 +250,14 @@ export default class TimetableEditSidebar extends React.Component {
 
                 <div className="flex-item-rigid">
                     <label>Repeating Tasks</label>
+                    <div className="tt-form-line">
+                        <LabeledIconButton
+                            disabled={!this.state.project ? 'Special work periods (Clear, Buffer, Break, ...) can not have tasks.' : false}
+                            iconName="add_circle_outline"
+                            label="Quick Add Repeating Task"
+                            onClick={::this.handleQuickAddTask}
+                        />
+                    </div>
                     <form
                         className="w3-center"
                         onChange={::this.handleFilterChange}

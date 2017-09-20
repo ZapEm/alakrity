@@ -15,7 +15,7 @@ import TaskEdit from './TaskEdit'
 
 const dragSource = {
     canDrag(props) {
-        if ( !props.editMode && props.task.get('type') === TASK_TYPES.repeating ) {
+        if ( props.draggable && !props.editMode && props.task.get('type') === TASK_TYPES.repeating ) {
             if ( confirm('Repeating tasks can only be moved while in the "Basic Schedule" view.\n\nDo you want to create an exception for this week?') ) {
                 alert('Well, too bad. Exceptions are not implemented, yet.') //TODO: exceptions for repeating tasks
             }
@@ -25,6 +25,7 @@ const dragSource = {
     },
 
     beginDrag(props) {
+
         // Return the data describing the dragged item
         return props.task.toJSON()
     },
@@ -118,13 +119,17 @@ export default class Task extends React.Component {
 
 
     handleSave(task) {
-        if ( task.title.length === 0 ) {
+        if ( !task.title || task.title.length === 0 ) {
             this.props.taskActions.removeTask(task.id)
         } else {
             this.props.taskActions.editTask(task)
         }
         this.setState({ editing: false })
     }
+
+    // handleCancel(){
+    //     this.setState({ editing: false })
+    // }
 
 
     render() {
@@ -168,6 +173,7 @@ export default class Task extends React.Component {
                 task={task}
                 locale={locale}
                 onSubmit={(task) => this.handleSave(task)}
+                onCancel={() => this.setState({ editing: false })}
             />
         } else {
             element =
