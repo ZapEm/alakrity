@@ -5,6 +5,7 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import { LOCALE_STRINGS, TASK_TYPES } from '../../utils/constants'
+import { TASK_STATUS } from '../../utils/enums'
 
 export default class TaskItemDragPreview extends React.Component {
 

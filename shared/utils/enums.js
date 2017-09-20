@@ -18,6 +18,7 @@ export const MODAL_TYPES = Object.freeze(
     {
         DEFAULT: Symbol('DEFAULT_MODAL'),
         REMINDER: Symbol('REMINDER_MODAL'),
+        COMPLETION: Symbol('COMPLETION_MODAL'),
         EDIT_TASK: Symbol('EDIT_TASK_MODAL'),
         EDIT_PROJECT: Symbol('EDIT_PROJECT_MODAL')
     }
@@ -39,12 +40,12 @@ export const PROJECT_TYPES = Object.freeze(
 
 export const TASK_STATUS = Object.freeze(
     {
-        DEFAULT: 'default',
-        SCHEDULED: 'scheduled',
-        ACTIVE: 'active',
-        DONE: 'done',
-        WAITING: 'waiting',
-        SNOOZED: 'snoozed'
+        DEFAULT: { key: 'DEFAULT', name: 'Standard', icon: '' },
+        SCHEDULED: { key: 'SCHEDULED', name: 'Scheduled', icon: 'grid_on' },
+        ACTIVE: { key: 'ACTIVE', name: 'Active', icon: 'pets' },
+        DONE: { key: 'DONE', name: 'Done', icon: 'done' },
+        WAITING: { key: 'WAITING', name: 'Waiting', icon: 'notifications_active' },
+        SNOOZED: { key: 'SNOOZED', name: 'Snoozed', icon: 'snooze' }
     }
 )
 

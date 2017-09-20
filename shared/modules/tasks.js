@@ -138,6 +138,8 @@ export function editTaskStart(newTask) {
         const newStart = moment(newTask.start)
         const newEnd = newStart.clone().add(newTask.duration, 'm')
 
+        newTask.status = getTaskStatus(newTask, newStart)
+
         const sameDayTasks = getState().tasks.get('taskList').filter((task) => (taskDayFilters[task.get('type')](task, newStart)))
 
         const found = sameDayTasks.find(
@@ -168,7 +170,7 @@ export function beginTask(tmpTask) {
     return (dispatch, getState) => {
 
         const task = _merge({}, tmpTask, {
-            status: TASK_STATUS.ACTIVE,
+            status: TASK_STATUS.ACTIVE.key,
             started: moment()
         })
 
@@ -176,6 +178,32 @@ export function beginTask(tmpTask) {
             .then(Promise.all([
                     dispatch(backendActions.updateModals()),
                     dispatch(statistics.recordBeginTask(task))
+                ])
+            )
+
+    }
+}
+
+export function completeTask(task, options = { rating: false }) {
+
+    if ( Immutable.Map.isMap(task) ) {
+        task = task.toJS()
+    }
+
+    return (dispatch, getState) => {
+
+        const newTask = _merge({}, task, {
+            status: TASK_STATUS.DONE.key
+        })
+
+        const newOptions = _merge({}, options, {
+            time: moment()
+        })
+
+        return dispatch(editTask(newTask))
+            .then(Promise.all([
+                    dispatch(backendActions.updateModals()),
+                    dispatch(statistics.recordCompleteTask(newTask, newOptions))
                 ])
             )
 
@@ -244,4 +272,15 @@ export default function reducer(state = initialState, action) {
         default:
             return state
     }
+}
+
+function getTaskStatus(newTask, newStart) {
+
+    //Schedule task if appropriate
+    if ( newStart.isAfter() && (!newTask.status || newTask.status === TASK_STATUS.DEFAULT.key) ) {
+        return TASK_STATUS.SCHEDULED.key
+    }
+
+    //default
+    return newTask.status ? newTask.status : TASK_STATUS.DEFAULT.key
 }

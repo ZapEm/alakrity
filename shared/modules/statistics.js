@@ -1,7 +1,7 @@
 import * as Immutable from 'immutable'
+import * as _ from 'lodash/object'
 import { STATISTIC_TYPES } from '../utils/enums'
 import fetch from '../utils/fetcher'
-import moment from 'moment'
 //import { ReminderModal } from '../components/misc/Modals/Modals'
 
 
@@ -89,18 +89,32 @@ export function removeStatistic(id) {
 /**
  * Thunks:
  * */
+
 export function recordBeginTask(task) {
     return (dispatch) => {
         return dispatch(recordStatistic(
             {
                 type: STATISTIC_TYPES.TASK,
                 id: 'task_' + task.id,
-                beginDiff: task.started.diff(task.start, 'minutes')
+                task: _.pick(task, ['id', 'projectID', 'start', 'duration', 'title', 'type']),
+                started: task.started
             }
         ))
     }
 }
 
+export function recordCompleteTask(task, { time, rating }) {
+    return (dispatch) => {
+        return dispatch(recordStatistic(
+            {
+                type: STATISTIC_TYPES.TASK,
+                id: 'task_' + task.id,
+                completed: time,
+                rating: rating ? rating : false
+            }
+        ))
+    }
+}
 
 /**
  * Reducer:

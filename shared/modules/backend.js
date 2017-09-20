@@ -1,5 +1,6 @@
-import * as Immutable from 'immutable'
-import { ReminderModal } from '../components/misc/modals/Modals'
+import { fromJS, OrderedMap } from 'immutable'
+import moment from 'moment'
+import { getTaskModal } from '../components/misc/modals/Modals'
 import { REJECTED_NAME as FAILURE, RESOLVED_NAME as SUCCESS } from '../utils/constants'
 import { MASCOT_STATUS, TASK_STATUS } from '../utils/enums'
 import { LOGIN, LOGOUT } from './auth'
@@ -51,15 +52,19 @@ export function getUpcomingTasks(taskList, time, lookahead = 10, initial = false
 
         const lookAheadDate = new Date(time.getTime() + (lookahead * 3600000))
         taskList = taskList.filter((task) => {
-            if ( task.get('status') && TASK_STATUS.SCHEDULED !== task.get('status') ) {
+            if ( task.get('status') && task.get('status') !== TASK_STATUS.SCHEDULED.key && task.get('status') !== TASK_STATUS.WAITING.key ) {
                 return false
             }
-            const startTime = new Date(task.get('start'))
-            return ( startTime >= time && startTime < lookAheadDate)
+            const queryTime = (task.get('status') === TASK_STATUS.ACTIVE.key) ?
+                              new Date(moment(task.get('start')).add(task.get('duration'), 'minutes')) :
+                              new Date(task.get('start'))
+            return ( queryTime >= time && queryTime < lookAheadDate)
         })
 
         // create an OrderedMap in taskList order, with task.id as key and Modal-obj as value
-        const modals = Immutable.OrderedMap(taskList.map((task) => [task.get('id'), new ReminderModal(task)]))
+        const modals = OrderedMap(taskList.map(task => [task.get('id'), getTaskModal(task)])
+                                          .sortBy(modal => modal.date)
+        )
 
         return {
             type: UPDATE_UPCOMING_TASKS,
@@ -95,10 +100,10 @@ export function updateModals(time = false, initial = false) {
 /**
  * Reducer:
  * */
-const initialState = Immutable.fromJS({
+const initialState = fromJS({
     mascotStatus: MASCOT_STATUS.HI,
     time: false,
-    modalsOM: Immutable.OrderedMap()
+    modalsOM: OrderedMap()
 })
 
 export default function reducer(state = initialState, action) {

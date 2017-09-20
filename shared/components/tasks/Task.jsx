@@ -9,7 +9,7 @@ import { DragSource } from 'react-dnd'
 import { getEmptyImage } from 'react-dnd-html5-backend'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import { DANGER_LEVELS, LOCALE_STRINGS, TASK_TYPES } from '../../utils/constants'
-import { DndTypes } from '../../utils/enums'
+import { DndTypes, TASK_STATUS } from '../../utils/enums'
 import IconButton from '../misc/IconButton'
 import TaskEdit from './TaskEdit'
 
@@ -143,6 +143,8 @@ export default class Task extends React.Component {
             return null
         }
 
+        const status = (editable || task.get('status') !== TASK_STATUS.SCHEDULED.key) ? TASK_STATUS[task.get('status')] : false
+
         const durationCutoff = task.get('duration') >= 90
 
 
@@ -197,6 +199,13 @@ export default class Task extends React.Component {
                     // data-start={task.get('start')}
                     // data-duration={task.get('duration')}
                 >
+                    { status && status.icon &&
+                    <div
+                        className="material-icons w3-display-topleft task-status-icon"
+                        title={status.name}
+                    >
+                        {status.icon}
+                    </div>}
                     <div className="task-item-info">
                         <p className="title">{task.get('title')}</p>
                         {durationCutoff &&
