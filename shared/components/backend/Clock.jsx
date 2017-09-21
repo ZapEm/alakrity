@@ -49,11 +49,11 @@ export default class Clock extends React.Component {
 
         // do once per minute...
         if ( this.initial || this.time.getMinutes() !== this.currentMinute ) {
+            const initial = this.initial
+            this.initial = false
             this.currentMinute = this.time.getMinutes()
             this.props.backendActions.setCurrentTime(this.time)
-            this.props.backendActions.updateModals(this.time, this.initial)
-
-            this.initial = false
+            this.props.backendActions.updateModals(this.time, initial)
         }
     }
 

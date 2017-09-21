@@ -20,7 +20,8 @@ export default class ModalComponent extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            modalKey: ''
+            modalKey: '',
+            rating: false
         }
     }
 
@@ -95,6 +96,8 @@ export default class ModalComponent extends React.Component {
                         modal={currentModal}
                         projectColorMap={this.state.projectColorMap}
                         settings={settings}
+                        changeModalState={::this.setState}
+                        rating={this.state.rating}
                     />
 
                     <ModalFooter

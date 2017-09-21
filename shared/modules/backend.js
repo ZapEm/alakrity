@@ -1,4 +1,4 @@
-import { fromJS, OrderedMap } from 'immutable'
+import { fromJS, List, OrderedMap } from 'immutable'
 import moment from 'moment'
 import { getTaskModal } from '../components/misc/modals/Modals'
 import { REJECTED_NAME as FAILURE, RESOLVED_NAME as SUCCESS } from '../utils/constants'
@@ -47,24 +47,52 @@ export function setMascotStatus(mascotStatus = MASCOT_STATUS.IDLE) {
     }
 }
 
-export function getUpcomingTasks(taskList, time, lookahead = 10, initial = false) {
+export function getUpcomingTasks(taskList, time, lookaheadMinutes = 5, initial = false) {
     if ( taskList ) {
+        const checkMoment = moment(time).add(lookaheadMinutes, 'minutes')
 
-        const lookAheadDate = new Date(time.getTime() + (lookahead * 3600000))
-        taskList = taskList.filter((task) => {
-            if ( task.get('status') && task.get('status') !== TASK_STATUS.SCHEDULED.key && task.get('status') !== TASK_STATUS.WAITING.key ) {
-                return false
-            }
-            const queryTime = (task.get('status') === TASK_STATUS.ACTIVE.key) ?
-                              new Date(moment(task.get('start')).add(task.get('duration'), 'minutes')) :
-                              new Date(task.get('start'))
-            return ( queryTime >= time && queryTime < lookAheadDate)
-        })
+        let groupedTasks = taskList.filter(task =>
+                                       (
+                                           [
+                                               TASK_STATUS.ACTIVE.key,
+                                               TASK_STATUS.SCHEDULED.key,
+                                               TASK_STATUS.SNOOZED.key
+                                           ].indexOf(task.get('status')) !== -1))
+                                   .groupBy(task => task.get('status'))
 
-        // create an OrderedMap in taskList order, with task.id as key and Modal-obj as value
-        const modals = OrderedMap(taskList.map(task => [task.get('id'), getTaskModal(task)])
-                                          .sortBy(modal => modal.date)
-        )
+        console.log(groupedTasks.toJS())
+
+        groupedTasks = groupedTasks.withMutations(
+            groupedTasks => {
+                groupedTasks.update(TASK_STATUS.SCHEDULED.key, list => list ? list.filter(task => {
+                    const start = moment(task.get('start'))
+                    return start.isSameOrBefore(checkMoment)
+                }) : List())
+                groupedTasks.update(TASK_STATUS.SNOOZED.key, list => list ? list.filter(task => {
+                    const snoozedStart = moment(task.get('start'))
+                        .add(task.has('snooze') ? task.get('snooze') : 0, 'minutes')
+                    return snoozedStart.isSameOrBefore(checkMoment)
+                }) : List())
+                groupedTasks.update(TASK_STATUS.ACTIVE.key, list => list ? list.filter(task => {
+                    const end = moment(task.get('start')).add(task.get('duration'), 'minutes')
+                    return end.isSameOrBefore(checkMoment)
+                }) : List())
+            })
+
+        console.log(groupedTasks.toJS())
+
+        const modals = OrderedMap()
+            .concat(groupedTasks.get(TASK_STATUS.SCHEDULED.key).map(task => [task.get('id'), getTaskModal(task)]))
+            .concat(groupedTasks.get(TASK_STATUS.SNOOZED.key).map(task => [task.get('id'), getTaskModal(task)]))
+            .concat(groupedTasks.get(TASK_STATUS.ACTIVE.key).map(task => [task.get('id'), getTaskModal(task)]))
+            .sortBy(modal => modal.date, (date1, date2) => {
+                if ( date1.isBefore(date2) ) { return -1 }
+                if ( date1.isAfter(date2) ) { return 1 }
+                if ( date1.isSame(date2) ) { return 0 }
+            })
+
+
+        console.log(modals.toJS())
 
         return {
             type: UPDATE_UPCOMING_TASKS,
@@ -144,3 +172,11 @@ export default function reducer(state = initialState, action) {
             return state
     }
 }
+
+// const taskGroups = {
+//     [TASK_STATUS.SCHEDULED]: 'remind',
+//     [TASK_STATUS.WAITING]: 'remind',
+//     [TASK_STATUS.ACTIVE]: 'active',
+//     [TASK_STATUS.DONE]: 'ignore',
+//     [TASK_STATUS.SNOOZED]: 'snoozed'
+// }

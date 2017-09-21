@@ -25,7 +25,6 @@ const dragSource = {
     },
 
     beginDrag(props) {
-
         // Return the data describing the dragged item
         return props.task.toJSON()
     },
@@ -34,7 +33,23 @@ const dragSource = {
         if ( !monitor.didDrop() ) {
             // You can check whether the drop was successful
             // or if the drag ended but nobody handled the drop
-            props.taskActions.editTask(_merge({}, monitor.getItem(), { start: null }))
+            const task = monitor.getItem()
+
+            if(task.status === TASK_STATUS.DONE.key){
+                if(!confirm('You are trying to remove a task that is already done from the schedule. ' +
+                    'This will change it back to "not done". \n\n' +
+                    'Do you wish to proceed?')){
+                    return
+                }
+            }
+
+
+            props.taskActions.editTask(_merge({}, task, {
+                    start: null,
+                    status: TASK_STATUS.DEFAULT.key
+                })
+            )
+
             return
         }
 
@@ -143,7 +158,8 @@ export default class Task extends React.Component {
             return null
         }
 
-        const status = (editable || task.get('status') !== TASK_STATUS.SCHEDULED.key) ? TASK_STATUS[task.get('status')] : false
+        const status = (editable || task.get('status') !== TASK_STATUS.SCHEDULED.key) ?
+                       TASK_STATUS[task.get('status')] : false
 
         const durationCutoff = task.get('duration') >= 90
 
@@ -199,7 +215,7 @@ export default class Task extends React.Component {
                     // data-start={task.get('start')}
                     // data-duration={task.get('duration')}
                 >
-                    { status && status.icon &&
+                    {status && status.icon &&
                     <div
                         className="material-icons w3-display-topleft task-status-icon"
                         title={status.name}

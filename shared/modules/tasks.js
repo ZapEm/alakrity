@@ -285,8 +285,16 @@ export default function reducer(state = initialState, action) {
 function getTaskStatus(newTask, newStart) {
 
     //Schedule task if appropriate
-    if ( newStart.isAfter() && (!newTask.status || newTask.status === TASK_STATUS.DEFAULT.key) ) {
-        return TASK_STATUS.SCHEDULED.key
+    if ( (!newTask.status || newTask.status === TASK_STATUS.DEFAULT.key) ) {
+        if ( newStart.isAfter() ) {
+            return TASK_STATUS.SCHEDULED.key
+        } else {
+            return (confirm('You are trying to schedule a task in the past. ' +
+                'This will cause you to miss its start time. \n\n' +
+                'Do you want to mark the task as done to avoid this?')) ?
+                   TASK_STATUS.DONE.key :
+                   TASK_STATUS.SCHEDULED.key
+        }
     }
 
     //default

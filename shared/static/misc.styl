@@ -125,3 +125,25 @@
   height 181px
   width 242px
   animation blend-in normal forwards 0.3s ease-out
+
+.rating-picker
+  display grid
+  border-radius 8px
+  border solid 1px rgba(50,50,50,0.5)
+  padding 2px
+  margin 8px 2px
+  width 109px
+  grid-template-columns 1fr 1fr 1fr 1fr 1fr
+  justify-items center
+  align-items end
+  background-color rgba(0,0,0,0.2)
+
+.rating-star
+  display inline-block
+  cursor pointer
+  font-weight bold
+  line-height 18px
+  font-size 18px
+  color gold
+  &.empty
+    color rgba(255, 215, 0, 0.5)

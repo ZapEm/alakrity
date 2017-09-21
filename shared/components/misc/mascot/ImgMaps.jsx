@@ -38,7 +38,6 @@ export function getMascotImage(status) {
 
 function getIdleImg(time = moment()) {
     const hour = time.hour()
-    console.log(hour)
 
     if ( 0 <= hour && hour <= 5 ) {
         return require('img/sleep.png')
