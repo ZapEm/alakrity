@@ -40,25 +40,6 @@ export function saveSettings(settings) {
     }
 }
 
-// export function loadSettings(settings) {
-//     if ( Immutable.Map.isMap(settings) ) {
-//         settings = settings.toJS()
-//     }
-//
-//     if ( settings.locale && !LOCALE_STRINGS[settings.locale] ) {
-//         throw new Error(settings.locale + ' is not a valid key of LOCALE_STRING')
-//     }
-//
-//     return {
-//         type: LOAD,
-//         payload: settings,
-//         meta: {
-//             promise: fetch.get('user', { settings: settings }),
-//             optimist: true
-//         }
-//     }
-// }
-
 /**
  * Reducer:
  * */

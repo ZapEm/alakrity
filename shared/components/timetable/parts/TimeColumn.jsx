@@ -41,7 +41,8 @@ export default class TimeColumn extends React.Component {
         }
 
         let timeLabels = []
-        for ( let dt = moment({ hour: timetable.get('start') }).locale(locale); dt.isBefore(endMoment); dt.add(1, 'h') ) {
+        let dt = moment({ hour: timetable.get('start') }).locale(locale)
+        for ( dt; dt.isBefore(endMoment); dt.add(1, 'h') ) {
             timeLabels.push(
                 <div
                     key={dt.hour()}

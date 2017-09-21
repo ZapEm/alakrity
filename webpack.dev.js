@@ -62,7 +62,7 @@ export default function (app) {
                     exclude: /node_modules/,
                     loader: 'file-loader',
                     options: {
-                        name: '[name].[ext]'
+                        name: '[sha512:hash:base64:7]_[name].[ext]'
                     }
                 }
             ]
@@ -70,7 +70,8 @@ export default function (app) {
         plugins: [
             new LodashModuleReplacementPlugin({ // OptIn, see https://www.npmjs.com/package/lodash-webpack-plugin
                 'paths': true,
-                'guards': true
+                'guards': true,
+                'collections': true
             }),
             new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /(en|de)/),
             new webpack.HotModuleReplacementPlugin(),

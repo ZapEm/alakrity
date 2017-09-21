@@ -140,7 +140,15 @@ export function editTaskStart(newTask) {
 
         newTask.status = getTaskStatus(newTask, newStart)
 
-        const sameDayTasks = getState().tasks.get('taskList').filter((task) => (taskDayFilters[task.get('type')](task, newStart)))
+        const sameDayTasks = (getState().timetables.get('editMode')) ?
+                             getState().tasks.get('taskList').filter((task) => (
+                                 task.get('type') === TASK_TYPES.repeating
+                                 && taskDayFilters[task.get('type')](task, newStart))
+                             ) :
+                             getState().tasks.get('taskList').filter((task) => (
+                                     taskDayFilters[task.get('type')](task, newStart)
+                                 )
+                             )
 
         const found = sameDayTasks.find(
             (task) => {

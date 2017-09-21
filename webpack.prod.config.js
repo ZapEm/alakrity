@@ -62,7 +62,7 @@ module.exports = {
                 exclude: /node_modules/,
                 loader: 'file-loader',
                 options: {
-                    name: '[name].[ext]'
+                    name: '[hash:base64:7]_[name].[ext]'
                 }
             }
         ]
@@ -77,7 +77,8 @@ module.exports = {
         new ExtractTextPlugin({ filename: 'style.css' }),
         new LodashModuleReplacementPlugin({ // OptIn, see https://www.npmjs.com/package/lodash-webpack-plugin
             'paths': true,
-            'guards': true
+            'guards': true,
+            'collections': true
         }),
         new webpack.DefinePlugin({
             'process.env': {

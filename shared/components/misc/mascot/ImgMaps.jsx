@@ -1,5 +1,6 @@
 import { MASCOT_STATUS } from '/utils/enums'
 import { getRandomItem } from '/utils/helpers'
+import moment from 'moment'
 import React from 'react'
 
 
@@ -10,12 +11,7 @@ export function getMascotImage(status) {
     }
 
     const urlMap = {
-        [MASCOT_STATUS.IDLE]: getRandomItem(
-            [
-                require('img/idle1.png'),
-                require('img/idle2.png')
-            ]
-        ),
+        [MASCOT_STATUS.IDLE]: getIdleImg(),
         [MASCOT_STATUS.BREAK]: require('img/nap.png'),
         [MASCOT_STATUS.WORK]: require('img/work.png'),
         [MASCOT_STATUS.STRESS]: require('img/stress.png'),
@@ -38,4 +34,32 @@ export function getMascotImage(status) {
     }
 
     return <img className="mascot-image" src={urlMap[status]} alt={status}/>
+}
+
+function getIdleImg(time = moment()) {
+    const hour = time.hour()
+    console.log(hour)
+
+    if ( 0 <= hour && hour <= 5 ) {
+        return require('img/sleep.png')
+    }
+    else if ( 6 <= hour && hour <= 7 ) {
+        return require('img/wakeup.png')
+    }
+
+    // 9 to 18 is default
+
+    else if ( 19 <= hour && hour <= 22 ) {
+        return require('img/goodwork.png') // TODO: appropriate img
+    }
+    else if ( hour === 23 ) {
+        return require('img/tired.png')
+    }
+    // default
+    return getRandomItem(
+        [
+            require('img/idle1.png'),
+            require('img/idle2.png')
+        ]
+    )
 }
