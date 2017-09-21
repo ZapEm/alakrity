@@ -12,6 +12,7 @@ import { logout } from '../modules/auth'
 import * as backendActions from '../modules/backend'
 import * as taskActions from '../modules/tasks'
 import { checkWorking } from '../utils/stateChecks'
+import moment from 'moment'
 
 
 @DragDropContext(HTML5Backend)
@@ -42,12 +43,16 @@ export default class AppRoot extends React.Component {
 
     static childContextTypes = {
         dragDropManager: PropTypes.object,
-        storeSubscription: PropTypes.any,
+        storeSubscription: PropTypes.any
     }
 
 
     render() {
         const { isWorking, isAuthenticated, message, dispatch, currentPath, backend, taskList, projectList, settings } = this.props
+
+        // set global moment locale
+        moment.locale(settings.get('locale'))
+
         return (
             <div id="app-view">
                 {isAuthenticated && <ModalComponent

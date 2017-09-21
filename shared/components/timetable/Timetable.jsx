@@ -39,9 +39,9 @@ export default class Timetable extends React.Component {
 
     render() {
         const { date, tasks, taskActions, editMode, timetableActions, settingsActions, timetables, settings, time, projectColorMap } = this.props
-        const momentDate = moment.isMoment(date) ? date : moment(date)
+        let momentDate = moment.isMoment(date) ? date : moment(date)
         const locale = settings.get('locale')
-        momentDate.locale(locale)
+        momentDate = momentDate.locale(locale)
 
         return (
             <div className={(editMode ? 'tt-edit-mode ' : '') + 'tt-timetable w3-border-theme w3-card-4'}

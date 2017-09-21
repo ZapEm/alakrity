@@ -75,6 +75,7 @@ module.exports = {
     },
     plugins: [
         new ExtractTextPlugin({ filename: 'style.css' }),
+        new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /(en|de)/),
         new LodashModuleReplacementPlugin({ // OptIn, see https://www.npmjs.com/package/lodash-webpack-plugin
             'paths': true,
             'guards': true,
@@ -85,7 +86,6 @@ module.exports = {
                 NODE_ENV: '"production"'
             }
         }),
-        new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /(en|de)/),
         new webpack.optimize.UglifyJsPlugin()
     ]
 }
