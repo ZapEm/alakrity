@@ -12,6 +12,13 @@ export function find(tableName, id) {
               })
 }
 
+export function has(tableName, id) {
+    return rdb.table(tableName).get(id).run()
+              .then(response => {
+                  return !!response
+              })
+}
+
 export function findAll(tableName) {
     return rdb.table(tableName).run()
               .then(response => {

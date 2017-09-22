@@ -22,6 +22,9 @@ COPY . $APPDIR
 
 # USER alakrity
 
+# Setup Timezone (this is a crutch > to avoid complex TZ setup in application, depending on user settings...)
+RUN apk add --update tzdata
+ENV TZ=Europe/Berlin
 
 # Build production app from source
 ENV NODE_ENV production

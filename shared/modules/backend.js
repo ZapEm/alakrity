@@ -60,8 +60,6 @@ export function getUpcomingTasks(taskList, time, lookaheadMinutes = 5, initial =
                                            ].indexOf(task.get('status')) !== -1))
                                    .groupBy(task => task.get('status'))
 
-        console.log(groupedTasks.toJS())
-
         groupedTasks = groupedTasks.withMutations(
             groupedTasks => {
                 groupedTasks.update(TASK_STATUS.SCHEDULED.key, list => list ? list.filter(task => {
@@ -79,8 +77,6 @@ export function getUpcomingTasks(taskList, time, lookaheadMinutes = 5, initial =
                 }) : List())
             })
 
-        console.log(groupedTasks.toJS())
-
         const modals = OrderedMap()
             .concat(groupedTasks.get(TASK_STATUS.SCHEDULED.key).map(task => [task.get('id'), getTaskModal(task)]))
             .concat(groupedTasks.get(TASK_STATUS.SNOOZED.key).map(task => [task.get('id'), getTaskModal(task)]))
@@ -90,9 +86,6 @@ export function getUpcomingTasks(taskList, time, lookaheadMinutes = 5, initial =
                 if ( date1.isAfter(date2) ) { return 1 }
                 if ( date1.isSame(date2) ) { return 0 }
             })
-
-
-        console.log(modals.toJS())
 
         return {
             type: UPDATE_UPCOMING_TASKS,

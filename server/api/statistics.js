@@ -24,6 +24,8 @@ export function getStatistics(req, res) {
 export function recordStatistic(req, res) {
     const statistic = { ...req.body, userID: res.locals.decoded.id }
 
+    console.log(statistic)
+
     if ( !statistic.type ) {
         rethink.save('statistics', statistic)
                .then((response) => res.json(response))
@@ -32,12 +34,12 @@ export function recordStatistic(req, res) {
     }
 
     if ( statistic.type === STATISTIC_TYPES.TASK ) {
-        if ( rethink.find('statistics', statistic.id) === null ) {
-            rethink.save('statistics', statistic)
+        if ( rethink.has('statistics', statistic.id ) ) {
+            rethink.edit('statistics', statistic.id, statistic)
                    .then((response) => res.json(response))
                    .catch(err => handleError(res, err, 400))
         } else {
-            rethink.edit('statistics', statistic.id, statistic)
+            rethink.save('statistics', statistic.id)
                    .then((response) => res.json(response))
                    .catch(err => handleError(res, err, 400))
         }
