@@ -68,7 +68,7 @@ export default function (app) {
             ]
         },
         plugins: [
-            new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /(en|de)/),
+            new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /de|en/),
             new LodashModuleReplacementPlugin({ // OptIn, see https://www.npmjs.com/package/lodash-webpack-plugin
                 'paths': true,
                 'guards': true,

@@ -15,6 +15,7 @@ import { checkWorking } from '../utils/stateChecks'
 import moment from 'moment'
 
 
+
 @DragDropContext(HTML5Backend)
 @connect(state => ({
     isWorking: checkWorking(state),
@@ -52,6 +53,21 @@ export default class AppRoot extends React.Component {
 
         // set global moment locale
         moment.locale(settings.get('locale'))
+        console.log(moment.locale())
+        // switch (settings.get('locale')){
+        //     case 'en':
+        //         require('moment/locale/en')
+        //         break
+        //
+        //     case 'de':
+        //         require('moment/locale/de')
+        //         break
+        //
+        //     default:
+        //         require('moment/locale/en')
+        // }
+        //
+        // console.log(moment.locale())
 
         return (
             <div id="app-view">
