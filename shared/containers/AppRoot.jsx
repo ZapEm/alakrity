@@ -1,3 +1,4 @@
+import moment from 'moment'
 import PropTypes from 'prop-types'
 import React from 'react'
 
@@ -12,8 +13,8 @@ import { logout } from '../modules/auth'
 import * as backendActions from '../modules/backend'
 import * as taskActions from '../modules/tasks'
 import { checkWorking } from '../utils/stateChecks'
-import moment from 'moment'
-
+// import 'moment/locale/de'
+// //import 'moment/locale/en'
 
 
 @DragDropContext(HTML5Backend)
@@ -53,21 +54,15 @@ export default class AppRoot extends React.Component {
 
         // set global moment locale
         moment.locale(settings.get('locale'))
-        console.log(moment.locale())
-        // switch (settings.get('locale')){
-        //     case 'en':
-        //         require('moment/locale/en')
-        //         break
-        //
-        //     case 'de':
-        //         require('moment/locale/de')
-        //         break
-        //
-        //     default:
-        //         require('moment/locale/en')
-        // }
-        //
-        // console.log(moment.locale())
+        console.log('pre', moment.locale())
+        if ( settings.get('locale') === 'de' ) {
+            require('moment/locale/de')
+            if(moment.locale() === 'en'){
+                moment.locale('de')
+                console.log('...!')
+            }
+        }
+        console.log('post', moment.locale())
 
         return (
             <div id="app-view">
