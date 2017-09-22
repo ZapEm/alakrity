@@ -1,0 +1,23 @@
+import firebase from 'firebase-app'
+import 'firebase-messaging'
+
+// Initialize Firebase
+const config = {
+    apiKey: 'AIzaSyBMuxYF20MiQu4HPY6N0m2ojQv032pzV_4',
+    authDomain: 'alakrity-notifications.firebaseapp.com',
+    databaseURL: 'https://alakrity-notifications.firebaseio.com',
+    projectId: 'alakrity-notifications',
+    storageBucket: 'alakrity-notifications.appspot.com',
+    messagingSenderId: '252407098561'
+}
+firebase.initializeApp(config)
+
+const messaging = firebase.messaging()
+
+messaging.setBackgroundMessageHandler(payload => {
+    const title = 'Hello World'
+    const options = {
+        body: payload.data && payload.data.status ? payload.data.status : 'empty'
+    }
+    return self.registration.showNotification(title, options)
+})

@@ -79,6 +79,7 @@ export default class ModalComponent extends React.Component {
         const currentModal = modalsOM.get(modalKey)
         //console.log(modalKey, currentModal)
 
+
         return (
             <div className="w3-modal w3-animate-opacity" style={
                 {

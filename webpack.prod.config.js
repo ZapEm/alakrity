@@ -58,12 +58,17 @@ module.exports = {
                 })
             },
             {
-                test: /\.(jpg|jpeg|gif|png|ico)$/,
+                test: /manifest\.json|\.(jpg|jpeg|gif|png|ico)$/,
                 exclude: /node_modules/,
                 loader: 'file-loader',
                 options: {
-                    name: '[hash:base64:7]_[name].[ext]'
+                    name: '[path][name].[ext]'
                 }
+            },
+            {
+                test: /service-worker\.js$/,
+                exclude: /node_modules/,
+                loader: 'service-worker-loader'
             }
         ]
     },

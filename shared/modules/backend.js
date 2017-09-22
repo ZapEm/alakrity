@@ -4,6 +4,7 @@ import { getTaskModal } from '../components/misc/modals/Modals'
 import { REJECTED_NAME as FAILURE, RESOLVED_NAME as SUCCESS } from '../utils/constants'
 import { MASCOT_STATUS, TASK_STATUS } from '../utils/enums'
 import { LOGIN, LOGOUT } from './auth'
+import fetcher from '../utils/fetcher'
 
 
 /**
@@ -15,6 +16,7 @@ const ADD_MODAL = 'alakrity/backend/ADD_MODAL'
 const REMOVE_MODAL = 'alakrity/backend/REMOVE_MODAL'
 const UPDATE_UPCOMING_TASKS = 'alakrity/backend/UPDATE_UPCOMING_TASKS'
 const SET_MASCOT = 'alakrity/backend/SET_MASCOT'
+const SEND_NOTIFICATION = 'alakrity/backend/SEND_NOTIFICATION'
 
 /**
  * Action Creators:
@@ -31,6 +33,17 @@ export function addModal(modal) {
     return {
         type: ADD_MODAL,
         payload: modal
+    }
+}
+
+function sendNotificationAction(notification, toToken) {
+    return {
+        type: SEND_NOTIFICATION,
+        payload: notification,
+        meta: {
+            promise: fetcher.sendNotification(notification, toToken),
+            optimist: false
+        }
     }
 }
 
@@ -115,6 +128,18 @@ export function updateModals(time = false, initial = false) {
                    : new Date()
 
         return dispatch(getUpcomingTasks(taskList, time, 10, initial))
+    }
+}
+
+export function sendNotification(notification) {
+    return (dispatch, getState) => {
+        const toToken = getState().settings.get('toToken')
+        if ( !toToken ) {
+            console.log('Can\'t send notification. No toToken set!')
+            return
+        }
+
+        return sendNotificationAction(notification, toToken)
     }
 }
 

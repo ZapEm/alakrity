@@ -11,10 +11,11 @@ import ModalComponent from '../components/misc/modals/ModalComponent'
 import Navbar from '../components/misc/Navbar'
 import { logout } from '../modules/auth'
 import * as backendActions from '../modules/backend'
+import * as settingsActions from '../modules/settings'
 import * as taskActions from '../modules/tasks'
+
+import configureNotifications from '../utils/configureNotifications'
 import { checkWorking } from '../utils/stateChecks'
-// import 'moment/locale/de'
-// //import 'moment/locale/en'
 
 
 @DragDropContext(HTML5Backend)
@@ -57,12 +58,16 @@ export default class AppRoot extends React.Component {
         console.log('pre', moment.locale())
         if ( settings.get('locale') === 'de' ) {
             require('moment/locale/de')
-            if(moment.locale() === 'en'){
+            if ( moment.locale() === 'en' ) {
                 moment.locale('de')
                 console.log('...!')
             }
         }
         console.log('post', moment.locale())
+
+
+        //configureNotifications(bindActionCreators(settingsActions, dispatch))
+
 
         return (
             <div id="app-view">

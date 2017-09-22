@@ -3,13 +3,14 @@ import { render } from 'react-dom'
 import { Provider } from 'react-redux'
 import { browserHistory, Router } from 'react-router'
 import transit from 'transit-immutable-js'
+
+
 import configureStore from '../shared/configureStore'
 import DevTools from '../shared/containers/devTools'
 import routes from '../shared/routes'
 
 import '../shared/static/favicon.ico'
 import '../shared/static/main.styl'
-import * as moment from 'moment'
 
 
 // hydrate initial state from transmitted state
@@ -18,6 +19,7 @@ const { store, history } = configureStore(browserHistory, transitState)
 
 const isDev = process.env.NODE_ENV !== 'production'
 const devTools = (isDev) ? <DevTools/> : null
+
 
 
 render(

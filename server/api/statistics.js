@@ -34,14 +34,21 @@ export function recordStatistic(req, res) {
     }
 
     if ( statistic.type === STATISTIC_TYPES.TASK ) {
-        if ( rethink.has('statistics', statistic.id ) ) {
+        if ( rethink.has('statistics', statistic.id) ) {
             rethink.edit('statistics', statistic.id, statistic)
-                   .then((response) => res.json(response))
+                   .then((response) => {
+                       console.log('$$edited', response)
+                       return res.json(response)
+                   })
                    .catch(err => handleError(res, err, 400))
         } else {
-            rethink.save('statistics', statistic.id)
-                   .then((response) => res.json(response))
+            rethink.save('statistics', statistic)
+                   .then((response) => {
+                       console.log('@@saved', response)
+                       return res.json(response)
+                   })
                    .catch(err => handleError(res, err, 400))
+
         }
     }
 }

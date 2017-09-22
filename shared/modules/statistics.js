@@ -95,7 +95,7 @@ export function recordBeginTask(task) {
         return dispatch(recordStatistic(
             {
                 type: STATISTIC_TYPES.TASK,
-                id: 'task_' + task.id,
+                id: task.id,
                 task: _.pick(task, ['id', 'projectID', 'start', 'duration', 'title', 'type']),
                 started: task.started
             }
@@ -108,7 +108,7 @@ export function recordCompleteTask(task, { time, rating }) {
         return dispatch(recordStatistic(
             {
                 type: STATISTIC_TYPES.TASK,
-                id: 'task_' + task.id,
+                id: task.id,
                 completed: time,
                 rating: rating ? rating : false
             }

@@ -15,7 +15,8 @@ export function find(tableName, id) {
 export function has(tableName, id) {
     return rdb.table(tableName).get(id).run()
               .then(response => {
-                  return !!response
+                  console.log('has', response !== null)
+                  return response !== null
               })
 }
 
@@ -77,6 +78,16 @@ export function remove(tableName, id) {
               .then(response => {
                   return response
               })
+}
+
+export function record(tableName, object) {
+    return rdb.table(tableName).insert(object, {conflict: 'update'}),
+            rdb.table(tableName).update(object).run()
+        .then(response => {
+            return (response.generated_keys)
+                ? Object.assign({}, object, { id: response.generated_keys[0] })
+                : object
+        })
 }
 
 

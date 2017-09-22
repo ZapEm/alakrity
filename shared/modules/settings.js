@@ -14,6 +14,8 @@ import { LOGIN, LOGOUT } from './auth'
 const SAVE = 'alakrity/settings/SAVE'
 const LOAD = 'alakrity/settings/LOAD'
 
+const SAVE_NOTIFICATION_TOKEN = 'alakrity/settings/SAVE_NOTIFICATION_TOKEN'
+
 
 /**
  * Action Creators:
@@ -30,6 +32,7 @@ export function saveSettings(settings) {
 
     settings.isDefault = false
 
+
     return {
         type: SAVE,
         payload: settings,
@@ -37,6 +40,21 @@ export function saveSettings(settings) {
             promise: fetch.post('settings', { data: settings }),
             optimist: true
         }
+    }
+}
+
+export function saveNotificationToken(token) {
+    return (dispatch, getState) => {
+
+        if (getState().settings.get('notificationToken') === token){
+            return
+        }
+
+        const settings = {
+            notificationToken: token
+        }
+
+        return dispatch(saveSettings(settings))
     }
 }
 

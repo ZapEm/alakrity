@@ -20,7 +20,6 @@ import configureStore from '../shared/configureStore'
 import DevTools from '../shared/containers/devTools'
 import routes from '../shared/routes'
 import { DEFAULT_SETTINGS } from '../shared/utils/constants'
-import { MASCOT_STATUS } from '../shared/utils/enums'
 import getRouters from './api/routes'
 import { serverGetInitial } from './api/utils/serverQueries'
 
