@@ -1,7 +1,0 @@
-{
-  "name": "Alakrity Week Scheduler",
-  "short_name": "Alakrity",
-  "start_url": "./bundle.js",
-  "display": "standalone",
-  "gcm_sender_id": "103953800507"
-}

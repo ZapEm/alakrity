@@ -1,39 +1,34 @@
 import { MODAL_TYPES, TASK_STATUS } from '../../../utils/enums'
 import moment from 'moment'
 
-const _ = require('lodash/object')
-
 export class Modal {
-    constructor(content) {
-        // for all
-        this.id = content.get('id')
+    constructor(content, type) {
+        this.id = (type ? type + '_' : 'default_') + content.get('id')
+        this.type = type ? type : MODAL_TYPES.DEFAULT
 
         // may be overridden
-        this.type = MODAL_TYPES.DEFAULT
+        this.task = content // meh
         this.headerTitle = content.has('header') ? content.get('header') : 'Default Header'
         this.date = content.has('time') ? moment(content.get('time')) : moment()
-        this.task = content // meh
     }
 }
 
 export class ReminderModal extends Modal {
     constructor(task) {
-        super(task)
+        super(task, MODAL_TYPES.REMINDER)
 
-        this.type = MODAL_TYPES.REMINDER
-        this.headerTitle = 'Begin: ' + task.get('title')
         this.task = task
+        this.headerTitle = 'Begin: ' + task.get('title')
         this.date = moment(task.get('start'))
     }
 }
 
 export class SnoozedReminderModal extends Modal {
     constructor(task) {
-        super(task)
+        super(task, MODAL_TYPES.REMINDER)
 
-        this.type = MODAL_TYPES.REMINDER
-        this.headerTitle = 'Begin: ' + task.get('title')
         this.task = task
+        this.headerTitle = 'Begin: ' + task.get('title')
         this.snooze = task.get('snooze')
         this.date = moment(task.get('start')).add(task.get('snooze'), 'minutes')
     }
@@ -41,11 +36,10 @@ export class SnoozedReminderModal extends Modal {
 
 export class CompletionModal extends Modal {
     constructor(task) {
-        super(task)
+        super(task, MODAL_TYPES.COMPLETION)
 
-        this.type = MODAL_TYPES.COMPLETION
-        this.headerTitle = 'Complete: ' + task.get('title')
         this.task = task
+        this.headerTitle = 'Complete: ' + task.get('title')
         this.date = moment(task.get('start')).add(task.get('duration'), 'minutes')
     }
 }
@@ -68,6 +62,4 @@ export function getTaskModal(task, statusOverride = false) {
         default:
             return new Modal(task)
     }
-
-
 }

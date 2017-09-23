@@ -2,18 +2,9 @@ import axios from 'axios'
 import jwt from 'jsonwebtoken'
 import cookie from 'react-cookie'
 
-// import { api as apiCfg } from 'config'
-
 // Set default values for requests on server and client:
 axios.defaults.timeout = 5000
 
-const notificationAxios = axios.create({
-    baseURL: 'https://fcm.googleapis.com',
-    headers: {
-        'Authorization': 'key=AAAAOsSirME:APA91bE0UKJYxIONjTfTXWr4LlVt3eH-ZfM_bmERlUy47w_MB_IFt9wNHUiz5KbHwfO1dfpB7iy6qPSvmtX-1xqqQiBcUT-4MjQB8MjcAT19dmfc7qXHcBf9Lwe_ff9i2HUhOfC-l8cy',
-        'Content-Type': 'application/json'
-    }
-})
 
 let apiCfg = {}
 if ( typeof window === 'undefined' ) {
@@ -60,17 +51,6 @@ class ApiFetcher {
                 )
             }
         )
-
-        this.sendNotification = (notification, toToken) => {
-            notificationAxios({
-                url: '/fcm/send',
-                method: 'post',
-                data: {
-                    notification: notification,
-                    to: toToken
-                }
-            })
-        }
     }
 }
 

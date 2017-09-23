@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import * as ImmutablePropTypes from 'react-immutable-proptypes'
+import notifyUser from '/utils/notifications'
 
 
 export default class Clock extends React.Component {
@@ -47,10 +48,19 @@ export default class Clock extends React.Component {
             })
         }
 
+        // // do once every 10 seconds
+        // if( this.time.getSeconds() % 10 === 0){
+        //     if (!this.initial){
+        //         notifyUser()
+        //     }
+        // }
+
+
         // do once per minute...
         if ( this.initial || this.time.getMinutes() !== this.currentMinute ) {
             const initial = this.initial
             this.initial = false
+
             this.currentMinute = this.time.getMinutes()
             this.props.backendActions.setCurrentTime(this.time)
             this.props.backendActions.updateModals(this.time, initial)

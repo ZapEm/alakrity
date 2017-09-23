@@ -5,6 +5,8 @@ import { getProjectColorMap } from '../../../utils/helpers'
 import ModalContent from './ModalContent'
 import ModalFooter from './ModalFooter'
 import ModalHeader from './ModalHeader'
+import { MODAL_TYPES } from '../../../utils/enums'
+import notifyUser from '../../../utils/notifications'
 
 
 export default class ModalComponent extends React.Component {
@@ -68,6 +70,48 @@ export default class ModalComponent extends React.Component {
         // this.forceUpdate()
     }
 
+    static handleNotification(modal) {
+        const title = modal.task.get('title')
+        switch (modal.type) {
+            case MODAL_TYPES.REMINDER:
+                notifyUser(
+                    'Task "' + title + '" is scheduled now!',
+                    {
+                        body: 'Please start the task when you are ready. \n( Click here to show Alakrity )',
+                        tag: modal.id
+                    }
+                )
+                notifyUser(
+                    'Task "' + title + '" is scheduled now!',
+                    {
+                        body: 'Please start the task when you are ready. \n( Click here to show Alakrity )',
+                        tag: modal.id
+                    }
+                )
+                break
+
+            case MODAL_TYPES.COMPLETION:
+                notifyUser(
+                    'Task "' + title + '" is at its end!',
+                    {
+                        body: 'Please confirm the completion when you are done. \n( Click here to show Alakrity )',
+                        icon: require('img/goodwork_cropped.png'),
+                        tag: modal.id
+                    }
+                )
+                break
+
+            default:
+                notifyUser(
+                    'Alakrity needs your attention',
+                    {
+                        body: 'Please start the task when you are ready. \n( Click here to show Alakrity )',
+                        tag: modal.id
+                    }
+                )
+        }
+    }
+
     render() {
         const { modalsOM, settings, taskActions, backendActions } = this.props
         const { modalKey } = this.state
@@ -79,13 +123,19 @@ export default class ModalComponent extends React.Component {
         const currentModal = modalsOM.get(modalKey)
         //console.log(modalKey, currentModal)
 
+        if ( typeof window !== 'undefined' && document.hidden ) {
+            ModalComponent.handleNotification(currentModal)
+        }
 
         return (
-            <div className="w3-modal w3-animate-opacity" style={
-                {
-                    display: 'block'
+            <div
+                className="w3-modal w3-animate-opacity"
+                style={
+                    {
+                        display: 'block'
+                    }
                 }
-            }>
+            >
                 <div className="modal w3-modal-content w3-round-large w3-card-4 w3-animate-top">
                     <ModalHeader
                         modalsOM={modalsOM}

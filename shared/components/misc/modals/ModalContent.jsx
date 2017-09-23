@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import * as ImmutablePropTypes from 'react-immutable-proptypes'
 import { MODAL_TYPES } from '../../../utils/enums'
+import notifyUser from '../../../utils/notifications'
 import TaskPreview from '../../dnd/TaskItemDragPreview'
 import { Modal } from './Modals'
 import RatePicker from './RatingPicker'
@@ -14,17 +15,21 @@ export default class ModalContent extends React.Component {
         projectColorMap: ImmutablePropTypes.map.isRequired,
         settings: ImmutablePropTypes.map.isRequired,
         rating: PropTypes.oneOfType([PropTypes.bool, PropTypes.number]),
-        changeModalState: PropTypes.func.isRequired,
+        changeModalState: PropTypes.func.isRequired
     }
 
     handleSetRating(rating) {
         this.props.changeModalState({ rating: rating })
     }
 
+
+
+
     render() {
         const { modal, projectColorMap, settings, rating } = this.props
         const task = modal.task
         const locale = settings.get('locale')
+
 
         return <div
             className="modal-middle w3-theme-l5"

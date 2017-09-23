@@ -81,13 +81,12 @@ export function remove(tableName, id) {
 }
 
 export function record(tableName, object) {
-    return rdb.table(tableName).insert(object, {conflict: 'update'}),
-            rdb.table(tableName).update(object).run()
-        .then(response => {
-            return (response.generated_keys)
-                ? Object.assign({}, object, { id: response.generated_keys[0] })
-                : object
-        })
+    return rdb.table(tableName).insert(object, { conflict: 'update' })
+              .then(response => {
+                  return (response.generated_keys)
+                      ? Object.assign({}, object, { id: response.generated_keys[0] })
+                      : object
+              })
 }
 
 

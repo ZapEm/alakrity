@@ -11,10 +11,6 @@ express:
   protocol: https
   port: 3000
   api: /api/0/
-notifications:
-  serverKey: AAAAOsSirME:APA91bE0UKJYxIONjTfTXWr4LlVt3eH-ZfM_bmERlUy47w_MB_IFt9wNHUiz5KbHwfO1dfpB7iy6qPSvmtX-1xqqQiBcUT-4MjQB8MjcAT19dmfc7qXHcBf9Lwe_ff9i2HUhOfC-l8cy
-  senderID: 252407098561
-#  webApiKey: AIzaSyBMuxYF20MiQu4HPY6N0m2ojQv032pzV_4
 auth:
   jwtExpiresIn: 2h
   jwtSecret: MuchSecretSuchWow

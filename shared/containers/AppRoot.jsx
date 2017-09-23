@@ -11,10 +11,8 @@ import ModalComponent from '../components/misc/modals/ModalComponent'
 import Navbar from '../components/misc/Navbar'
 import { logout } from '../modules/auth'
 import * as backendActions from '../modules/backend'
-import * as settingsActions from '../modules/settings'
 import * as taskActions from '../modules/tasks'
 
-import configureNotifications from '../utils/configureNotifications'
 import { checkWorking } from '../utils/stateChecks'
 
 
@@ -64,10 +62,6 @@ export default class AppRoot extends React.Component {
             }
         }
         console.log('post', moment.locale())
-
-
-        //configureNotifications(bindActionCreators(settingsActions, dispatch))
-
 
         return (
             <div id="app-view">

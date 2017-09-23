@@ -16,11 +16,11 @@ export const TaskListFilters = Object.freeze(
 
 export const MODAL_TYPES = Object.freeze(
     {
-        DEFAULT: 'DEFAULT_MODAL',
-        REMINDER: 'REMINDER_MODAL',
-        COMPLETION: 'COMPLETION_MODAL',
-        EDIT_TASK: 'EDIT_TASK_MODAL',
-        EDIT_PROJECT: 'EDIT_PROJECT_MODAL'
+        DEFAULT: 'default',
+        REMINDER: 'reminder',
+        COMPLETION: 'completion',
+        EDIT_TASK: 'edit-task',
+        EDIT_PROJECT: 'edit-project'
     }
 )
 

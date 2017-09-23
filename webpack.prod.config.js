@@ -64,11 +64,6 @@ module.exports = {
                 options: {
                     name: '[path][name].[ext]'
                 }
-            },
-            {
-                test: /service-worker\.js$/,
-                exclude: /node_modules/,
-                loader: 'service-worker-loader'
             }
         ]
     },

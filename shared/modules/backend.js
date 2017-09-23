@@ -4,7 +4,6 @@ import { getTaskModal } from '../components/misc/modals/Modals'
 import { REJECTED_NAME as FAILURE, RESOLVED_NAME as SUCCESS } from '../utils/constants'
 import { MASCOT_STATUS, TASK_STATUS } from '../utils/enums'
 import { LOGIN, LOGOUT } from './auth'
-import fetcher from '../utils/fetcher'
 
 
 /**
@@ -33,17 +32,6 @@ export function addModal(modal) {
     return {
         type: ADD_MODAL,
         payload: modal
-    }
-}
-
-function sendNotificationAction(notification, toToken) {
-    return {
-        type: SEND_NOTIFICATION,
-        payload: notification,
-        meta: {
-            promise: fetcher.sendNotification(notification, toToken),
-            optimist: false
-        }
     }
 }
 
@@ -91,14 +79,18 @@ export function getUpcomingTasks(taskList, time, lookaheadMinutes = 5, initial =
             })
 
         const modals = OrderedMap()
-            .concat(groupedTasks.get(TASK_STATUS.SCHEDULED.key).map(task => [task.get('id'), getTaskModal(task)]))
-            .concat(groupedTasks.get(TASK_STATUS.SNOOZED.key).map(task => [task.get('id'), getTaskModal(task)]))
-            .concat(groupedTasks.get(TASK_STATUS.ACTIVE.key).map(task => [task.get('id'), getTaskModal(task)]))
-            .sortBy(modal => modal.date, (date1, date2) => {
-                if ( date1.isBefore(date2) ) { return -1 }
-                if ( date1.isAfter(date2) ) { return 1 }
-                if ( date1.isSame(date2) ) { return 0 }
-            })
+            .concat(groupedTasks.get(TASK_STATUS.SCHEDULED.key)
+                                .map(task => ((modal) => [modal.id, modal])(getTaskModal(task))))
+            .concat(groupedTasks.get(TASK_STATUS.SNOOZED.key)
+                                .map(task => ((modal) => [modal.id, modal])(getTaskModal(task))))
+            .concat(groupedTasks.get(TASK_STATUS.ACTIVE.key)
+                                .map(task => ((modal) => [modal.id, modal])(getTaskModal(task))))
+            .sortBy(modal => modal.date,
+                (date1, date2) => {
+                    if ( date1.isBefore(date2) ) { return -1 }
+                    if ( date1.isAfter(date2) ) { return 1 }
+                    if ( date1.isSame(date2) ) { return 0 }
+                })
 
         return {
             type: UPDATE_UPCOMING_TASKS,
@@ -131,17 +123,6 @@ export function updateModals(time = false, initial = false) {
     }
 }
 
-export function sendNotification(notification) {
-    return (dispatch, getState) => {
-        const toToken = getState().settings.get('toToken')
-        if ( !toToken ) {
-            console.log('Can\'t send notification. No toToken set!')
-            return
-        }
-
-        return sendNotificationAction(notification, toToken)
-    }
-}
 
 /**
  * Reducer:
@@ -161,15 +142,10 @@ export default function reducer(state = initialState, action) {
             if ( action.meta && action.meta.initial ) {
                 return state.set('modalsOM', action.payload)
             }
-            return state.withMutations((state) =>
-                state.set('modalsOM', action.payload)
-                     .set('mascotStatus', (action.payload.first() ?
-                                           action.payload.first().type :
-                                           MASCOT_STATUS.IDLE))
-            )
+            return state.set('modalsOM', action.payload)
 
         case ADD_MODAL:
-            return state.withMutations((state) => state.set('modalsOM', state.get('modalsOM').merge(action.payload)))
+            return state.set('modalsOM', state.get('modalsOM').merge(action.payload))
 
         case REMOVE_MODAL:
             return state.deleteIn(['modalsOM', action.payload])
