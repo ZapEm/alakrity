@@ -6,6 +6,7 @@ import { DANGER_LEVELS } from '../../utils/constants'
 import { PROJECT_TYPES } from '../../utils/enums'
 import IconButton from '../misc/IconButton'
 import ProjectEdit from './ProjectEdit'
+import MilestonesComponent from './Milestones/MilestonesComponent'
 
 
 export default class Project extends React.Component {
@@ -92,7 +93,10 @@ export default class Project extends React.Component {
                     </div>
                 </div>
 
-                <p>{project.get('description')}</p>
+                <p className="project-description">{project.get('description')}</p>
+
+                <MilestonesComponent project={project}/>
+
                 {editable &&
                 <div className="project-item-buttons w3-display-hover w3-display-topright">
                     <IconButton
