@@ -5,8 +5,8 @@ import tinycolor from 'tinycolor2'
 import { DANGER_LEVELS } from '../../utils/constants'
 import { PROJECT_TYPES } from '../../utils/enums'
 import IconButton from '../misc/IconButton'
-import ProjectEdit from './ProjectEdit'
 import MilestonesComponent from './Milestones/MilestonesComponent'
+import ProjectEdit from './ProjectEdit'
 
 
 export default class Project extends React.Component {
@@ -26,7 +26,8 @@ export default class Project extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            editing: this.props.editing
+            editing: this.props.editing,
+            managingMilestones: false
         }
     }
 
@@ -39,12 +40,27 @@ export default class Project extends React.Component {
 
     handleSave(project) {
         this.props.projectActions.editProject(project)
-        this.setState({ editing: false })
+        this.setState({
+            editing: false,
+            managingMilestones: false
+        })
+    }
+
+    handleSaveMilestones(milestones) {
+        this.props.projectActions.editProject(this.props.project.set('milestones', milestones))
+        //this.setState({ managingMilestones: false })
+    }
+
+    handleManageMilestonesToggle() {
+        this.setState({ managingMilestones: !this.state.managingMilestones })
     }
 
 
     handleCancel() {
-        this.setState({ editing: false })
+        this.setState({
+            editing: false,
+            managingMilestones: false
+        })
     }
 
     handleRemove() {
@@ -66,59 +82,62 @@ export default class Project extends React.Component {
 
         const projectType = project.has('type') ? PROJECT_TYPES[project.get('type')] : PROJECT_TYPES.DEFAULT
 
-        let element
+
         if ( this.state.editing ) {
 
-            element = <ProjectEdit
+            return <ProjectEdit
                 onSubmit={::this.handleSave}
                 onCancel={::this.handleCancel}
                 project={project}
                 style={style}
             />
-        } else {
-            element = <div
-                className="project w3-card w3-padding w3-round-large w3-display-container"
-                style={style}
-            >
-                <div className="w3-topleft w3-margin-top">
-                    <div
-                        className="material-icons project-type-icon"
-                        title={'Project Type: ' + projectType.name}
-                        style={{ color: darkColor }}
-                    >
-                        {projectType.icon}
-                    </div>
-                    <div className="project-title w3-large w3-show-inline-block">
-                        {project.get('title')}
-                    </div>
-                </div>
-
-                <p className="project-description">{project.get('description')}</p>
-
-                <MilestonesComponent project={project}/>
-
-                {editable &&
-                <div className="project-item-buttons w3-display-hover w3-display-topright">
-                    <IconButton
-                        iconName={'edit'}
-                        style={{
-                            float: 'right',
-                            marginLeft: '16px'
-                        }}
-                        onClick={::this.handleEditClick}
-                    />
-                    <IconButton
-                        iconName={'check_circle'}
-                        style={{ float: 'right' }}
-                        onClick={::this.handleRemove}
-                        dangerLevel={DANGER_LEVELS.DANGER}
-                        unarmedDangerLevel={DANGER_LEVELS.WARN.hover}
-                        unarmedIconName={'delete_forever'}
-                    />
-                </div>}
-            </div>
         }
 
-        return element
+        return <div
+            className="project w3-card w3-padding w3-round-large w3-display-container"
+            style={style}
+        >
+        <div className="w3-topleft w3-margin-top">
+                <div
+                    className="material-icons project-type-icon"
+                    title={'Project Type: ' + projectType.name}
+                    style={{ color: darkColor }}
+                >
+                    {projectType.icon}
+                </div>
+                <div className="project-title w3-large w3-show-inline-block">
+                    {project.get('title')}
+                </div>
+            </div>
+
+            {!this.state.managingMilestones && <p className="project-description">{project.get('description')}</p>}
+
+            <MilestonesComponent
+                project={project}
+                managing={this.state.managingMilestones}
+                onSave={::this.handleSaveMilestones}
+                onManageToggle={::this.handleManageMilestonesToggle}
+            />
+
+            {editable && !this.state.managingMilestones &&
+            <div className="project-item-buttons w3-display-hover w3-display-topright">
+                <IconButton
+                    iconName={'edit'}
+                    style={{
+                        float: 'right',
+                        marginLeft: '16px'
+                    }}
+                    onClick={::this.handleEditClick}
+                />
+                <IconButton
+                    iconName={'check_circle'}
+                    style={{ float: 'right' }}
+                    onClick={::this.handleRemove}
+                    dangerLevel={DANGER_LEVELS.DANGER}
+                    unarmedDangerLevel={DANGER_LEVELS.WARN.hover}
+                    unarmedIconName={'delete_forever'}
+                />
+            </div>}
+        </div>
     }
 }
