@@ -28,18 +28,13 @@ if ( typeof window === 'undefined' || !('Notification' in window) ) {
             const notification = new Notification(title, options)
 
 
-            notification.addEventListener('click', (event) => {
+            notification.addEventListener('click', () => {
                 if ( parent ) {
                     parent.focus()
                 }
                 window.focus()
                 notification.close()
             })
-            // notificationEvents.forEach((eventName) => {
-            //     notification[eventName] = (event) => {
-            //         console.log('Event' + event.type + ' triggered for notification ' + notification.tag)
-            //     }
-            // })
         })
     }
 }

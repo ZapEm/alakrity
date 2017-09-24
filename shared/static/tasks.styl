@@ -160,4 +160,49 @@
 .task-form
   margin-bottom 4px
   padding-top 4px
-  background-color white
+
+.task-form-group
+  display grid
+  grid-template-columns 74px 1fr
+
+.task-form-label
+  padding-right 8px
+  text-align right
+  line-height 34px
+
+.duration-picker-element
+  flex 1
+  text-align center
+  border-right solid 1px $theme
+  line-height 2rem
+  vertical-align baseline
+  cursor pointer
+  background-color $theme-l5
+  //&.duration-element-0
+  //  background-image linear-gradient(0deg, rgba(0,0,0,0.1), rgba(0,0,0,0.1))
+  &.duration-element-1
+    font-size small
+  &:hover
+    background-image linear-gradient(0deg, rgba(255,255,255,0.3), rgba(255,255,255,0.4))
+  &.selected
+    background-color $theme-d3
+    background-image none
+    color white
+    font-weight 500
+  &.lower
+    background-color $theme-l3
+
+
+.duration-picker
+  border solid 1px $theme
+  border-radius 5px
+  display flex
+  flex-direction row
+  justify-content center
+  overflow hidden
+  margin-bottom 16px
+  .duration-picker-element:last-child
+    border-right none
+
+.duration-picker-element-label
+  pointer-events none

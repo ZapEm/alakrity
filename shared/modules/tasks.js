@@ -37,6 +37,11 @@ export function loadTasks() {
 
 export function createTask(taskInput) {
 
+    if(Immutable.Map.isMap(taskInput)){
+        console.log('was Map')
+        taskInput = taskInput.toJS()
+    }
+
     taskInput.text = xss(taskInput.text)
     taskInput.created = moment()
 

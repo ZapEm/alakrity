@@ -1,6 +1,6 @@
 import { TASK_TYPES } from './constants'
 import * as _ from 'lodash/object'
-import { PROJECT_TYPES } from './enums'
+import { PROJECT_TYPES, TASK_STATUS } from './enums'
 
 
 export function thaw(frozenObject) {
@@ -23,10 +23,7 @@ export const DEFAULT_TASK = Object.freeze(
         start: null,
         duration: 120,
 
-        status: 0,
-        begun: null,
-        completed: null,
-        rating: 0
+        status: TASK_STATUS.DEFAULT
     }
 )
 

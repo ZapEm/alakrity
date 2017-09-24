@@ -17,12 +17,10 @@ export default class Toolbar extends React.Component {
 
 
     handleSelectTimetable(e) {
-        console.log('## Loading Timetable (ID):', e.target.value)
         this.props.loadTimetable(e.target.value)
     }
 
     handleColorClick(e) {
-        console.log('## projectNr:', e.target.value)
         this.props.setCurrentProject(e.target.value)
     }
 

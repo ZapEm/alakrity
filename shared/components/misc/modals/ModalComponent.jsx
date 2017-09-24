@@ -121,7 +121,6 @@ export default class ModalComponent extends React.Component {
         }
 
         const currentModal = modalsOM.get(modalKey)
-        //console.log(modalKey, currentModal)
 
         if ( typeof window !== 'undefined' && document.hidden ) {
             ModalComponent.handleNotification(currentModal)

@@ -4,6 +4,8 @@ import * as ImmutablePropTypes from 'react-immutable-proptypes'
 import { PROJECT_COLORS } from '../../utils/constants'
 import { DEFAULT_PROJECT, thaw } from '../../utils/defaultValues'
 import LabeledIconButton from '../misc/LabeledIconButton'
+import MascotContainer from '../misc/mascot/MascotContainer'
+import { MASCOT_STATUS } from '../../utils/enums'
 
 export default class ProjectsSidebar extends React.Component {
 
@@ -33,6 +35,7 @@ export default class ProjectsSidebar extends React.Component {
         return <div
             className={'layout-sidebar w3-card-4 w3-padding w3-border w3-border-theme w3-round-large'}
         >
+            <MascotContainer status={MASCOT_STATUS.IDLE}/>
             <LabeledIconButton
                 label={'Create a Project'}
                 iconName={'library_add'} //create_new_folder

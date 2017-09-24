@@ -54,24 +54,39 @@ export default class ProjectTypeSelector extends React.Component {
             width: '32px'
         }, style)
 
-        const typeOptions = Object.entries(PROJECT_TYPES).map(([key, typeOption]) => (
-                <li
-                    className="project-type-option"
-                    key={key}
-                    data-id={key}
-                    onMouseDown={::this.handleSelect}
-                >
-                    <div className="material-icons project-type-option-icon"
-                         style={{ color: style.color ? style.color : 'black' }}>
-                        {typeOption.icon}
-                    </div>
-                    <div
-                        className="project-type-option-text"
+
+        const separators = [
+            <li className="project-type-separator" key={'primary'}>Primary</li>,
+            <li className="project-type-separator" key={'secondary'}>Secondary</li>,
+            <li className="project-type-separator" key={'misc'}>Misc</li>
+        ]
+
+        let currentGroup = 0
+        let typeOptions = []
+        Object.entries(PROJECT_TYPES).forEach(([key, typeOption]) => {
+                // put separator labels before groups
+                if ( currentGroup === typeOption.group ) {
+                    typeOptions.push(separators[currentGroup])
+                    currentGroup++
+                }
+                typeOptions.push(<li
+                        className="project-type-option"
+                        key={key}
+                        data-id={key}
+                        onMouseDown={::this.handleSelect}
                     >
-                        {typeOption.name}
-                    </div>
-                </li>
-            )
+                        <div className="material-icons project-type-option-icon"
+                             style={{ color: style.color ? style.color : 'black' }}>
+                            {typeOption.icon}
+                        </div>
+                        <div
+                            className="project-type-option-text"
+                        >
+                            {typeOption.name}
+                        </div>
+                    </li>
+                )
+            }
         )
 
 

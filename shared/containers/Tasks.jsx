@@ -3,10 +3,9 @@ import React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import TaskForm from '../components/tasks/TaskForm'
-import TasksList from '../components/tasks/TasksList'
-import * as TaskActions from '../modules/tasks'
+import TasksSidebar from '../components/tasks/TasksSidebar'
 import TasksView from '../components/tasks/TasksView'
+import * as TaskActions from '../modules/tasks'
 
 
 @connect(state => ({
@@ -44,10 +43,8 @@ export default class Tasks extends React.Component {
                         />
                     </div>
                     <div id="sidebar" className="col sidebar">
-                        <TaskForm
-                            onSubmit={bindActionCreators(TaskActions.createTask, dispatch)}
-                            textLabel="Enter new task name"
-                            editing={false}
+                        <TasksSidebar
+                            taskActions={bindActionCreators(TaskActions, dispatch)}
                             projectList={projectList}
                         />
                     </div>

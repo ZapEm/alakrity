@@ -90,7 +90,8 @@ export default class Task extends React.Component {
         liWrapper: PropTypes.object,
         locale: PropTypes.string.isRequired,
         editMode: PropTypes.bool,
-        editTaskStart: PropTypes.func
+        editTaskStart: PropTypes.func,
+        setEditingTask: PropTypes.func
     }
 
     static defaultProps = {
@@ -129,6 +130,7 @@ export default class Task extends React.Component {
     handleEditClick() {
         if ( this.props.editable ) {
             this.setState({ editing: true })
+            this.props.setEditingTask(this.props.task.get('id'), true)
         }
     }
 
@@ -140,11 +142,13 @@ export default class Task extends React.Component {
             this.props.taskActions.editTask(task)
         }
         this.setState({ editing: false })
+        this.props.setEditingTask(this.props.task.get('id'), false)
     }
 
-    // handleCancel(){
-    //     this.setState({ editing: false })
-    // }
+    handleCancel(){
+        this.setState({ editing: false })
+        this.props.setEditingTask(this.props.task.get('id'), false)
+    }
 
 
     render() {
@@ -191,7 +195,7 @@ export default class Task extends React.Component {
                 task={task}
                 locale={locale}
                 onSubmit={(task) => this.handleSave(task)}
-                onCancel={() => this.setState({ editing: false })}
+                onCancel={::this.handleCancel}
             />
         } else {
             element =

@@ -48,10 +48,10 @@ export default class Project extends React.Component {
 
     handleSaveMilestones(milestones) {
         this.props.projectActions.editProject(this.props.project.set('milestones', milestones))
-        //this.setState({ managingMilestones: false })
+        this.setState({ managingMilestones: false })
     }
 
-    handleManageMilestonesToggle() {
+    handleEnterManageMilestones() {
         this.setState({ managingMilestones: !this.state.managingMilestones })
     }
 
@@ -116,7 +116,7 @@ export default class Project extends React.Component {
                 project={project}
                 managing={this.state.managingMilestones}
                 onSave={::this.handleSaveMilestones}
-                onManageToggle={::this.handleManageMilestonesToggle}
+                onEnterManage={::this.handleEnterManageMilestones}
             />
 
             {editable && !this.state.managingMilestones &&

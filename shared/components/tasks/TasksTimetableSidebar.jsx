@@ -8,12 +8,12 @@ import { SPECIAL_PROJECTS } from '../../utils/constants'
 import { MASCOT_STATUS, TaskListFilters } from '../../utils/enums'
 import { getTaskListFilter } from '../../utils/helpers'
 import LabeledIconButton from '../misc/LabeledIconButton'
+import MascotContainer from '../misc/mascot/MascotContainer'
 import ProjectSelector from '../projects/ProjectSelector'
 import TasksList from './TasksList'
-import MascotContainer from '../misc/mascot/MascotContainer'
 
 
-export default class TasksSidebarView extends React.Component {
+export default class TasksTimetableSidebar extends React.Component {
 
     static propTypes = {
         taskList: ImmutablePropTypes.list.isRequired,
@@ -32,7 +32,8 @@ export default class TasksSidebarView extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            project: false
+            project: false,
+            editingTasks: Immutable.List()
         }
     }
 
@@ -53,6 +54,18 @@ export default class TasksSidebarView extends React.Component {
 
     changeProject(project) {
         this.setState({ project: project })
+    }
+
+    handleSetEditingTask(id, editingBool){
+        if(editingBool){
+            this.setState(({editingTasks}) => ({
+                editingTasks: editingTasks.push(id)
+            }))
+        } else {
+            this.setState(({editingTasks}) => ({
+                editingTasks: editingTasks.delete(editingTasks.indexOf(id))
+            }))
+        }
     }
 
     render() {
@@ -85,6 +98,7 @@ export default class TasksSidebarView extends React.Component {
                     <form
                         className="w3-center w3-border-bottom w3-margin-top w3-border-theme"
                         onChange={::this.handleFilterChange}
+                        disabled={this.state.editingTasks.size !== 0}
                     >
                         <label>Filter:</label>
                         <label className="task-list-filter-label">
@@ -95,6 +109,7 @@ export default class TasksSidebarView extends React.Component {
                                 value={TaskListFilters.UNASSIGNED}
                                 checked={this.state.filterRadioSelection === TaskListFilters.UNASSIGNED}
                                 readOnly
+                                disabled={this.state.editingTasks.size !== 0}
                             />
                             {'Unassigned'}
                         </label>
@@ -106,6 +121,7 @@ export default class TasksSidebarView extends React.Component {
                                 value={TaskListFilters.ALL}
                                 checked={this.state.filterRadioSelection === TaskListFilters.ALL}
                                 readOnly
+                                disabled={this.state.editingTasks.size !== 0}
                             />
                             {'All'}
                         </label>
@@ -120,6 +136,7 @@ export default class TasksSidebarView extends React.Component {
                     draggable={true}
                     columns={2}
                     addClassNames={'flex-item-shrinkable'}
+                    setEditingTask={::this.handleSetEditingTask}
                 />
             </div>
         )

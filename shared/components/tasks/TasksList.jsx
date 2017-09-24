@@ -17,7 +17,8 @@ export default class TasksList extends React.Component {
         sidebar: PropTypes.bool,
         columns: PropTypes.number,
         editMode: PropTypes.bool,
-        addClassNames: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.string])
+        addClassNames: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.string]),
+        setEditingTask: PropTypes.func
     }
 
     static defaultProps = {
@@ -28,21 +29,8 @@ export default class TasksList extends React.Component {
         columns: 1
     }
 
-
-    // componentDidMount() {
-    //     this.sidebarRef = document.getElementById('sidebar')
-    //
-    //     this.intervalID = setInterval(() => {
-    //         this.containerRef.style.height = (this.sidebarRef.clientHeight - this.containerRef.offsetTop - 24) + 'px'
-    //     }, 100)
-    // }
-    //
-    // componentWillUnmount() {
-    //     clearInterval(this.intervalID)
-    // }
-
     render() {
-        const { draggable, taskActions, taskList, locale, projectColorMap, columns, sidebar, editMode, addClassNames } = this.props
+        const { draggable, taskActions, taskList, locale, projectColorMap, columns, sidebar, editMode, addClassNames, setEditingTask } = this.props
 
         let taskItems = []
         let columnTally = []
@@ -69,6 +57,7 @@ export default class TasksList extends React.Component {
                                 style: { height: duration / 20 + 'rem' }
                             }
                         }
+                        setEditingTask={setEditingTask}
                     />
                     const lowestIndex = columnTally.indexOf(Math.min(...columnTally))
                     taskItems[lowestIndex].push(taskItem)

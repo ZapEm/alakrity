@@ -119,7 +119,13 @@ export function updateModals(time = false, initial = false) {
             : getState().backend.get('time') ? getState().backend.get('time')
                    : new Date()
 
-        return dispatch(getUpcomingTasks(taskList, time, 10, initial))
+        const mascotStatus = getState().backend.get('mascotStatus')
+        return (!initial && (mascotStatus === MASCOT_STATUS.HI || mascotStatus === MASCOT_STATUS.IDLE))
+            ? Promise.all([
+                dispatch(getUpcomingTasks(taskList, time, 5, initial)),
+                dispatch(setMascotStatus())
+            ])
+            : dispatch(getUpcomingTasks(taskList, time, 5, initial))
     }
 }
 

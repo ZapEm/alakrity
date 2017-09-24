@@ -4,7 +4,7 @@ import ImmutablePropTypes from 'react-immutable-proptypes'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import Spinner from '../components/misc/Spinner'
-import TasksSidebarView from '../components/tasks/TasksSidebarView'
+import TasksTimetableSidebar from '../components/tasks/TasksTimetableSidebar'
 import EditTimetableForm from '../components/timetable/TimetableEditSidebar'
 import TimetableView from '../components/timetable/TimetableView'
 import * as SettingsActions from '../modules/settings'
@@ -90,7 +90,7 @@ export default class Timetable extends React.Component {
                     </div>
                     <div id="sidebar" className="col sidebar">
                         {(!editMode) ?
-                         <TasksSidebarView
+                         <TasksTimetableSidebar
                              taskList={preFilteredTasks}
                              projectList={projectList}
                              locale={locale}

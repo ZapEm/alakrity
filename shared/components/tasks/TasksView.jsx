@@ -2,6 +2,7 @@ import moment from 'moment'
 import PropTypes from 'prop-types'
 import React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
+import Immutable from 'immutable'
 import MomentPropTypes from 'react-moment-proptypes'
 import { TaskListFilters } from '../../utils/enums'
 import { getProjectColorMap, getTaskListFilter } from '../../utils/helpers'
@@ -29,7 +30,8 @@ export default class TasksSidebarView extends React.Component {
         super(props)
         this.state = {
             project: false,
-            projectColorMap: getProjectColorMap(this.props.projectList)
+            projectColorMap: getProjectColorMap(this.props.projectList),
+            editingTasks: Immutable.List()
         }
     }
 
@@ -41,7 +43,6 @@ export default class TasksSidebarView extends React.Component {
 
     handleFilterChange(e) {
         this.setState({ filterRadioSelection: e.target.value })
-        console.log(e.target.value)
     }
 
     handleQuickAddTask(e) {
@@ -53,7 +54,17 @@ export default class TasksSidebarView extends React.Component {
         this.setState({ project: project })
     }
 
-
+    handleSetEditingTask(id, editingBool){
+        if(editingBool){
+            this.setState(({editingTasks}) => ({
+                editingTasks: editingTasks.push(id)
+            }))
+        } else {
+            this.setState(({editingTasks}) => ({
+                editingTasks: editingTasks.delete(editingTasks.indexOf(id))
+            }))
+        }
+    }
 
     render() {
         const { taskActions, taskList, projectList, locale } = this.props
@@ -80,6 +91,7 @@ export default class TasksSidebarView extends React.Component {
                     <form
                         className="w3-center w3-border-bottom w3-margin-top w3-border-theme"
                         onChange={::this.handleFilterChange}
+                        disabled={this.state.editingTasks.size !== 0}
                     >
                         <label className="task-list-filter-label">
                             <input
@@ -89,6 +101,7 @@ export default class TasksSidebarView extends React.Component {
                                 value={TaskListFilters.UNASSIGNED}
                                 checked={this.state.filterRadioSelection === TaskListFilters.UNASSIGNED}
                                 readOnly
+                                disabled={this.state.editingTasks.size !== 0}
                             />
                             {'Unassigned'}
                         </label>
@@ -100,6 +113,7 @@ export default class TasksSidebarView extends React.Component {
                                 value={TaskListFilters.UPCOMING}
                                 checked={this.state.filterRadioSelection === TaskListFilters.UPCOMING}
                                 readOnly
+                                disabled={this.state.editingTasks.size !== 0}
                             />
                             {'Upcoming'}
                         </label>
@@ -111,6 +125,7 @@ export default class TasksSidebarView extends React.Component {
                                 value={TaskListFilters.ALL}
                                 checked={this.state.filterRadioSelection === TaskListFilters.ALL}
                                 readOnly
+                                disabled={this.state.editingTasks.size !== 0}
                             />
                             {'All'}
                         </label>
@@ -123,6 +138,7 @@ export default class TasksSidebarView extends React.Component {
                         sidebar={false}
                         draggable={false}
                         columns={7}
+                        setEditingTask={::this.handleSetEditingTask}
                     />
                 </div>
             </div>

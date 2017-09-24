@@ -84,8 +84,6 @@ export default class IconButton extends React.Component {
             id = newId('IconButton_')
         }
 
-        //if (staged) console.log('stage0', !disabled && staged && !armed, '.. armed', !disabled && (!staged || armed))
-
         let button = <button
             type={noSubmit ? 'button' : 'submit'}
             form={formID}
