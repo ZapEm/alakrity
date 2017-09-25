@@ -59,8 +59,8 @@ export default class Timetable extends React.Component {
         const projectList = projects.get('projectList')
 
         const preFilter = (editMode)
-            ? (task) => task.get('type') === TASK_TYPES.repeating
-            : (task) => task.get('type') !== TASK_TYPES.repeating
+            ? (task) => task.get('repeating')
+            : (task) => !task.get('repeating')
         const preFilteredTasks = tasks.get('taskList').filter(preFilter)
 
 

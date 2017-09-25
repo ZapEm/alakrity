@@ -15,7 +15,7 @@ import TaskEdit from './TaskEdit'
 
 const dragSource = {
     canDrag(props) {
-        if ( props.draggable && !props.editMode && props.task.get('type') === TASK_TYPES.repeating ) {
+        if ( props.draggable && !props.editMode && props.task.get('repeating') ) {
             if ( confirm('Repeating tasks can only be moved while in the "Basic Schedule" view.\n\nDo you want to create an exception for this week?') ) {
                 alert('Well, too bad. Exceptions are not implemented, yet.') //TODO: exceptions for repeating tasks
             }
@@ -179,7 +179,7 @@ export default class Task extends React.Component {
             }
         })).toJSON()
 
-        const itemColors = task.get('type') !== TASK_TYPES.oneTime ?
+        const itemColors = !task.get('special') ?
                            _.omit(colors, ['special']) :
                            colors.special
 
@@ -204,8 +204,8 @@ export default class Task extends React.Component {
                         classNames('task-item', 'w3-card', 'w3-display-container',
                             {
                                 'dragging': isDragging,
-                                'w3-round-large': !((task.get('type') === TASK_TYPES.repeating)),
-                                'special': task.get('type') === TASK_TYPES.oneTime
+                                'w3-round-large': !task.get('repeating'),
+                                'special': task.get('special')
                             }
                         )
                     }

@@ -35,7 +35,7 @@ export default class TaskItemDragPreview extends React.Component {
         })).toJSON()
 
         this.state = {
-            colors: this.props.task.type !== TASK_TYPES.oneTime ?
+            colors: !this.props.task.special ?
                     _.omit(colors, ['special']) :
                     colors.special
         }
@@ -62,8 +62,8 @@ export default class TaskItemDragPreview extends React.Component {
                         'w3-card': notDragging,
                         'w3-card-4': !notDragging,
                         'animate-drag-pop': !notDragging,
-                        'w3-round-large': !(task.type === TASK_TYPES.repeating),
-                        'special': task.type === TASK_TYPES.oneTime
+                        'w3-round-large': !(task.repeating),
+                        'special': task.special
                     })}
 
                     style={

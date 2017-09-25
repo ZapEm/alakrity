@@ -1,4 +1,3 @@
-import * as Immutable from 'immutable'
 import PropTypes from 'prop-types'
 import React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
@@ -37,16 +36,18 @@ export default class ProjectSelector extends React.Component {
 
         const disabled = (projectList.size === 0) ? 'A project needs to be created first.' : false
         let projectSelectOptions = []
-        if ( withAllOption ) {
-            projectSelectOptions.push(
-                <option
-                    className="project-selector-option"
-                    key={'_ALL_PROJECTS'}
-                    value={'_ALL_PROJECTS'}
-                    style={{ backgroundColor: 'white' }}
-                >{'< ALL PROJECTS >'}</option>)
-        }
+
         if ( !disabled ) {
+            if ( withAllOption ) {
+                projectSelectOptions.push(
+                    <option
+                        className="project-selector-option"
+                        key={'_ALL_PROJECTS'}
+                        value={'_ALL_PROJECTS'}
+                        style={{ backgroundColor: 'white' }}
+                    >{'< ALL PROJECTS >'}</option>)
+            }
+
             let i = 0
             for ( const project of projectList ) {
                 projectSelectOptions.push(
@@ -63,21 +64,21 @@ export default class ProjectSelector extends React.Component {
             projectSelectOptions.push(
                 <option key={'noProject'}
                         value={'noProject'}
-                        selected
                         disabled>{'Create a project first'}</option>
             )
         }
 
         return <select
             onChange={::this.handleSelectProject}
-            className={'project-selector w3-round w3-select' + (disabled ? ' w3-text-gray' :
-                                                                                 '')}
+            className={'project-selector w3-round w3-select' + (disabled ? ' w3-text-gray' : '')}
             name="option"
+            defaultValue={!disabled ? '_ALL_PROJECTS' : 'noProject'}
             style={{
                 backgroundColor: this.state.currentProject ?
                                  tinycolor(this.state.currentProject.get('color')).brighten(10) : 'white',
                 border: this.state.currentProject ?
-                        'solid 1px ' + tinycolor(this.state.currentProject.get('color')).brighten(-35) : 'solid 1px #777777'
+                        'solid 1px ' + tinycolor(this.state.currentProject.get('color')).brighten(-35) :
+                        'solid 1px #777777'
             }}
             disabled={disabled}
         >

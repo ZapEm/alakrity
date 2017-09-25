@@ -154,7 +154,7 @@ export default class TaskEdit extends React.Component {
                 onSubmit={::this.handleSubmit}
                 className={
                     'task-item task-item-edit w3-card w3-display-container' +
-                    (!this.state.type || this.state.type !== TASK_TYPES.repeating ? ' w3-round-large' : '')
+                    (!this.state.repeating ? ' w3-round-large' : '')
                 }
                 style={
                     _.merge({}, colorStyle, {

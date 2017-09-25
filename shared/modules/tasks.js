@@ -2,10 +2,10 @@ import Immutable from 'immutable'
 import { merge as _merge } from 'lodash/object'
 import moment from 'moment'
 import xss from 'xss'
-import { REJECTED_NAME as FAILURE, RESOLVED_NAME as SUCCESS, TASK_TYPES } from '../utils/constants'
+import { REJECTED_NAME as FAILURE, RESOLVED_NAME as SUCCESS } from '../utils/constants'
 import { TASK_STATUS } from '../utils/enums'
 import fetch from '../utils/fetcher'
-import { taskDayFilters } from '../utils/helpers'
+import { dayTasksFilter, getTaskDayFilter, taskDayFilters } from '../utils/helpers'
 import newId from '../utils/newId'
 import { LOGIN, LOGOUT } from './auth'
 
@@ -37,7 +37,7 @@ export function loadTasks() {
 
 export function createTask(taskInput) {
 
-    if(Immutable.Map.isMap(taskInput)){
+    if ( Immutable.Map.isMap(taskInput) ) {
         console.log('was Map')
         taskInput = taskInput.toJS()
     }
@@ -55,22 +55,14 @@ export function createTask(taskInput) {
     }
 }
 
-export function quickAddTask(project, typeFilter = 'default') {
+export function quickAddTask(project, repeating = false) {
     if ( !Immutable.Map.isMap(project) ) {project = Immutable.Map(project)}
-
-    const Types = {
-        'default': project.get('defaultTaskType') ? project.get('defaultTaskType') : TASK_TYPES.standard,
-        'repeating': TASK_TYPES.repeating,
-        'notRepeating': (project.get('defaultTaskType') && project.get('defaultTaskType') !== TASK_TYPES.repeating)
-            ? project.get('defaultTaskType')
-            : TASK_TYPES.standard
-
-    }
 
     const taskInput = {
         text: '',
         projectID: project.get('id'),
-        type: Types[typeFilter],
+        repeating: repeating,
+        special: false,
         created: moment(),
         duration: 120,
         start: null
@@ -147,13 +139,9 @@ export function editTaskStart(newTask) {
 
         const sameDayTasks = (getState().timetables.get('editMode')) ?
                              getState().tasks.get('taskList').filter((task) => (
-                                 task.get('type') === TASK_TYPES.repeating
-                                 && taskDayFilters[task.get('type')](task, newStart))
-                             ) :
-                             getState().tasks.get('taskList').filter((task) => (
-                                     taskDayFilters[task.get('type')](task, newStart)
-                                 )
-                             )
+                                 task.get('repeating') && dayTasksFilter(task, newStart)
+                             )) :
+                             getState().tasks.get('taskList').filter((task) => (dayTasksFilter(task, newStart))                             )
 
         const found = sameDayTasks.find(
             (task) => {

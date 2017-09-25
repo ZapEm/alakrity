@@ -4,7 +4,7 @@ import React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import { DEFAULT_TIMETABLE, thaw } from '../../utils/defaultValues'
 import { TaskListFilters } from '../../utils/enums'
-import { getTaskListFilter } from '../../utils/helpers'
+import { getMilestoneMap, getTaskListFilter } from '../../utils/helpers'
 import newId from '../../utils/newId'
 import IconButton from '../misc/IconButton'
 import LabeledIconButton from '../misc/LabeledIconButton'
@@ -237,16 +237,12 @@ export default class TimetableEditSidebar extends React.Component {
                         <span className="tt-form-time-sign">:00</span>
                     </div>
                 </form>
-                {/*<div className="flex-item-rigid w3-border-bottom w3-margin-top w3-margin-bottom w3-border-theme"/>*/}
-                {/*<div className="flex-item-flexible">*/}
+
                 <ProjectPeriodPicker
                     setCurrentProject={::this.handleSelectProjectPeriod}
                     projectList={projectList}
                     currentProjectID={timetables.get('currentProjectID')}
                 />
-                {/*</div>*/}
-
-                {/*<div className="flex-item-rigid w3-border-bottom w3-margin-top w3-margin-bottom w3-border-theme"/>*/}
 
                 <div className="flex-item-rigid">
                     <label>Repeating Tasks</label>
@@ -296,6 +292,7 @@ export default class TimetableEditSidebar extends React.Component {
                     draggable={true}
                     editMode={true}
                     columns={2}
+                    milestoneMap={getMilestoneMap(projectList)}
                 />
 
             </div>

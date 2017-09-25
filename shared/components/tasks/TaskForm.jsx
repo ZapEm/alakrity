@@ -31,7 +31,12 @@ export default class TaskForm extends React.Component {
     handleSubmit(e) {
         e.preventDefault()
         this.props.onSubmit(this.state.task)
-        this.setState({ task: Immutable.Map(DEFAULT_TASK) })
+        this.setState(({ task }) => ({
+            task: task.merge({
+                title: '',
+                description: ''
+            })
+        }))
     }
 
     handleTaskChange(value, field) {
@@ -48,7 +53,6 @@ export default class TaskForm extends React.Component {
     render() {
         const { editing, textLabel, projectList } = this.props
         const task = this.state.task
-        let saveText = (editing) ? 'done' : 'add_box'
 
         const disabled = (projectList.size === 0) ? 'A project needs to be created first.' : false
 
@@ -70,7 +74,6 @@ export default class TaskForm extends React.Component {
                 <option
                     key={'noProject'}
                     value={'noProject'}
-                    selected
                     disabled
                 >
                     {'Create a project first'}
@@ -110,53 +113,72 @@ export default class TaskForm extends React.Component {
                 onSubmit={::this.handleSubmit}
                 className="task-form"
             >
+                <h3 className="w3-center w3-text-theme">Create a new task</h3>
                 <div className="task-form-group">
-                    <label htmlFor="task-title-input" className="task-form-label"> Name </label>
-                    <input
-                        className="w3-input w3-border w3-border-theme w3-round w3-margin-bottom"
-                        id="task-title-input"
-                        type="text"
-                        placeholder={textLabel}
-                        value={task.get('title')}
-                        onChange={(e) => this.handleTaskChange(e.target.value, 'title')}
-                        disabled={disabled}
-                        required
-                    />
+                    <label htmlFor="task-title-input" className="task-form-label"> Name
+                        <input
+                            className="task-form-input w3-border w3-border-theme w3-round"
+                            id="task-title-input"
+                            type="text"
+                            placeholder={textLabel}
+                            value={task.get('title')}
+                            onChange={(e) => this.handleTaskChange(e.target.value, 'title')}
+                            disabled={disabled}
+                            required
+                        />
+                    </label>
 
-                    <label htmlFor="task-project-select" className="task-form-label"> Project </label>
-                    <select
-                        id="task-project-select"
-                        onChange={::this.handleSelectProject}
-                        className={'w3-select w3-right w3-border w3-border-theme w3-round w3-margin-bottom' + (disabled ?
-                                                                                                               ' w3-text-gray' :
-                                                                                                               '')}
-                        name="option"
-                        style={{
-                            padding: '8px 4px'
-                        }}
-                        disabled={disabled}
-                    >
-                        {projectSelectOptions}
-                    </select>
+                    <label htmlFor="task-repeating-input" className="task-form-label right"
+                           title={'Should the task be repeated every week?'}> Repeating
+                        <input
+                            className="task-form-input checkbox w3-border w3-border-theme w3-round"
+                            id="task-repeating-input"
+                            type="checkbox"
+                            checked={task.get('repeating')}
+                            onChange={() => this.handleTaskChange(!task.get('repeating'), 'repeating')}
+                            disabled={disabled}
+                        />
+                    </label>
+
+                    <label htmlFor="task-project-select" className="task-form-label"> Project
+                        <select
+                            id="task-project-select"
+                            onChange={::this.handleSelectProject}
+                            className={'task-form-input w3-border w3-border-theme w3-round'
+                            + (disabled ? ' w3-text-gray' : '')}
+                            name="option"
+                            disabled={disabled}
+                            defaultValue={!disabled ? 0 : 'noProject'}
+                        >
+                            {projectSelectOptions}
+                        </select>
+                    </label>
+
+                    <label htmlFor="task-special-input" className="task-form-label right"
+                           title={'Highlight the task. Purely optical as of now.'}> Special
+                        <input
+                            className="task-form-input checkbox w3-border w3-border-theme w3-round"
+                            id="task-special-input"
+                            type="checkbox"
+                            checked={task.get('special')}
+                            onChange={() => this.handleTaskChange(!task.get('special'), 'special')}
+                            disabled={disabled}
+                        />
+                    </label>
 
                     {(milestoneSelectOptions) &&
-                    <label htmlFor="task-milestone-select" className="task-form-label"> Milestone </label>
-                    }
-                    {(milestoneSelectOptions) &&
-                    <select
-                        id="task-milestone-select"
-                        onChange={(e) => this.handleTaskChange(e.target.value, 'milestone')}
-                        className={'w3-select w3-right w3-border w3-border-theme w3-round w3-margin-bottom' + (disabled ?
-                                                                                                               ' w3-text-gray' :
-                                                                                                               '')}
-                        name="option"
-                        style={{
-                            padding: '8px 4px'
-                        }}
-                        disabled={(disabled || (milestoneSelectOptions === []))}
-                    >
-                        {milestoneSelectOptions}
-                    </select>
+                    <label htmlFor="task-milestone-select" className="task-form-label"> Milestone
+
+                        <select
+                            id="task-milestone-select"
+                            onChange={(e) => this.handleTaskChange(e.target.value, 'milestone')}
+                            className={'task-form-input w3-border w3-border-theme w3-round'
+                            + (disabled ? ' w3-text-gray' : '')}
+                            name="option"
+                            disabled={(disabled || (milestoneSelectOptions === []))}
+                        >
+                            {milestoneSelectOptions}
+                        </select></label>
                     }
                 </div>
                 <label>
@@ -172,8 +194,8 @@ export default class TaskForm extends React.Component {
                     />
                 </label>
                 <LabeledIconButton
-                    label={'Add New Task'}
-                    iconName={saveText}
+                    label={'Add Task'}
+                    iconName={'add_circle'}
                     disabled={disabled}
                     style={{ marginLeft: 'auto' }}
                 />

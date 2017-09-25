@@ -6,7 +6,7 @@ import ImmutablePropTypes from 'react-immutable-proptypes'
 import MomentPropTypes from 'react-moment-proptypes'
 import { SPECIAL_PROJECTS } from '../../utils/constants'
 import { MASCOT_STATUS, TaskListFilters } from '../../utils/enums'
-import { getTaskListFilter } from '../../utils/helpers'
+import { getMilestoneMap, getTaskListFilter } from '../../utils/helpers'
 import LabeledIconButton from '../misc/LabeledIconButton'
 import MascotContainer from '../misc/mascot/MascotContainer'
 import ProjectSelector from '../projects/ProjectSelector'
@@ -137,6 +137,7 @@ export default class TasksTimetableSidebar extends React.Component {
                     columns={2}
                     addClassNames={'flex-item-shrinkable'}
                     setEditingTask={::this.handleSetEditingTask}
+                    milestoneMap={getMilestoneMap(projectList)}
                 />
             </div>
         )

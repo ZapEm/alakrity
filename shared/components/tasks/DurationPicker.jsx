@@ -35,8 +35,10 @@ export default class DurationPicker extends React.Component {
     }
 
     handleElementClick(value) {
-        this.props.onChange(value)
-        this.setState({ currentValue: value })
+        if(value !== this.state.currentValue){
+            this.props.onChange(value)
+            this.setState({ currentValue: value })
+        }
     }
 
     render() {

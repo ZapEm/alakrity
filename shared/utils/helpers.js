@@ -1,7 +1,7 @@
 import * as Immutable from 'immutable'
 import moment from 'moment'
 import tinycolor from 'tinycolor2'
-import { SPECIAL_PROJECTS, TASK_TYPES } from './constants'
+import { SPECIAL_PROJECTS } from './constants'
 import { TaskListFilters } from './enums'
 
 /**
@@ -68,15 +68,28 @@ export function getTaskListFilter(selection, projectID, filterByMoment) {
     }
 }
 
-export const taskDayFilters = {
-    [TASK_TYPES.standard]: (task, date) => (moment(task.get('start')).isSame(date, 'day')),
-    [TASK_TYPES.oneTime]: (task, date) => (moment(task.get('start')).isSame(date, 'day')),
-    [TASK_TYPES.repeating]: (task, date) => {
-        const taskStartMoment = moment(task.get('start'))
-        return (taskStartMoment.isSameOrBefore(date, 'day') && taskStartMoment.isoWeekday() === date.isoWeekday())
+export function dayTasksFilter(task, date) {
+    if (task.get('repeating')){
+        return moment(task.get('start')).isSame(date, 'day')
+    } else {
+       return ((taskStartMoment) => (taskStartMoment.isSameOrBefore(date, 'day')
+            && taskStartMoment.isoWeekday() === date.isoWeekday()))(moment(task.get('start')))
     }
 }
 
-export function getRandomItem(array){
-    return array[Math.floor(Math.random()*array.length)]
+export function getRandomItem(array) {
+    return array[Math.floor(Math.random() * array.length)]
+}
+
+export function getMilestoneMap(projectList){
+    let milestones = {}
+    projectList.forEach(project => {
+            if ( project.has('milestones') ) {
+                project.get('milestones').forEach(milestone => {
+                    milestones[milestone.get('id')] = milestone
+                })
+            }
+        }
+    )
+    return Immutable.fromJS(milestones)
 }

@@ -1,4 +1,3 @@
-import { TASK_TYPES } from './constants'
 import * as _ from 'lodash/object'
 import { PROJECT_TYPES, TASK_STATUS } from './enums'
 
@@ -19,7 +18,8 @@ export const DEFAULT_TASK = Object.freeze(
 
         title: '',
         description: '',
-        type: TASK_TYPES.standard,
+        repeating: false,
+        special: false,
         start: null,
         duration: 120,
 
@@ -36,7 +36,6 @@ export const DEFAULT_PROJECT = Object.freeze(
 
         title: '',
         description: '',
-        defaultTaskType: TASK_TYPES.standard,
         color: '#FFFFFF',
         type: PROJECT_TYPES.DEFAULT.key,
 

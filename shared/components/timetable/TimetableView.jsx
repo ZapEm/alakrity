@@ -30,7 +30,7 @@ export default class TimetableView extends React.Component {
             editMode, settings, settingsActions, time, projectColorMap
         } = this.props
         const taskList = !editMode ? tasks.get('taskList') :
-                         tasks.get('taskList').filter((task) => task.get('type') === TASK_TYPES.repeating)
+                         tasks.get('taskList').filter((task) => task.get('repeating'))
 
         const date = timetables.get('currentWeek') || moment()
 

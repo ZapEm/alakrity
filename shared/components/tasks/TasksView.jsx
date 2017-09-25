@@ -1,11 +1,11 @@
+import Immutable from 'immutable'
 import moment from 'moment'
 import PropTypes from 'prop-types'
 import React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
-import Immutable from 'immutable'
 import MomentPropTypes from 'react-moment-proptypes'
 import { TaskListFilters } from '../../utils/enums'
-import { getProjectColorMap, getTaskListFilter } from '../../utils/helpers'
+import { getMilestoneMap, getProjectColorMap, getTaskListFilter } from '../../utils/helpers'
 import LabeledIconButton from '../misc/LabeledIconButton'
 import ProjectSelector from '../projects/ProjectSelector'
 import TasksList from './TasksList'
@@ -54,13 +54,13 @@ export default class TasksSidebarView extends React.Component {
         this.setState({ project: project })
     }
 
-    handleSetEditingTask(id, editingBool){
-        if(editingBool){
-            this.setState(({editingTasks}) => ({
+    handleSetEditingTask(id, editingBool) {
+        if ( editingBool ) {
+            this.setState(({ editingTasks }) => ({
                 editingTasks: editingTasks.push(id)
             }))
         } else {
-            this.setState(({editingTasks}) => ({
+            this.setState(({ editingTasks }) => ({
                 editingTasks: editingTasks.delete(editingTasks.indexOf(id))
             }))
         }
@@ -139,6 +139,7 @@ export default class TasksSidebarView extends React.Component {
                         draggable={false}
                         columns={7}
                         setEditingTask={::this.handleSetEditingTask}
+                        milestoneMap={getMilestoneMap(projectList)}
                     />
                 </div>
             </div>

@@ -108,19 +108,7 @@ export default class ProjectEdit extends React.Component {
             </div>
 
             <div className="project-line w3-display-container">
-                <label className="project-task-type-label">Default Task Type
-                    <select
-                        className="w3-select project-input w3-round project-task-type-select"
-                        style={{ border: style.border }}
-                        name="option"
-                        onChange={::this.handleSelect}
-                        defaultValue={this.state.project.get('defaultTaskType')}
-                    >
-                        <option value={TASK_TYPES.standard}>Standard</option>
-                        <option value={TASK_TYPES.oneTime}>Appointment</option>
-                        <option value={TASK_TYPES.repeating}>Repeating</option>
-                    </select>
-                </label>
+                <div/>
                 <ProjectColorPicker
                     currentColor={this.state.project.get('color')}
                     label={'Color'}
