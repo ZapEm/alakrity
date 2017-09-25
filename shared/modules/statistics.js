@@ -70,13 +70,14 @@ export function removeStatistic(id) {
 
 export function recordBeginTask(task) {
     return (dispatch) => {
+        const weekDate = moment(task.started).startOf('isoWeek')
         return dispatch(recordStatistic(
             {
                 type: STATISTIC_TYPES.TASK,
-                weekDate: moment(task.started).startOf('isoWeek'),
+                weekDate: weekDate,
 
-                id: task.id,
-                task: _.pick(task, ['id', 'projectID', 'start', 'duration', 'title', 'type']),
+                id: (task.repeating ? weekDate.format('YYYY-WW_') : '') + task.id,
+                task: _.pick(task, ['id', 'projectID', 'start', 'duration', 'title', 'repeating', 'special']),
                 started: task.started
             }
         ))

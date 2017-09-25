@@ -1,5 +1,6 @@
 import { MODAL_TYPES, TASK_STATUS } from '../../../utils/enums'
 import moment from 'moment'
+import { getTaskStatus } from '../../../utils/helpers'
 
 export class Modal {
     constructor(content, type) {
@@ -44,12 +45,9 @@ export class CompletionModal extends Modal {
     }
 }
 
-export function getTaskModal(task, statusOverride = false) {
-    if ( statusOverride ) {
-        task = task.set('status', statusOverride)
-    }
+export function getTaskModal(task, thisWeek) {
 
-    switch (task.get('status')) {
+    switch (getTaskStatus(task, thisWeek)) {
         case TASK_STATUS.SCHEDULED.key:
             return new ReminderModal(task)
 

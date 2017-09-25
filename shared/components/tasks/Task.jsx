@@ -12,6 +12,8 @@ import { DANGER_LEVELS, LOCALE_STRINGS, TASK_TYPES } from '../../utils/constants
 import { DndTypes, TASK_STATUS } from '../../utils/enums'
 import IconButton from '../misc/IconButton'
 import TaskEdit from './TaskEdit'
+import { getTaskStatus } from '../../utils/helpers'
+import moment from 'moment'
 
 const dragSource = {
     canDrag(props) {
@@ -35,8 +37,9 @@ const dragSource = {
             // You can check whether the drop was successful
             // or if the drag ended but nobody handled the drop
             const task = monitor.getItem()
+            const thisWeek = moment().startOf('isoWeek')
 
-            if(task.status === TASK_STATUS.DONE.key){
+            if(getTaskStatus(task, thisWeek) === TASK_STATUS.DONE.key){
                 if(!confirm('You are trying to remove a task that is already done from the schedule. ' +
                     'This will change it back to "not done". \n\n' +
                     'Do you wish to proceed?')){
@@ -47,7 +50,7 @@ const dragSource = {
 
             props.taskActions.editTask(_merge({}, task, {
                     start: null,
-                    status: TASK_STATUS.DEFAULT.key
+                    status: task.repeating ? {[thisWeek]: TASK_STATUS.DEFAULT.key} : TASK_STATUS.DEFAULT.key
                 })
             )
 

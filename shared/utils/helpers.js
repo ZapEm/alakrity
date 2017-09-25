@@ -93,3 +93,15 @@ export function getMilestoneMap(projectList){
     )
     return Immutable.fromJS(milestones)
 }
+
+export function getTaskStatus(task, startOfThisWeek = moment().startOf('isoWeek')){
+    if(Immutable.Map.isMap(task)){
+        task = task.toJS()
+    }
+
+    const status = task.repeating ? task.status[startOfThisWeek] : task.status
+
+    if(task.repeating) { console.log(status) }
+
+    return status
+}

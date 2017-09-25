@@ -2,6 +2,7 @@ import { fromJS, List, OrderedMap } from 'immutable'
 import moment from 'moment'
 import { getTaskModal } from '../components/misc/modals/Modals'
 import { MASCOT_STATUS, TASK_STATUS } from '../utils/enums'
+import { getTaskStatus } from '../utils/helpers'
 
 
 /**
@@ -50,6 +51,7 @@ export function setMascotStatus(mascotStatus = MASCOT_STATUS.IDLE, setOverride =
 export function getUpcomingTasks(taskList, time, lookaheadMinutes = 5, initial = false) {
     if ( taskList ) {
         const checkMoment = moment(time).add(lookaheadMinutes, 'minutes')
+        const thisWeek = moment(time).startOf('isoWeek')
 
         let groupedTasks = taskList.filter(task =>
                                        (
@@ -57,8 +59,8 @@ export function getUpcomingTasks(taskList, time, lookaheadMinutes = 5, initial =
                                                TASK_STATUS.ACTIVE.key,
                                                TASK_STATUS.SCHEDULED.key,
                                                TASK_STATUS.SNOOZED.key
-                                           ].indexOf(task.get('status')) !== -1))
-                                   .groupBy(task => task.get('status'))
+                                           ].indexOf(getTaskStatus(task, thisWeek)) !== -1))
+                                   .groupBy(task => getTaskStatus(task, thisWeek))
 
         groupedTasks = groupedTasks.withMutations(
             groupedTasks => {
@@ -79,11 +81,11 @@ export function getUpcomingTasks(taskList, time, lookaheadMinutes = 5, initial =
 
         const modals = OrderedMap()
             .concat(groupedTasks.get(TASK_STATUS.SCHEDULED.key)
-                                .map(task => ((modal) => [modal.id, modal])(getTaskModal(task))))
+                                .map(task => ((modal) => [modal.id, modal])(getTaskModal(task, thisWeek))))
             .concat(groupedTasks.get(TASK_STATUS.SNOOZED.key)
-                                .map(task => ((modal) => [modal.id, modal])(getTaskModal(task))))
+                                .map(task => ((modal) => [modal.id, modal])(getTaskModal(task, thisWeek))))
             .concat(groupedTasks.get(TASK_STATUS.ACTIVE.key)
-                                .map(task => ((modal) => [modal.id, modal])(getTaskModal(task))))
+                                .map(task => ((modal) => [modal.id, modal])(getTaskModal(task, thisWeek))))
             .sortBy(modal => modal.date,
                 (date1, date2) => {
                     if ( date1.isBefore(date2) ) { return -1 }
@@ -129,10 +131,8 @@ export function updateModals(time = false, initial = false) {
 }
 
 export function mascotSplash(mascotStatus, seconds = 5) {
-    return (dispatch, getState) => {
+    return (dispatch) => {
 
-        //const previousMascot = getState().backend.get('mascotStatus')
-        //const revertMascot = (mascot) => dispatch(setMascotStatus(mascot))
         setTimeout(() => dispatch(setMascotStatus(false, true)), seconds * 1000)
 
         return dispatch(setMascotStatus(mascotStatus, true))
@@ -169,15 +169,6 @@ export default function reducer(state = initialState, action) {
 
         case SET_MASCOT:
             return state.set(action.meta.override ? 'mascotStatusOverride' : 'mascotStatus', action.payload)
-
-        // case LOGIN + SUCCESS:
-        //     return state.set('mascotStatus', MASCOT_STATUS.HI)
-        //
-        // case LOGIN + FAILURE:
-        //     return state.set('mascotStatus', MASCOT_STATUS.DENIED)
-        //
-        // case LOGOUT:
-        //     return state.set('mascotStatus', MASCOT_STATUS.BYE)
 
         default:
             return state

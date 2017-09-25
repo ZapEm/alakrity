@@ -135,7 +135,14 @@ export function editTaskStart(newTask) {
         const newStart = moment(newTask.start)
         const newEnd = newStart.clone().add(newTask.duration, 'm')
 
-        newTask.status = getTaskStatus(newTask, newStart)
+        if(!newTask.repeating) {
+            newTask.status = computeTaskStatus(newTask, newStart)
+        } else {
+            if (typeof newTask.status === 'string'){
+                newTask.status = {}
+            }
+            newTask.status[moment().startOf('isoWeek')] = computeTaskStatus(newTask, newStart)
+        }
 
         const sameDayTasks = (getState().timetables.get('editMode')) ?
                              getState().tasks.get('taskList').filter((task) => (
@@ -168,7 +175,7 @@ export function beginTask(task) {
         task = task.toJS()
     }
 
-    return (dispatch, getState) => {
+    return (dispatch) => {
 
         task = _merge({}, task, {
             status: task.repeating
@@ -198,7 +205,7 @@ export function completeTask(task, options = { rating: false }) {
         task = _merge({}, task, {
             status: task.repeating
                 ? { [moment().startOf('isoWeek')]: TASK_STATUS.DONE.key }
-                : TASK_STATUS.DONE.key,
+                : TASK_STATUS.DONE.key
         })
 
         const newOptions = _merge({}, options, {
@@ -278,21 +285,39 @@ export default function reducer(state = initialState, action) {
     }
 }
 
-function getTaskStatus(newTask, newStart) {
+function computeTaskStatus(newTask, newStart) {
 
-    //Schedule task if appropriate
-    if ( (!newTask.status || newTask.status === TASK_STATUS.DEFAULT.key) ) {
-        if ( newStart.isAfter() ) {
-            return TASK_STATUS.SCHEDULED.key
-        } else {
-            return (confirm('You are trying to schedule a task in the past. ' +
-                'This will cause you to miss its start time. \n\n' +
-                'Do you want to mark the task as done to avoid this?')) ?
-                   TASK_STATUS.DONE.key :
-                   TASK_STATUS.SCHEDULED.key
+    const thisWeek = moment().startOf('isoWeek')
+
+    if ( !newTask.repeating ) {
+        //Schedule task if appropriate
+        if ( (!newTask.status || newTask.status === TASK_STATUS.DEFAULT.key) ) {
+            if ( newStart.isAfter() ) {
+                return TASK_STATUS.SCHEDULED.key
+            } else {
+                return (confirm('You are trying to schedule a task in the past. ' +
+                    'This will cause you to miss its start time. \n\n' +
+                    'Do you want to mark the task as done to avoid this?')) ?
+                       TASK_STATUS.DONE.key :
+                       TASK_STATUS.SCHEDULED.key
+            }
+        }
+    } else {
+        //Schedule repeating task if appropriate
+        if ( (!newTask.status || !newTask.status[thisWeek] !== TASK_STATUS.DEFAULT.key) ) {
+            if ( newStart.isAfter() ) {
+                return TASK_STATUS.SCHEDULED.key
+            } else {
+                return (confirm('You are trying to schedule a task in the past. ' +
+                    'This will cause you to miss its start time. \n\n' +
+                    'Do you want to mark the task as done to avoid this?')) ?
+                       TASK_STATUS.DONE.key :
+                       TASK_STATUS.SCHEDULED.key
+            }
         }
     }
 
-    //default
+
+//default
     return newTask.status && typeof newTask.status === 'string' ? newTask.status : TASK_STATUS.DEFAULT.key
 }

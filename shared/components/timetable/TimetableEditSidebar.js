@@ -34,6 +34,7 @@ export default class TimetableEditSidebar extends React.Component {
         const currentProjectID = this.props.timetables.get('currentProjectID')
         this.state = {
             project: this.props.projectList.find((pro) => pro.get('id') === currentProjectID, null, false),
+            editingTasks: Immutable.List(),
             _update: true
         }
     }
@@ -123,6 +124,18 @@ export default class TimetableEditSidebar extends React.Component {
             _update: true
         })
         this.props.timetableActions.setCurrentProject(projectID)
+    }
+
+    handleSetEditingTask(id, editingBool){
+        if(editingBool){
+            this.setState(({editingTasks}) => ({
+                editingTasks: editingTasks.push(id)
+            }))
+        } else {
+            this.setState(({editingTasks}) => ({
+                editingTasks: editingTasks.delete(editingTasks.indexOf(id))
+            }))
+        }
     }
 
 
@@ -266,6 +279,7 @@ export default class TimetableEditSidebar extends React.Component {
                                 value={TaskListFilters.UNASSIGNED}
                                 checked={this.state.filterRadioSelection === TaskListFilters.UNASSIGNED}
                                 readOnly
+                                disabled={this.state.editingTasks.size !== 0}
                             />
                             {'Unassigned'}
                         </label>
@@ -277,6 +291,7 @@ export default class TimetableEditSidebar extends React.Component {
                                 value={TaskListFilters.ALL}
                                 checked={this.state.filterRadioSelection === TaskListFilters.ALL}
                                 readOnly
+                                disabled={this.state.editingTasks.size !== 0}
                             />
                             {'All'}
                         </label>
@@ -293,6 +308,7 @@ export default class TimetableEditSidebar extends React.Component {
                     editMode={true}
                     columns={2}
                     milestoneMap={getMilestoneMap(projectList)}
+                    setEditingTask={::this.handleSetEditingTask}
                 />
 
             </div>
