@@ -141,7 +141,7 @@ export function editTaskStart(newTask) {
                              getState().tasks.get('taskList').filter((task) => (
                                  task.get('repeating') && dayTasksFilter(task, newStart)
                              )) :
-                             getState().tasks.get('taskList').filter((task) => (dayTasksFilter(task, newStart))                             )
+                             getState().tasks.get('taskList').filter((task) => (dayTasksFilter(task, newStart)))
 
         const found = sameDayTasks.find(
             (task) => {
@@ -162,16 +162,18 @@ export function editTaskStart(newTask) {
     }
 }
 
-export function beginTask(tmpTask) {
+export function beginTask(task) {
 
-    if ( Immutable.Map.isMap(tmpTask) ) {
-        tmpTask = tmpTask.toJS()
+    if ( Immutable.Map.isMap(task) ) {
+        task = task.toJS()
     }
 
     return (dispatch, getState) => {
 
-        const task = _merge({}, tmpTask, {
-            status: TASK_STATUS.ACTIVE.key,
+        task = _merge({}, task, {
+            status: task.repeating
+                ? { [moment().startOf('isoWeek')]: TASK_STATUS.ACTIVE.key }
+                : TASK_STATUS.ACTIVE.key,
             started: moment()
         })
 
@@ -193,21 +195,22 @@ export function completeTask(task, options = { rating: false }) {
 
     return (dispatch, getState) => {
 
-        const newTask = _merge({}, task, {
-            status: TASK_STATUS.DONE.key
+        task = _merge({}, task, {
+            status: task.repeating
+                ? { [moment().startOf('isoWeek')]: TASK_STATUS.DONE.key }
+                : TASK_STATUS.DONE.key,
         })
 
         const newOptions = _merge({}, options, {
             time: moment()
         })
 
-        return dispatch(editTask(newTask))
+        return dispatch(editTask(task))
             .then(Promise.all([
                     dispatch(backendActions.updateModals()),
-                    dispatch(statistics.recordCompleteTask(newTask, newOptions))
+                    dispatch(statistics.recordCompleteTask(task, newOptions))
                 ])
             )
-
     }
 }
 
@@ -291,5 +294,5 @@ function getTaskStatus(newTask, newStart) {
     }
 
     //default
-    return newTask.status ? newTask.status : TASK_STATUS.DEFAULT.key
+    return newTask.status && typeof newTask.status === 'string' ? newTask.status : TASK_STATUS.DEFAULT.key
 }

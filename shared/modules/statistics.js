@@ -2,6 +2,7 @@ import * as Immutable from 'immutable'
 import * as _ from 'lodash/object'
 import { STATISTIC_TYPES } from '../utils/enums'
 import fetch from '../utils/fetcher'
+import moment from 'moment'
 //import { ReminderModal } from '../components/misc/Modals/Modals'
 
 
@@ -10,9 +11,7 @@ import fetch from '../utils/fetcher'
  * */
 
 const LOAD = 'alakrity/statistics/LOAD'
-const CREATE = 'alakrity/statistics/CREATE'
 const RECORD = 'alakrity/statistics/RECORD'
-const EDIT = 'alakrity/statistics/EDIT'
 const REMOVE = 'alakrity/statistics/REMOVE'
 const LOAD_GLOBAL = 'alakrity/statistics/LOAD'
 const BEGIN_TASK = 'alakrity/statistics/BEGIN_TASK'
@@ -41,17 +40,6 @@ export function loadGlobalStatistics() {
     }
 }
 
-// export function createStatistic(statistic) {
-//     return {
-//         type: CREATE,
-//         payload: statistic,
-//         meta: {
-//             promise: fetch.post('statistics', { data: statistic }),
-//             optimist: false
-//         }
-//     }
-// }
-
 export function recordStatistic(statistic) {
     return {
         type: RECORD,
@@ -63,16 +51,6 @@ export function recordStatistic(statistic) {
     }
 }
 
-// export function editStatistic(statistic) {
-//     return {
-//         type: EDIT,
-//         payload: statistic,
-//         meta: {
-//             promise: fetch.post('statistics', { id: statistic.id, data: statistic }),
-//             optimist: false
-//         }
-//     }
-// }
 
 export function removeStatistic(id) {
     return {
@@ -95,6 +73,8 @@ export function recordBeginTask(task) {
         return dispatch(recordStatistic(
             {
                 type: STATISTIC_TYPES.TASK,
+                weekDate: moment(task.started).startOf('isoWeek'),
+
                 id: task.id,
                 task: _.pick(task, ['id', 'projectID', 'start', 'duration', 'title', 'type']),
                 started: task.started

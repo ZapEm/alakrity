@@ -1,6 +1,7 @@
 import { STATISTIC_TYPES } from '../../shared/utils/enums'
 import * as rethink from './service/rethink'
 import handleError from './utils/handleError'
+import moment from 'moment'
 
 /**
  * Api function(s) to call the DB. Authentication is handled by middleware beforehand.
@@ -40,10 +41,10 @@ export function removeStatistic(req, res) {
 }
 
 export function getGlobalStatistics(req, res) {
-    rethink.findAll('statistics')
+    rethink.findIndexed('statistics', moment().startOf('isoWeek'), 'weekDate')
            .then((response) => {
                // TODO: compile response!
-               console.log('NOT YET IMPLEMENTED!')
+               console.log('NOT YET IMPLEMENTED!\n', response)
                return res.json({ message: 'NOT YET IMPLEMENTED!' })
            })
            .catch(err => handleError(res, err, 400))

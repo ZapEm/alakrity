@@ -33,7 +33,7 @@ export default class Login extends React.Component {
                 </div>
                 <div id="sidebar" className="col sidebar">
                     <div className="login-sidebar w3-card-4 w3-padding w3-border w3-border-theme w3-round-large">
-                        <MascotContainer />
+                        <MascotContainer replaceStatus={MASCOT_STATUS.IDLE} />
                         <AuthForm
                             authActions={bindActionCreators(authActions, dispatch)}
                         />

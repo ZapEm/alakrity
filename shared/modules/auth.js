@@ -5,6 +5,8 @@ import cookie from 'react-cookie'
 import xss from 'xss'
 import { REJECTED_NAME as FAILURE, RESOLVED_NAME as SUCCESS } from '../utils/constants'
 import fetch from '../utils/fetcher'
+import { mascotSplash } from './backend'
+import { MASCOT_STATUS } from '../utils/enums'
 
 
 /**
@@ -68,6 +70,7 @@ export function removeUser(userID) {
 }
 
 export function login(username = '', password = '') {
+
     username = xss(username)
     password = xss(password)
     return {
@@ -87,8 +90,13 @@ export function login(username = '', password = '') {
 }
 
 export function logout() {
-    return {
-        type: LOGOUT
+    return (dispatch) =>{
+
+        dispatch(mascotSplash(MASCOT_STATUS.BYE, 20))
+
+        return dispatch({
+            type: LOGOUT
+        })
     }
 }
 

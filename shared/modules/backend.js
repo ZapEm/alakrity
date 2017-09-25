@@ -1,9 +1,7 @@
 import { fromJS, List, OrderedMap } from 'immutable'
 import moment from 'moment'
 import { getTaskModal } from '../components/misc/modals/Modals'
-import { REJECTED_NAME as FAILURE, RESOLVED_NAME as SUCCESS } from '../utils/constants'
 import { MASCOT_STATUS, TASK_STATUS } from '../utils/enums'
-import { LOGIN, LOGOUT } from './auth'
 
 
 /**
@@ -35,16 +33,17 @@ export function addModal(modal) {
     }
 }
 
-export function setMascotStatus(mascotStatus = MASCOT_STATUS.IDLE) {
+export function setMascotStatus(mascotStatus = MASCOT_STATUS.IDLE, setOverride = false) {
 
-    if ( !MASCOT_STATUS[mascotStatus] ) {
+    if ( !MASCOT_STATUS[mascotStatus] && !setOverride ) {
         console.warn('INVALID MASCOT STATUS')
         mascotStatus = MASCOT_STATUS.IDLE
     }
 
     return {
         type: SET_MASCOT,
-        payload: mascotStatus
+        payload: mascotStatus,
+        meta: { override: setOverride }
     }
 }
 
@@ -119,13 +118,24 @@ export function updateModals(time = false, initial = false) {
             : getState().backend.get('time') ? getState().backend.get('time')
                    : new Date()
 
-        const mascotStatus = getState().backend.get('mascotStatus')
-        return (!initial && (mascotStatus === MASCOT_STATUS.HI || mascotStatus === MASCOT_STATUS.IDLE))
+        //const mascotStatus = getState().backend.get('mascotStatus')
+        return (initial)
             ? Promise.all([
                 dispatch(getUpcomingTasks(taskList, time, 5, initial)),
-                dispatch(setMascotStatus())
+                dispatch(mascotSplash(MASCOT_STATUS.HI, 5))
             ])
             : dispatch(getUpcomingTasks(taskList, time, 5, initial))
+    }
+}
+
+export function mascotSplash(mascotStatus, seconds = 5) {
+    return (dispatch, getState) => {
+
+        //const previousMascot = getState().backend.get('mascotStatus')
+        //const revertMascot = (mascot) => dispatch(setMascotStatus(mascot))
+        setTimeout(() => dispatch(setMascotStatus(false, true)), seconds * 1000)
+
+        return dispatch(setMascotStatus(mascotStatus, true))
     }
 }
 
@@ -134,7 +144,8 @@ export function updateModals(time = false, initial = false) {
  * Reducer:
  * */
 const initialState = fromJS({
-    mascotStatus: MASCOT_STATUS.HI,
+    mascotStatus: MASCOT_STATUS.IDLE,
+    mascotStatusOverride: false,
     time: false,
     modalsOM: OrderedMap()
 })
@@ -157,16 +168,16 @@ export default function reducer(state = initialState, action) {
             return state.deleteIn(['modalsOM', action.payload])
 
         case SET_MASCOT:
-            return state.set('mascotStatus', action.payload)
+            return state.set(action.meta.override ? 'mascotStatusOverride' : 'mascotStatus', action.payload)
 
-        case LOGIN + SUCCESS:
-            return state.set('mascotStatus', MASCOT_STATUS.HI)
-
-        case LOGIN + FAILURE:
-            return state.set('mascotStatus', MASCOT_STATUS.DENIED)
-
-        case LOGOUT:
-            return state.set('mascotStatus', MASCOT_STATUS.BYE)
+        // case LOGIN + SUCCESS:
+        //     return state.set('mascotStatus', MASCOT_STATUS.HI)
+        //
+        // case LOGIN + FAILURE:
+        //     return state.set('mascotStatus', MASCOT_STATUS.DENIED)
+        //
+        // case LOGOUT:
+        //     return state.set('mascotStatus', MASCOT_STATUS.BYE)
 
         default:
             return state

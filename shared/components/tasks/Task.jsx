@@ -16,8 +16,9 @@ import TaskEdit from './TaskEdit'
 const dragSource = {
     canDrag(props) {
         if ( props.draggable && !props.editMode && props.task.get('repeating') ) {
-            if ( confirm('Repeating tasks can only be moved while in the "Basic Schedule" view.\n\nDo you want to create an exception for this week?') ) {
-                alert('Well, too bad. Exceptions are not implemented, yet.') //TODO: exceptions for repeating tasks
+            if ( alert('Repeating tasks can only be moved while in the "Basic Schedule" view.\n\n' +
+                    'In the future, there should be a way to create one-time exceptions here.') ) {
+                //TODO: exceptions for repeating tasks
             }
             return false
         }

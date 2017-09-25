@@ -10,7 +10,7 @@ let DATABASE = dbConfig.servers[0].db || 'alakrity_db'
 
 /*
  * Array of table definitions like
- * { name: 'timetables', secIndex: 'userID' }
+ * { name: 'timetables', secIndex: 'userID' | [...] }
  *
  * secIndex can be a single definition or an array of definitions.
  * Valid definitions are:
@@ -20,10 +20,17 @@ let DATABASE = dbConfig.servers[0].db || 'alakrity_db'
  */
 let TABLES = [
     { name: 'users' },
-    { name: 'tasks', secIndex: ['userID', 'projectID'] },
+    { name: 'tasks', secIndex: 'userID' },
     { name: 'timetables', secIndex: 'userID' },
     { name: 'projects', secIndex: 'userID' },
-    { name: 'statistics', secIndex: ['userID', 'type'] }
+    {
+        name: 'statistics',
+        secIndex: [
+            'userID',
+            'weekDate',
+            //{ type: 'compound', indexName: 'userWeekDate', fields: ['userID', 'weekDate'] }
+        ]
+    }
 ]
 
 dbSetup()

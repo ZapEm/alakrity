@@ -54,6 +54,7 @@ export default class TaskItemDragPreview extends React.Component {
                         height: task.duration / 20 + 'rem',
                         width: '112px',
                         padding: '2px',
+                        paddingTop: '3px',
                         pointerEvents: 'none'
                     }
                 }>

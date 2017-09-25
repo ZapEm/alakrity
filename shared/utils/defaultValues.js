@@ -23,7 +23,7 @@ export const DEFAULT_TASK = Object.freeze(
         start: null,
         duration: 120,
 
-        status: TASK_STATUS.DEFAULT
+        status: TASK_STATUS.DEFAULT.key
     }
 )
 

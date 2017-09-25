@@ -48,14 +48,6 @@ export default class Clock extends React.Component {
             })
         }
 
-        // // do once every 10 seconds
-        // if( this.time.getSeconds() % 10 === 0){
-        //     if (!this.initial){
-        //         notifyUser()
-        //     }
-        // }
-
-
         // do once per minute...
         if ( this.initial || this.time.getMinutes() !== this.currentMinute ) {
             const initial = this.initial
