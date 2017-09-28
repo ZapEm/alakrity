@@ -35,6 +35,7 @@ export function findBy(tableName, fieldName, value) {
 }
 
 export function findIndexed(tableName, query, index) {
+    console.log(tableName, query, { index: index })
     return rdb.table(tableName).getAll(query, { index: index }).run()
               .then(response => {
                   return response

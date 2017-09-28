@@ -1,5 +1,5 @@
-import { MODAL_TYPES, TASK_STATUS } from '../../../utils/enums'
 import moment from 'moment'
+import { MODAL_TYPES, TASK_STATUS } from '../../../utils/enums'
 import { getTaskStatus } from '../../../utils/helpers'
 
 export class Modal {
@@ -45,11 +45,26 @@ export class CompletionModal extends Modal {
     }
 }
 
-export function getTaskModal(task, thisWeek) {
+export class OverModal extends Modal {
+    constructor(task) {
+        super(task, MODAL_TYPES.OVER)
+
+        this.task = task
+        this.headerTitle = '"' + task.get('title') + '" is over.'
+        this.date = moment(task.get('start')).add(task.get('duration'), 'minutes')
+    }
+}
+
+export function getTaskModal(task, thisWeek, checkTime) {
 
     switch (getTaskStatus(task, thisWeek)) {
         case TASK_STATUS.SCHEDULED.key:
-            return new ReminderModal(task)
+            if ( moment(task.get('start')).add(task.get('duration'), 'minutes').isBefore(checkTime) ) {
+                return new OverModal(task)
+            } else {
+                return new ReminderModal(task)
+            }
+
 
         case TASK_STATUS.SNOOZED.key:
             return new SnoozedReminderModal(task)

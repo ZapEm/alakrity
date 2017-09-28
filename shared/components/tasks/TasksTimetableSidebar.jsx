@@ -49,7 +49,7 @@ export default class TasksTimetableSidebar extends React.Component {
 
     handleQuickAddTask(e) {
         e.preventDefault()
-        this.props.taskActions.quickAddTask(this.state.project, 'notRepeating')
+        this.props.taskActions.quickAddTask(this.state.project, false)
     }
 
     changeProject(project) {

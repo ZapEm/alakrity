@@ -1,18 +1,10 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
-import { connect } from 'react-redux'
 import StatisticsSidebar from '../components/statistics/StatisticsSidebar'
-import StatisticsView from '../components/statistics/StatisticsView'
+import StatisticsViewContainer from '../components/statistics/StatisticsViewContainer'
 
 
-@connect(state => ({
-    auth: state.auth,
-    tasks: state.tasks,
-    projects: state.projects,
-    settings: state.settings,
-    isAuthenticated: state.auth.get('isAuthenticated')
-}))
 export default class Projects extends React.Component {
 
     static propTypes = {
@@ -31,7 +23,7 @@ export default class Projects extends React.Component {
             <div className="react-container">
                 <div className="row">
                     <div className="col px900">
-                        <StatisticsView/>
+                        <StatisticsViewContainer/>
                     </div>
                     <div id="sidebar" className="col sidebar">
                         <StatisticsSidebar

@@ -48,7 +48,7 @@ export function setMascotStatus(mascotStatus = MASCOT_STATUS.IDLE, setOverride =
     }
 }
 
-export function getUpcomingTasks(taskList, time, lookaheadMinutes = 5, initial = false) {
+export function getUpcomingTasks(taskList, time, lookaheadMinutes = 0, initial = false) {
     if ( taskList ) {
         const checkMoment = moment(time).add(lookaheadMinutes, 'minutes')
         const thisWeek = moment(time).startOf('isoWeek')
@@ -70,22 +70,23 @@ export function getUpcomingTasks(taskList, time, lookaheadMinutes = 5, initial =
                 }) : List())
                 groupedTasks.update(TASK_STATUS.SNOOZED.key, list => list ? list.filter(task => {
                     const snoozedStart = moment(task.get('start'))
-                        .add(task.has('snooze') ? task.get('snooze') : 0, 'minutes')
-                    return snoozedStart.isSameOrBefore(checkMoment)
+                        .add(task.get('snooze') ? task.get('snooze') : 0, 'minutes')
+                    return snoozedStart.isSameOrBefore(time)
                 }) : List())
                 groupedTasks.update(TASK_STATUS.ACTIVE.key, list => list ? list.filter(task => {
-                    const end = moment(task.get('start')).add(task.get('duration'), 'minutes')
+                    const end = moment(task.get('start'))
+                        .add(task.get('duration') + (task.get('extend') ? task.get('extend') : 0), 'minutes')
                     return end.isSameOrBefore(checkMoment)
                 }) : List())
             })
 
         const modals = OrderedMap()
             .concat(groupedTasks.get(TASK_STATUS.SCHEDULED.key)
-                                .map(task => ((modal) => [modal.id, modal])(getTaskModal(task, thisWeek))))
+                                .map(task => ((modal) => [modal.id, modal])(getTaskModal(task, thisWeek, time))))
             .concat(groupedTasks.get(TASK_STATUS.SNOOZED.key)
-                                .map(task => ((modal) => [modal.id, modal])(getTaskModal(task, thisWeek))))
+                                .map(task => ((modal) => [modal.id, modal])(getTaskModal(task, thisWeek, time))))
             .concat(groupedTasks.get(TASK_STATUS.ACTIVE.key)
-                                .map(task => ((modal) => [modal.id, modal])(getTaskModal(task, thisWeek))))
+                                .map(task => ((modal) => [modal.id, modal])(getTaskModal(task, thisWeek, time))))
             .sortBy(modal => modal.date,
                 (date1, date2) => {
                     if ( date1.isBefore(date2) ) { return -1 }
@@ -123,10 +124,10 @@ export function updateModals(time = false, initial = false) {
         //const mascotStatus = getState().backend.get('mascotStatus')
         return (initial)
             ? Promise.all([
-                dispatch(getUpcomingTasks(taskList, time, 5, initial)),
+                dispatch(getUpcomingTasks(taskList, time, 0, initial)),
                 dispatch(mascotSplash(MASCOT_STATUS.HI, 5))
             ])
-            : dispatch(getUpcomingTasks(taskList, time, 5, initial))
+            : dispatch(getUpcomingTasks(taskList, time, 0, initial))
     }
 }
 

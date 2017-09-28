@@ -19,6 +19,7 @@ export const MODAL_TYPES = Object.freeze(
         DEFAULT: 'default',
         REMINDER: 'reminder',
         COMPLETION: 'completion',
+        OVER: 'over',
         EDIT_TASK: 'edit-task',
         EDIT_PROJECT: 'edit-project'
     }

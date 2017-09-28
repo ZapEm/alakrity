@@ -21,10 +21,8 @@ import { checkWorking } from '../utils/stateChecks'
     isWorking: checkWorking(state),
     isAuthenticated: state.auth.get('isAuthenticated'),
     message: state.auth.get('message') || '',
-    backend: state.backend,
     settings: state.settings,
     taskList: state.tasks.get('taskList'),
-    projectList: state.projects.get('projectList'),
     currentPath: state.routing.locationBeforeTransitions.pathname || '/'
 }))
 export default class AppRoot extends React.Component {
@@ -34,9 +32,7 @@ export default class AppRoot extends React.Component {
         isWorking: PropTypes.bool,
         isAuthenticated: PropTypes.bool,
         message: PropTypes.string,
-        backend: ImmutablePropTypes.map,
         taskList: ImmutablePropTypes.list,
-        projectList: ImmutablePropTypes.list,
         dispatch: PropTypes.func,
         currentPath: PropTypes.string,
         settings: ImmutablePropTypes.map
@@ -49,29 +45,17 @@ export default class AppRoot extends React.Component {
 
 
     render() {
-        const { isWorking, isAuthenticated, message, dispatch, currentPath, backend, taskList, projectList, settings } = this.props
+        const { isWorking, isAuthenticated, message, dispatch, currentPath, taskList, settings } = this.props
 
         // set global moment locale
         moment.locale(settings.get('locale'))
-        console.log('pre', moment.locale())
         if ( settings.get('locale') === 'de' ) {
             require('moment/locale/de')
-            if ( moment.locale() === 'en' ) {
-                moment.locale('de')
-                console.log('...!')
-            }
         }
-        console.log('post', moment.locale())
 
         return (
             <div id="app-view">
-                {isAuthenticated && <ModalComponent
-                    settings={settings}
-                    modalsOM={backend.get('modalsOM')}
-                    projectList={projectList}
-                    backendActions={bindActionCreators(backendActions, dispatch)}
-                    taskActions={bindActionCreators(taskActions, dispatch)}
-                />}
+                {isAuthenticated && <ModalComponent/>}
                 <Navbar
                     isAuthenticated={isAuthenticated}
                     isWorking={isWorking}

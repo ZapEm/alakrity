@@ -4,9 +4,10 @@ import optimist from 'redux-optimist'
 import auth from './auth'
 import backend from './backend'
 import projects from './projects'
+import settings from './settings'
+import statistics from './statistics'
 import tasks from './tasks'
 import timetables from './timetables'
-import settings from './settings'
 
 
 export default optimist(combineReducers(
@@ -17,6 +18,7 @@ export default optimist(combineReducers(
         projects,
         tasks,
         backend,
-        settings
+        settings,
+        statistics
     }
 ))

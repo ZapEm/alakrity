@@ -3,6 +3,8 @@ import * as _ from 'lodash/object'
 import { STATISTIC_TYPES } from '../utils/enums'
 import fetch from '../utils/fetcher'
 import moment from 'moment'
+import { RESOLVED_NAME as SUCCESS } from '/utils/constants'
+import { compileUser } from '../functions/compileStatistics'
 //import { ReminderModal } from '../components/misc/Modals/Modals'
 
 
@@ -13,7 +15,7 @@ import moment from 'moment'
 const LOAD = 'alakrity/statistics/LOAD'
 const RECORD = 'alakrity/statistics/RECORD'
 const REMOVE = 'alakrity/statistics/REMOVE'
-const LOAD_GLOBAL = 'alakrity/statistics/LOAD'
+const LOAD_GLOBAL = 'alakrity/statistics/LOAD_GLOBAL'
 const BEGIN_TASK = 'alakrity/statistics/BEGIN_TASK'
 
 /**
@@ -68,21 +70,28 @@ export function removeStatistic(id) {
  * Thunks:
  * */
 
-export function recordBeginTask(task) {
+export function recordBeginTask(task, { started }) {
     return (dispatch) => {
-        const weekDate = moment(task.started).startOf('isoWeek')
+        started = moment.isMoment(started) ? started : moment(started)
+        started = started.isValid() ? started : moment()
+
+        const weekDate = started.startOf('isoWeek')
         return dispatch(recordStatistic(
             {
                 type: STATISTIC_TYPES.TASK,
                 weekDate: weekDate,
 
                 id: (task.repeating ? weekDate.format('YYYY-WW_') : '') + task.id,
+                started: started,
+                startDelay: moment(task.start).diff(started, 'minutes'),
+                ...task.snooze !== 'none' && { snoozed: task.snooze },
                 task: _.pick(task, ['id', 'projectID', 'start', 'duration', 'title', 'repeating', 'special']),
-                started: task.started
+
             }
         ))
     }
 }
+
 
 export function recordCompleteTask(task, { time, rating }) {
     return (dispatch) => {
@@ -91,9 +100,17 @@ export function recordCompleteTask(task, { time, rating }) {
                 type: STATISTIC_TYPES.TASK,
                 id: task.id,
                 completed: time,
-                rating: rating ? rating : false
+                rating: rating ? rating : false,
+                extended: task.extend ? task.extend : false,
+                completeDelay: moment(task.start).add(task.duration, 'minutes').diff(time, 'minutes')
             }
         ))
+    }
+}
+
+export function removeRecordedTask(task) {
+    return (dispatch) => {
+        return dispatch(removeStatistic((task.repeating ? moment(task.started).startOf('isoWeek').format('YYYY-WW_') : '') + task.id))
     }
 }
 
@@ -101,15 +118,17 @@ export function recordCompleteTask(task, { time, rating }) {
  * Reducer:
  * */
 const initialState = Immutable.fromJS({
-    tasks: {
-        number: 0
-    }
+    userStatistics: {},
+    globalStatistics: {}
 })
 
 export default function reducer(state = initialState, action) {
     switch (action.type) {
-        case BEGIN_TASK:
-            return state.set('tasks', action.payload)
+        case LOAD + SUCCESS:
+            return state.set('userStatistics', compileUser(action.payload.data))
+
+        case LOAD_GLOBAL + SUCCESS:
+            return state.set('globalStatistics', Immutable.fromJS(action.payload.data))
 
         default:
             return state

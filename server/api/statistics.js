@@ -2,6 +2,7 @@ import { STATISTIC_TYPES } from '../../shared/utils/enums'
 import * as rethink from './service/rethink'
 import handleError from './utils/handleError'
 import moment from 'moment'
+import { compileGlobalStatistics, compileUserStatistics } from './utils/statisticsCompilers'
 
 /**
  * Api function(s) to call the DB. Authentication is handled by middleware beforehand.
@@ -11,7 +12,7 @@ import moment from 'moment'
  */
 export function getStatistics(req, res) {
     rethink.findIndexed('statistics', res.locals.decoded.id, 'userID')
-           .then((response) => res.json(response))
+           .then((response) => res.json(compileUserStatistics(response)))
            .catch(err => handleError(res, err, 400))
 }
 
@@ -41,11 +42,9 @@ export function removeStatistic(req, res) {
 }
 
 export function getGlobalStatistics(req, res) {
-    rethink.findIndexed('statistics', moment().startOf('isoWeek'), 'weekDate')
+    rethink.findIndexed('statistics', moment().startOf('isoWeek').toISOString(), 'weekDate')
            .then((response) => {
-               // TODO: compile response!
-               console.log('NOT YET IMPLEMENTED!\n', response)
-               return res.json({ message: 'NOT YET IMPLEMENTED!' })
+               return res.json(compileGlobalStatistics(response))
            })
            .catch(err => handleError(res, err, 400))
 }

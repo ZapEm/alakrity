@@ -2,7 +2,7 @@ import * as Immutable from 'immutable'
 import moment from 'moment'
 import tinycolor from 'tinycolor2'
 import { SPECIAL_PROJECTS } from './constants'
-import { TaskListFilters } from './enums'
+import { TASK_STATUS, TaskListFilters } from './enums'
 
 /**
  * Extract and adjust the project colors then return as immutable map
@@ -99,9 +99,13 @@ export function getTaskStatus(task, startOfThisWeek = moment().startOf('isoWeek'
         task = task.toJS()
     }
 
-    const status = task.repeating ? task.status[startOfThisWeek] : task.status
+    const status = !task.repeating
+        ? task.status
+        : task.status
+            ? task.status[startOfThisWeek] ? task.status[startOfThisWeek] : TASK_STATUS.DEFAULT.key
+            : TASK_STATUS.DEFAULT.key
 
-    if(task.repeating) { console.log(status) }
+    if(task.repeating && typeof task.status !== 'object') { console.warn('Status of', task.title ,'needs to be an Object! Is "', task.status, '" instead.\n   returning', status) }
 
     return status
 }

@@ -2,18 +2,18 @@ import classNames from 'classnames'
 import Immutable from 'immutable'
 import * as _ from 'lodash/object'
 import { merge as _merge } from 'lodash/object'
+import moment from 'moment'
 import PropTypes from 'prop-types'
 import React from 'react'
 
 import { DragSource } from 'react-dnd'
 import { getEmptyImage } from 'react-dnd-html5-backend'
 import ImmutablePropTypes from 'react-immutable-proptypes'
-import { DANGER_LEVELS, LOCALE_STRINGS, TASK_TYPES } from '../../utils/constants'
+import { DANGER_LEVELS, LOCALE_STRINGS } from '../../utils/constants'
 import { DndTypes, TASK_STATUS } from '../../utils/enums'
+import { getTaskStatus } from '../../utils/helpers'
 import IconButton from '../misc/IconButton'
 import TaskEdit from './TaskEdit'
-import { getTaskStatus } from '../../utils/helpers'
-import moment from 'moment'
 
 const dragSource = {
     canDrag(props) {
@@ -39,10 +39,10 @@ const dragSource = {
             const task = monitor.getItem()
             const thisWeek = moment().startOf('isoWeek')
 
-            if(getTaskStatus(task, thisWeek) === TASK_STATUS.DONE.key){
-                if(!confirm('You are trying to remove a task that is already done from the schedule. ' +
-                    'This will change it back to "not done". \n\n' +
-                    'Do you wish to proceed?')){
+            if ( getTaskStatus(task, thisWeek) === TASK_STATUS.DONE.key ) {
+                if ( !confirm('You are trying to remove a task that is already done from the schedule. ' +
+                        'This will change it back to "not done". \n\n' +
+                        'Do you wish to proceed?') ) {
                     return
                 }
             }
@@ -50,7 +50,7 @@ const dragSource = {
 
             props.taskActions.editTask(_merge({}, task, {
                     start: null,
-                    status: task.repeating ? {[thisWeek]: TASK_STATUS.DEFAULT.key} : TASK_STATUS.DEFAULT.key
+                    status: task.repeating ? { [thisWeek]: TASK_STATUS.DEFAULT.key } : TASK_STATUS.DEFAULT.key
                 })
             )
 
@@ -149,7 +149,7 @@ export default class Task extends React.Component {
         this.props.setEditingTask(this.props.task.get('id'), false)
     }
 
-    handleCancel(){
+    handleCancel() {
         this.setState({ editing: false })
         this.props.setEditingTask(this.props.task.get('id'), false)
     }
@@ -202,6 +202,25 @@ export default class Task extends React.Component {
                 onCancel={::this.handleCancel}
             />
         } else {
+            let iconTooltip = ''
+            try {
+                iconTooltip = !status ? '' : {
+                    [TASK_STATUS.SNOOZED.key]: (task) => 'Snoozed.\nReminder '
+                        + moment(task.get('start'))
+                            .add(task.get('snooze'), 'minutes')
+                            .fromNow() + '.',
+                    [TASK_STATUS.ACTIVE.key]: (task) => 'Active.\n Planned end '
+                        + moment(task.get('start'))
+                            .add(task.get('duration') + task.get('extend'), 'minutes')
+                            .fromNow() + '.',
+                    [TASK_STATUS.DONE.key]: () => status.name,
+                    [TASK_STATUS.DEFAULT.key]: () => status.name,
+                    [TASK_STATUS.SCHEDULED.key]: () => status.name
+                }[status.key](task)
+            } catch (error) {
+                iconTooltip = status ? status.name : ''
+            }
+
             element =
                 <div
                     className={
@@ -226,7 +245,7 @@ export default class Task extends React.Component {
                     {status && status.icon &&
                     <div
                         className="material-icons w3-display-topleft task-status-icon"
-                        title={status.name}
+                        title={iconTooltip}
                     >
                         {status.icon}
                     </div>}

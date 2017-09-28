@@ -1,8 +1,9 @@
 import * as _ from 'lodash/object'
 
-
+// shim
 let notifyUser = () => {
-} // shim
+}
+
 if ( typeof window === 'undefined' || !('Notification' in window) ) {
     // server or not supported
     if ( typeof window !== 'undefined' ) {
@@ -21,8 +22,6 @@ if ( typeof window === 'undefined' || !('Notification' in window) ) {
                 tag: 'default'
             },
             options)
-
-        console.log(title, options)
 
         Notification.requestPermission(() => {
             const notification = new Notification(title, options)

@@ -1,22 +1,35 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import * as ImmutablePropTypes from 'react-immutable-proptypes'
+import { MODAL_TYPES } from '../../../utils/enums'
 import { getProjectColorMap } from '../../../utils/helpers'
+import notifyUser from '../../../utils/notifications'
 import ModalContent from './ModalContent'
 import ModalFooter from './ModalFooter'
 import ModalHeader from './ModalHeader'
-import { MODAL_TYPES } from '../../../utils/enums'
-import notifyUser from '../../../utils/notifications'
+import { connect } from 'react-redux'
+import Immutable from 'immutable'
+import * as TaskActions from '/modules/tasks'
+import * as BackendActions from '/modules/backend'
+import { bindActionCreators } from 'redux'
+import moment from 'moment'
 
-
+@connect(state => ({
+    modalsOM: state.backend.get('modalsOM'),
+    projectList: state.projects.get('projectList'),
+    settings: state.settings
+}))
 export default class ModalComponent extends React.Component {
 
     static propTypes = {
-        modalsOM: ImmutablePropTypes.orderedMap.isRequired,
-        backendActions: PropTypes.objectOf(PropTypes.func).isRequired,
-        taskActions: PropTypes.objectOf(PropTypes.func).isRequired,
-        projectList: ImmutablePropTypes.list.isRequired,
-        settings: ImmutablePropTypes.map.isRequired
+        modalsOM: ImmutablePropTypes.orderedMap,
+        projectList: ImmutablePropTypes.list,
+        settings: ImmutablePropTypes.map,
+        dispatch: PropTypes.func
+    }
+
+    static defaultProps = {
+        modalsOM: Immutable.OrderedMap()
     }
 
     constructor(props) {
@@ -25,49 +38,6 @@ export default class ModalComponent extends React.Component {
             modalKey: '',
             rating: false
         }
-    }
-
-    componentWillMount() {
-        this.setState({
-            projectColorMap: getProjectColorMap(this.props.projectList),
-            ...this.props.modalsOM.size > 0 && { modalKey: this.props.modalsOM.keySeq().first() }
-        })
-    }
-
-    componentWillUpdate(nextProps) {
-        if ( this.state.modalKey === '' && nextProps.modalsOM.size > 0 ) {
-            this.setState({
-                modalKey: nextProps.modalsOM.keySeq().first()
-            })
-        }
-    }
-
-    handleNext(e) {
-        e.preventDefault()
-        const keySeq = this.props.modalsOM.keySeq()
-        this.setState({
-            modalKey: keySeq.toIndexedSeq().get((keySeq.keyOf(this.state.modalKey) + 1 ) % keySeq.size)
-        })
-    }
-
-    handleBack(e) {
-        e.preventDefault()
-        const keySeq = this.props.modalsOM.keySeq()
-        this.setState({
-            modalKey: keySeq.toIndexedSeq().get((keySeq.keyOf(this.state.modalKey) - 1 ) % keySeq.size)
-        })
-    }
-
-    updateModal() {
-        const keySeq = this.props.modalsOM.keySeq()
-        if ( keySeq.size > 1 ) {
-            this.setState({
-                modalKey: keySeq.toIndexedSeq().get((keySeq.keyOf(this.state.modalKey) - 1 ) % keySeq.size)
-            })
-        } else {
-            this.setState({ modalKey: '' })
-        }
-        // this.forceUpdate()
     }
 
     static handleNotification(modal) {
@@ -112,11 +82,55 @@ export default class ModalComponent extends React.Component {
         }
     }
 
+    componentWillMount() {
+
+        this.setState({
+            projectColorMap: getProjectColorMap(this.props.projectList),
+            ...this.props.modalsOM.size > 0 && { modalKey: this.props.modalsOM.keySeq().first()}
+        })
+    }
+
+    componentWillUpdate(nextProps) {
+        if ( this.state.modalKey === '' && nextProps.modalsOM.size > 0 ) {
+            this.setState({
+                modalKey: nextProps.modalsOM.keySeq().first()
+            })
+        }
+    }
+
+    handleNext(e) {
+        e.preventDefault()
+        const keySeq = this.props.modalsOM.keySeq()
+        this.setState({
+            modalKey: keySeq.toIndexedSeq().get((keySeq.keyOf(this.state.modalKey) + 1 ) % keySeq.size)
+        })
+    }
+
+    handleBack(e) {
+        e.preventDefault()
+        const keySeq = this.props.modalsOM.keySeq()
+        this.setState({
+            modalKey: keySeq.toIndexedSeq().get((keySeq.keyOf(this.state.modalKey) - 1 ) % keySeq.size)
+        })
+    }
+
+    updateModal() {
+        const keySeq = this.props.modalsOM.keySeq()
+        if ( keySeq.size > 1 ) {
+            this.setState({
+                modalKey: keySeq.toIndexedSeq().get((keySeq.keyOf(this.state.modalKey) - 1 ) % keySeq.size)
+            })
+        } else {
+            this.setState({ modalKey: '' })
+        }
+        // this.forceUpdate()
+    }
+
     render() {
-        const { modalsOM, settings, taskActions, backendActions } = this.props
+        const { modalsOM, settings, dispatch } = this.props
         const { modalKey } = this.state
 
-        if ( modalKey === '' ) {
+        if ( modalKey === '' || !modalsOM || modalsOM.size === 0 ) {
             return <div className="w3-modal" style={{ display: 'none' }}/>
         }
 
@@ -148,13 +162,17 @@ export default class ModalComponent extends React.Component {
                         settings={settings}
                         changeModalState={::this.setState}
                         rating={this.state.rating}
+                        started={this.state.started}
+                        completed={this.state.completed}
                     />
-
                     <ModalFooter
                         modal={currentModal}
-                        taskActions={taskActions}
-                        backendActions={backendActions}
+                        taskActions={bindActionCreators(TaskActions, dispatch)}
+                        backendActions={bindActionCreators(BackendActions, dispatch)}
                         updateModal={::this.updateModal}
+                        rating={this.state.rating}
+                        started={this.state.started}
+                        completed={this.state.completed}
                     />
                 </div>
             </div>

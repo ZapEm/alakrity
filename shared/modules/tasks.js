@@ -1,4 +1,5 @@
 import Immutable from 'immutable'
+import * as _ from 'lodash/object'
 import { merge as _merge } from 'lodash/object'
 import moment from 'moment'
 import xss from 'xss'
@@ -10,7 +11,9 @@ import newId from '../utils/newId'
 import { LOGIN, LOGOUT } from './auth'
 
 import * as backendActions from './backend'
+import { updateModals } from './backend'
 import * as statistics from './statistics'
+import { removeRecordedTask } from './statistics'
 
 
 // action types:
@@ -64,6 +67,7 @@ export function quickAddTask(project, repeating = false) {
         repeating: repeating,
         special: false,
         created: moment(),
+        status: !repeating ? TASK_STATUS.DEFAULT.key : {},
         duration: 120,
         start: null
     }
@@ -135,10 +139,10 @@ export function editTaskStart(newTask) {
         const newStart = moment(newTask.start)
         const newEnd = newStart.clone().add(newTask.duration, 'm')
 
-        if(!newTask.repeating) {
+        if ( !newTask.repeating ) {
             newTask.status = computeTaskStatus(newTask, newStart)
         } else {
-            if (typeof newTask.status === 'string'){
+            if ( typeof newTask.status === 'string' ) {
                 newTask.status = {}
             }
             newTask.status[moment().startOf('isoWeek')] = computeTaskStatus(newTask, newStart)
@@ -169,6 +173,32 @@ export function editTaskStart(newTask) {
     }
 }
 
+export function rescheduleTask(task, started = false) {
+    if ( Immutable.Map.isMap(task) ) {
+        task = task.toJS()
+    }
+    return (dispatch) => {
+        const updatedTask = _.merge({}, task, {
+            start: null,
+            status: task.repeating
+                ? { [moment().startOf('isoWeek')]: TASK_STATUS.DEFAULT.key }
+                : TASK_STATUS.DEFAULT.key,
+            started: false,
+            snooze: false
+        })
+
+        return started
+            ? Promise.all([
+                dispatch(editTask(updatedTask)),
+                dispatch(removeRecordedTask(task)),
+                dispatch(updateModals())])
+            : Promise.all([
+                dispatch(editTask(updatedTask)),
+                dispatch(updateModals())])
+    }
+
+}
+
 export function beginTask(task) {
 
     if ( Immutable.Map.isMap(task) ) {
@@ -187,11 +217,70 @@ export function beginTask(task) {
         return dispatch(editTask(task))
             .then(Promise.all([
                     dispatch(backendActions.updateModals()),
-                    dispatch(statistics.recordBeginTask(task))
+                    dispatch(statistics.recordBeginTask(task, { started: task.started }))
                 ])
             )
 
     }
+}
+
+export function snoozeTask(task, snoozeMinutes = 15) {
+
+    if ( Immutable.Map.isMap(task) ) {
+        task = task.toJS()
+    }
+
+    return (dispatch) => {
+
+        task = _merge({}, task, {
+            status: task.repeating
+                ? { [moment().startOf('isoWeek')]: TASK_STATUS.SNOOZED.key }
+                : TASK_STATUS.SNOOZED.key,
+            snooze: task.snooze ? 0 + task.snooze + snoozeMinutes : snoozeMinutes
+        })
+
+        return dispatch(editTask(task))
+            .then(dispatch(backendActions.updateModals()))
+    }
+}
+
+export function extendTask(task, extendMinutes = 15) {
+
+    if ( Immutable.Map.isMap(task) ) {
+        task = task.toJS()
+    }
+
+    return (dispatch) => {
+
+        task = _merge({}, task, {
+            extend: task.extend ? 0 + task.extend + extendMinutes : extendMinutes
+        })
+
+        return dispatch(editTask(task))
+            .then(dispatch(backendActions.updateModals()))
+    }
+}
+
+export function confirmOverTask(task, { rating, completed, started }) {
+    if ( Immutable.Map.isMap(task) ) {
+        task = task.toJS()
+    }
+
+    task = _merge({}, task, {
+        status: task.repeating
+            ? { [moment().startOf('isoWeek')]: TASK_STATUS.DONE.key }
+            : TASK_STATUS.DONE.key
+    })
+
+
+    return (dispatch, getState) => {
+        return dispatch(editTask(task)).then(Promise.all([
+            dispatch(backendActions.updateModals()),
+            dispatch(statistics.recordBeginTask(task, { started: started }))
+                .then(dispatch(statistics.recordCompleteTask(task, { rating: rating, time: completed })))
+        ]))
+    }
+
 }
 
 export function completeTask(task, options = { rating: false }) {
@@ -292,28 +381,28 @@ function computeTaskStatus(newTask, newStart) {
     if ( !newTask.repeating ) {
         //Schedule task if appropriate
         if ( (!newTask.status || newTask.status === TASK_STATUS.DEFAULT.key) ) {
-            if ( newStart.isAfter() ) {
-                return TASK_STATUS.SCHEDULED.key
-            } else {
-                return (confirm('You are trying to schedule a task in the past. ' +
-                    'This will cause you to miss its start time. \n\n' +
-                    'Do you want to mark the task as done to avoid this?')) ?
-                       TASK_STATUS.DONE.key :
-                       TASK_STATUS.SCHEDULED.key
-            }
+            // if ( newStart.isAfter() ) {
+            return TASK_STATUS.SCHEDULED.key
+            // } else {
+            //     return (confirm('You are trying to schedule a task in the past. ' +
+            //         'This will cause you to miss its start time. \n\n' +
+            //         'Do you want to mark the task as done to avoid this?')) ?
+            //            TASK_STATUS.DONE.key :
+            //            TASK_STATUS.SCHEDULED.key
+            // }
         }
     } else {
         //Schedule repeating task if appropriate
         if ( (!newTask.status || !newTask.status[thisWeek] !== TASK_STATUS.DEFAULT.key) ) {
-            if ( newStart.isAfter() ) {
-                return TASK_STATUS.SCHEDULED.key
-            } else {
-                return (confirm('You are trying to schedule a task in the past. ' +
-                    'This will cause you to miss its start time. \n\n' +
-                    'Do you want to mark the task as done to avoid this?')) ?
-                       TASK_STATUS.DONE.key :
-                       TASK_STATUS.SCHEDULED.key
-            }
+            // if ( newStart.isAfter() ) {
+            return TASK_STATUS.SCHEDULED.key
+            // } else {
+            //     return (confirm('You are trying to schedule a task in the past. ' +
+            //         'This will cause you to miss its start time. \n\n' +
+            //         'Do you want to mark the task as done to avoid this?')) ?
+            //            TASK_STATUS.DONE.key :
+            //            TASK_STATUS.SCHEDULED.key
+            // }
         }
     }
 

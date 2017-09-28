@@ -75,9 +75,8 @@ export default class TimetableEditSidebar extends React.Component {
 
     handleQuickAddTask(e) {
         e.preventDefault()
-        //const project = this.props.projectList.find((pro) => pro.get('id') === this.props.timetables.get('currentProjectID'), null, false)
         if ( this.state.project ) {
-            this.props.taskActions.quickAddTask(this.state.project, 'repeating')
+            this.props.taskActions.quickAddTask(this.state.project, true)
         } else {
             alert('Special work periods (Buffer, Break, ...) can not have tasks.')
         }

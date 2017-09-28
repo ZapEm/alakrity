@@ -1,8 +1,10 @@
 <component name="ProjectDictionaryState">
   <dictionary name="ZapEm">
     <words>
+      <w>anonymize</w>
       <w>autofocus</w>
       <w>axios</w>
+      <w>datasets</w>
       <w>dateinput</w>
       <w>dropdown</w>
       <w>eslint</w>
@@ -17,6 +19,7 @@
       <w>newid</w>
       <w>noty</w>
       <w>styl</w>
+      <w>timepicker</w>
       <w>tinycolor</w>
       <w>webpush</w>
     </words>
