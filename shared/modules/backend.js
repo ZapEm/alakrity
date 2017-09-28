@@ -1,4 +1,4 @@
-import { fromJS, List, OrderedMap } from 'immutable'
+import { fromJS, List } from 'immutable'
 import moment from 'moment'
 import { getTaskModal } from '../components/misc/modals/Modals'
 import { MASCOT_STATUS, TASK_STATUS } from '../utils/enums'
@@ -80,13 +80,13 @@ export function getUpcomingTasks(taskList, time, lookaheadMinutes = 0, initial =
                 }) : List())
             })
 
-        const modals = OrderedMap()
+        const modals = List()
             .concat(groupedTasks.get(TASK_STATUS.SCHEDULED.key)
-                                .map(task => ((modal) => [modal.id, modal])(getTaskModal(task, thisWeek, time))))
+                                .map(task => getTaskModal(task, thisWeek, time)))
             .concat(groupedTasks.get(TASK_STATUS.SNOOZED.key)
-                                .map(task => ((modal) => [modal.id, modal])(getTaskModal(task, thisWeek, time))))
+                                .map(task => getTaskModal(task, thisWeek, time)))
             .concat(groupedTasks.get(TASK_STATUS.ACTIVE.key)
-                                .map(task => ((modal) => [modal.id, modal])(getTaskModal(task, thisWeek, time))))
+                                .map(task => getTaskModal(task, thisWeek, time)))
             .sortBy(modal => modal.date,
                 (date1, date2) => {
                     if ( date1.isBefore(date2) ) { return -1 }
@@ -148,7 +148,7 @@ const initialState = fromJS({
     mascotStatus: MASCOT_STATUS.IDLE,
     mascotStatusOverride: false,
     time: false,
-    modalsOM: OrderedMap()
+    modalsList: List()
 })
 
 export default function reducer(state = initialState, action) {
@@ -158,15 +158,19 @@ export default function reducer(state = initialState, action) {
 
         case UPDATE_UPCOMING_TASKS:
             if ( action.meta && action.meta.initial ) {
-                return state.set('modalsOM', action.payload)
+                return state.set('modalsList', action.payload)
             }
-            return state.set('modalsOM', action.payload)
+            return state.set('modalsList', action.payload)
 
         case ADD_MODAL:
-            return state.set('modalsOM', state.get('modalsOM').merge(action.payload))
+            return state.set('modalsList', state.get('modalsList').push(action.payload))
 
         case REMOVE_MODAL:
-            return state.deleteIn(['modalsOM', action.payload])
+            return (index => {
+                    return index !== -1
+                        ? state.deleteIn(['modalsList', index])
+                        : state
+                })(state.get('modalsList').findIndex(modal => modal.id === action.payload))
 
         case SET_MASCOT:
             return state.set(action.meta.override ? 'mascotStatusOverride' : 'mascotStatus', action.payload)

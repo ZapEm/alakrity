@@ -12,7 +12,6 @@ export default class ModalFooter extends React.Component {
         modal: PropTypes.instanceOf(Modal),
         taskActions: PropTypes.objectOf(PropTypes.func).isRequired,
         backendActions: PropTypes.objectOf(PropTypes.func),
-        updateModal: PropTypes.func,
         rating: PropTypes.oneOfType([PropTypes.number, PropTypes.bool]),
         started: PropTypes.oneOfType([MomentPropTypes.momentObj, PropTypes.bool]),
         completed: PropTypes.oneOfType([MomentPropTypes.momentObj, PropTypes.bool])
@@ -28,13 +27,11 @@ export default class ModalFooter extends React.Component {
     handleBegin(e) {
         e.preventDefault()
         this.props.taskActions.beginTask(this.props.modal.task)
-        this.props.updateModal()
     }
 
     handleComplete(e) {
         e.preventDefault()
         this.props.taskActions.completeTask(this.props.modal.task, { rating: this.props.rating })
-        this.props.updateModal()
     }
 
     handleConfirmOver(e) {
@@ -44,7 +41,6 @@ export default class ModalFooter extends React.Component {
             started: this.props.started,
             completed: this.props.completed
         })
-        this.props.updateModal()
     }
 
     handleReschedule(e) {

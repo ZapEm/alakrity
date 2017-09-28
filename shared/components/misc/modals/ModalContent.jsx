@@ -3,17 +3,18 @@ import PropTypes from 'prop-types'
 import TimePicker from 'rc-time-picker'
 import React from 'react'
 import * as ImmutablePropTypes from 'react-immutable-proptypes'
+import * as MomentPropTypes from 'react-moment-proptypes'
 import { MODAL_TYPES } from '../../../utils/enums'
 import TaskPreview from '../../dnd/TaskItemDragPreview'
 import IconButton from '../IconButton'
 import { Modal } from './Modals'
 import RatePicker from './RatingPicker'
-import * as MomentPropTypes from 'react-moment-proptypes'
 
 export default class ModalContent extends React.Component {
 
     static propTypes = {
         modal: PropTypes.instanceOf(Modal),
+        modalsList: ImmutablePropTypes.list,
         projectColorMap: ImmutablePropTypes.map.isRequired,
         settings: ImmutablePropTypes.map.isRequired,
         rating: PropTypes.oneOfType([PropTypes.bool, PropTypes.number]),
@@ -37,11 +38,20 @@ export default class ModalContent extends React.Component {
         return arr
     }
 
-    componentWillMount(){
+    componentWillMount() {
         this.props.changeModalState({
             started: moment(this.props.modal.task.get('start')),
             completed: moment(this.props.modal.task.get('start')).add(this.props.modal.task.get('duration'), 'minutes')
         })
+    }
+
+    componentWillUpdate(nextProps) {
+        if ( nextProps.modal && this.props.modal !== nextProps.modal ) {
+            this.props.changeModalState({
+                started: moment(nextProps.modal.task.get('start')),
+                completed: moment(nextProps.modal.task.get('start')).add(nextProps.modal.task.get('duration'), 'minutes')
+            }, nextProps.modalsList.keySeq())
+        }
     }
 
     handleSetRating(rating) {
@@ -49,11 +59,11 @@ export default class ModalContent extends React.Component {
     }
 
     handleSetStarted(value) {
-        this.props.changeModalState({started: value})
+        this.props.changeModalState({ started: value })
     }
 
     handleSetCompleted(value) {
-        this.props.changeModalState({completed: value})
+        this.props.changeModalState({ completed: value })
     }
 
     handleResetTimes(e) {
@@ -66,7 +76,8 @@ export default class ModalContent extends React.Component {
 
     render() {
         const { modal, projectColorMap, settings, rating, started, completed } = this.props
-        const task = modal.task
+
+        const task = modal.task// ? modal.task : false
         const locale = settings.get('locale')
 
         const hiddenMinutes = ModalContent.generateHiddenMinutes()
@@ -74,7 +85,16 @@ export default class ModalContent extends React.Component {
         let overElements = null
         if ( modal.type === MODAL_TYPES.OVER && started && completed ) {
             overElements = (
-                <div className="modal-content-over-elements">
+                <div className="modal-content-over-elements w3-padding">
+                    <div className="modal-content-over-label">
+                        Scheduled
+                        <div
+                            className="modal-content-over-date"
+                            title={'The date is currently not adjustable here. If necessary, \nuse "Reschedule" and move it manually into the past.'}
+                        >
+                            {moment(task.get('start')).format('ll')}
+                            </div>
+                    </div>
                     <div className="modal-content-over-label">
                         Started
                         <TimePicker
@@ -117,29 +137,43 @@ export default class ModalContent extends React.Component {
             )
         }
 
-        return <div
-            className="modal-middle w3-theme-l5"
-        >
-            <div className="modal-middle-left w3-padding">
-                <TaskPreview
-                    projectColorMap={projectColorMap}
-                    task={task.toJSON()}
-                    locale={locale}
-                />
-                {modal.type === MODAL_TYPES.COMPLETION &&
-                <RatePicker
-                    setRating={::this.handleSetRating}
-                    rating={rating}
-                />
+        return <div className="modal-content-wrapper w3-theme-l5">
+            <div
+                className="modal-middle"
+            >
+                <div className="modal-middle-left w3-padding">
+                    <TaskPreview
+                        projectColorMap={projectColorMap}
+                        task={task.toJSON()}
+                        locale={locale}
+                    />
+                    {modal.type === MODAL_TYPES.COMPLETION || modal.type === MODAL_TYPES.OVER &&
+                    <RatePicker
+                        setRating={::this.handleSetRating}
+                        rating={rating}
+                    />
+                    }
+                </div>
+                {
+                    (modal.type === MODAL_TYPES.OVER)
+                        ?
+                    <div className="modal-middle-right w3-padding">
+                        <p>{'The task "' + task.get('title') + '" was scheduled in the past. '}</p>
+                        <p>Did you complete it? <br/> Enter your start and completion times.</p>
+                        <p>Did you miss it? <br/> Decide if you want to reschedule or remove the task.</p>
+                        <p>{task.get('description')}</p>
+                    </div>
+                        :
+                    <div className="modal-middle-right w3-padding">
+                        <p>{task.get('title')}</p>
+                        <p>End: {moment(task.get('start')).add(task.get('duration'), 'minutes').fromNow()}</p>
+                        {/* TODO: fix when description is added */ !task.get('description') &&
+                        <p>{task.get('description')}</p>}
+                    </div>
                 }
+
             </div>
-            <div className="modal-middle-right w3-padding">
-                <p>{task.get('title')}</p>
-                <p>End: {moment(task.get('start')).add(task.get('duration'), 'minutes').fromNow()}</p>
-                {/* TODO: fix when description is added */ !task.get('description') &&
-                <p>{task.get('description')} ...description here.</p>}
-                {overElements}
-            </div>
+            {overElements}
         </div>
     }
 }

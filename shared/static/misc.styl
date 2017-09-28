@@ -77,13 +77,6 @@
   line-height 43px
   margin 0 8px
 
-//.clock-wrapper
-//  position relative
-//  margin-left auto
-//  margin-right auto
-//  max-width 1200px
-//  pointer-events none
-
 .modal
   width 440px
   overflow hidden
@@ -119,9 +112,8 @@
 
 .modal-content-over-elements
   display grid
-  justify-items start
-  grid-column-gap 8px
-  grid-template-columns 1fr 1fr auto
+  grid-column-gap 16px
+  grid-template-columns 129px 1fr 1fr auto
 
 .modal-content-over-label
   display inline-block
@@ -130,6 +122,17 @@
   display block
   width 100px
   height 1.5rem
+
+.modal-content-over-date
+  background-color rgba(255,255,255,0.4)
+  border solid 1px $theme-border
+  border-radius 5px
+  cursor help
+  height 28px
+  //width 100px
+  text-align center
+  line-height 28px
+  color #444
 
 .rc-time-picker-panel-input
 .rc-time-picker-input
@@ -140,6 +143,7 @@
 .rc-time-picker-input
   border solid 1px $theme-border
   background-color rgba(255,255,255,0.8)
+  cursor pointer
 
 .rc-time-picker-panel-inner
   box-shadow 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12)
@@ -162,7 +166,7 @@
   border-radius 8px
   border solid 1px rgba(50,50,50,0.5)
   padding 2px
-  margin 8px 2px
+  margin 16px 2px
   width 109px
   grid-template-columns 1fr 1fr 1fr 1fr 1fr
   justify-items center

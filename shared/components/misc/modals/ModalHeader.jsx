@@ -6,17 +6,17 @@ import IconButton from '../IconButton'
 export default class ModalHeader extends React.Component {
 
     static propTypes = {
-        modalsOM: ImmutablePropTypes.orderedMap.isRequired,
-        currentModalKey: PropTypes.string.isRequired,
+        modalsList: ImmutablePropTypes.list.isRequired,
+        modalIndex: PropTypes.number.isRequired,
         handleNext: PropTypes.func.isRequired,
         handleBack: PropTypes.func.isRequired
     }
 
     render() {
-        const { modalsOM, currentModalKey, handleNext, handleBack } = this.props
+        const { modalsList, modalIndex, handleNext, handleBack } = this.props
 
-        const modal = modalsOM.get(currentModalKey)
-        const multiple = modalsOM.size > 1
+        const modal = modalsList.get(modalIndex)
+        const multiple = modalsList.size > 1
 
         const headerTitle = modal && modal.headerTitle ? modal.headerTitle : ''
 
@@ -33,7 +33,7 @@ export default class ModalHeader extends React.Component {
                 <div style={{
                     textAlign: 'center',
                     width: '100%'
-                }}>{(multiple ? `(${modalsOM.keySeq().keyOf(currentModalKey) + 1}/${modalsOM.size}) ` :
+                }}>{(multiple ? `(${modalIndex + 1}/${modalsList.size}) ` :
                      '') + headerTitle}</div>
                 {multiple &&
                 <IconButton

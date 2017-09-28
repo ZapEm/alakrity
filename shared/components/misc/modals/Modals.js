@@ -50,7 +50,7 @@ export class OverModal extends Modal {
         super(task, MODAL_TYPES.OVER)
 
         this.task = task
-        this.headerTitle = '"' + task.get('title') + '" is over.'
+        this.headerTitle = 'Over: ' + task.get('title')
         this.date = moment(task.get('start')).add(task.get('duration'), 'minutes')
     }
 }
