@@ -36,7 +36,7 @@ export default class ModalFooter extends React.Component {
 
     handleConfirmOver(e) {
         e.preventDefault()
-        this.props.taskActions.completeTask(this.props.modal.task, {
+        this.props.taskActions.confirmOverTask(this.props.modal.task, {
             rating: this.props.rating,
             started: this.props.started,
             completed: this.props.completed
@@ -51,6 +51,11 @@ export default class ModalFooter extends React.Component {
     handleAbort(e) {
         e.preventDefault()
         this.props.taskActions.rescheduleTask(this.props.modal.task, true)
+    }
+
+    handleRemoveTask(e){
+        e.preventDefault()
+        this.props.taskActions.removeOverTask(this.props.modal.task)
     }
 
     handleSnooze(e) {
@@ -136,7 +141,7 @@ export default class ModalFooter extends React.Component {
                     iconName="delete" //"event_busy" //"cancel" //"remove_circle_outline" //"skip_next"
                     label="Delete"
                     dangerLevel={DANGER_LEVELS.DANGER.hover}
-                    onClick={::this.handleReschedule}
+                    onClick={::this.handleRemoveTask}
                 />
             ]
         }

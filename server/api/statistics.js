@@ -1,7 +1,7 @@
+import moment from 'moment'
 import { STATISTIC_TYPES } from '../../shared/utils/enums'
 import * as rethink from './service/rethink'
 import handleError from './utils/handleError'
-import moment from 'moment'
 import { compileGlobalStatistics, compileUserStatistics } from './utils/statisticsCompilers'
 
 /**
@@ -27,10 +27,11 @@ export function recordStatistic(req, res) {
     }
 
 
-
     if ( statistic.type === STATISTIC_TYPES.TASK ) {
 
         rethink.record('statistics', statistic)
+               .then((response) => res.json(response))
+               .catch(err => handleError(res, err, 400))
     }
 }
 

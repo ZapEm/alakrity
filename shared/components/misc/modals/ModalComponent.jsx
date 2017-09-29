@@ -38,7 +38,6 @@ export default class ModalComponent extends React.Component {
             modalIndex: this.props.modalsList.size > 0 ? 0 : false,
             rating: false
         }
-        console.log(this.props.modalsList.size)
     }
 
     static handleNotification(modal) {

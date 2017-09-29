@@ -70,14 +70,12 @@ export const MASCOT_STATUS = Object.freeze(
         SPORT: 'SPORT',
         BREAK: 'BREAK',
         SLEEP: 'SLEEP',
-        //HAPPY: 'HAPPY',
+        CHORES: 'CHORES',
         HI: 'HI',
         BYE: 'BYE',
-        DENIED: 'DENIED'
+        DENIED: 'DENIED',
+        MEET: 'MEET',
+        HAPPY: 'HAPPY'
     }
 )
 
-export const projectToMascotStatus = Object.freeze({
-    ['asd']: MASCOT_STATUS.IDLE
-
-})

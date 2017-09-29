@@ -30,7 +30,17 @@ export function getMascotImage(status) {
                 require('img/sport3.png'),
                 require('img/sport4.png')
             ]
-        )
+        ),
+        [MASCOT_STATUS.HAPPY]: require('img/nap.png'),
+        [MASCOT_STATUS.CHORES]: getRandomItem(
+            [
+                require('img/clean.png'),
+                require('img/sweep.png'),
+                require('img/cook.png'),
+                require('img/groceries.png')
+            ]
+        ),
+        [MASCOT_STATUS.MEET]: require('img/idea.png')
     }
 
     return <img className="mascot-image" src={urlMap[status]} alt={status}/>

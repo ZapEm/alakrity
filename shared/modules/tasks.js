@@ -184,7 +184,8 @@ export function rescheduleTask(task, started = false) {
                 ? { [moment().startOf('isoWeek')]: TASK_STATUS.DEFAULT.key }
                 : TASK_STATUS.DEFAULT.key,
             started: false,
-            snooze: false
+            snooze: false,
+            extend: false
         })
 
         return started
@@ -276,9 +277,16 @@ export function confirmOverTask(task, { rating, completed, started }) {
     return (dispatch, getState) => {
         return dispatch(editTask(task)).then(Promise.all([
             dispatch(backendActions.updateModals()),
-            dispatch(statistics.recordBeginTask(task, { started: started }))
+            dispatch(statistics.recordBeginTask(task, { started: started, isOver: true }))
                 .then(dispatch(statistics.recordCompleteTask(task, { rating: rating, time: completed })))
         ]))
+    }
+}
+
+export function removeOverTask(task) {
+    return (dispatch) => {
+        return dispatch(removeTask(Immutable.Map.isMap(task) ? task.get('id') : task.id))
+            .then(dispatch(backendActions.updateModals()))
     }
 
 }

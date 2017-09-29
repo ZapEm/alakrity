@@ -1,10 +1,12 @@
+import { RESOLVED_NAME as SUCCESS } from '/utils/constants'
 import * as Immutable from 'immutable'
 import * as _ from 'lodash/object'
+import moment from 'moment'
+import { compileUser } from '../functions/compileStatistics'
 import { STATISTIC_TYPES } from '../utils/enums'
 import fetch from '../utils/fetcher'
-import moment from 'moment'
-import { RESOLVED_NAME as SUCCESS } from '/utils/constants'
-import { compileUser } from '../functions/compileStatistics'
+import { getMascotSplash, SPLASH_TYPES } from '../utils/helpers'
+import * as backendActions from './backend'
 //import { ReminderModal } from '../components/misc/Modals/Modals'
 
 
@@ -70,47 +72,62 @@ export function removeStatistic(id) {
  * Thunks:
  * */
 
-export function recordBeginTask(task, { started }) {
+export function recordBeginTask(task, { started, isOver = false }) {
     return (dispatch) => {
         started = moment.isMoment(started) ? started : moment(started)
-        started = started.isValid() ? started : moment()
 
-        const weekDate = started.startOf('isoWeek')
-        return dispatch(recordStatistic(
-            {
-                type: STATISTIC_TYPES.TASK,
-                weekDate: weekDate,
+        const weekDate = started.clone().startOf('isoWeek')
+        const startDelay = started.diff(moment(task.start), 'minutes')
 
-                id: (task.repeating ? weekDate.format('YYYY-WW_') : '') + task.id,
-                started: started,
-                startDelay: moment(task.start).diff(started, 'minutes'),
-                ...task.snooze !== 'none' && { snoozed: task.snooze },
-                task: _.pick(task, ['id', 'projectID', 'start', 'duration', 'title', 'repeating', 'special']),
+        return Promise.all([
+            dispatch(recordStatistic(
+                {
+                    type: STATISTIC_TYPES.TASK,
+                    weekDate: weekDate,
 
-            }
-        ))
+                    id: (task.repeating ? weekDate.format('YYYY-WW_') : '') + task.id,
+                    started: started,
+                    startDelay: startDelay,
+                    ...task.snooze !== 'none' && { snoozed: task.snooze },
+                    task: _.pick(task, ['id', 'projectID', 'start', 'duration', 'title', 'repeating', 'special'])
+
+                }
+            )),
+            (!isOver) ? [dispatch(backendActions.mascotSplash(getMascotSplash(SPLASH_TYPES.BEGIN, {
+                startDelay: startDelay
+            })))] : null
+        ])
     }
 }
 
 
 export function recordCompleteTask(task, { time, rating }) {
+    const completeDelay = moment(time).diff(moment(task.start).add(task.duration, 'minutes'), 'minutes')
+
     return (dispatch) => {
-        return dispatch(recordStatistic(
-            {
-                type: STATISTIC_TYPES.TASK,
-                id: task.id,
-                completed: time,
-                rating: rating ? rating : false,
-                extended: task.extend ? task.extend : false,
-                completeDelay: moment(task.start).add(task.duration, 'minutes').diff(time, 'minutes')
-            }
-        ))
+        return Promise.all([
+            dispatch(recordStatistic(
+                {
+                    type: STATISTIC_TYPES.TASK,
+                    id: task.id,
+                    completed: time,
+                    rating: rating ? rating : false,
+                    extended: task.extend ? task.extend : false,
+                    completeDelay: completeDelay
+                }
+            )),
+            dispatch(backendActions.mascotSplash(getMascotSplash(SPLASH_TYPES.COMPLETED, {
+                completeDelay: completeDelay,
+                rating: rating
+            })))
+        ])
     }
 }
 
 export function removeRecordedTask(task) {
     return (dispatch) => {
-        return dispatch(removeStatistic((task.repeating ? moment(task.started).startOf('isoWeek').format('YYYY-WW_') : '') + task.id))
+        return dispatch(removeStatistic((task.repeating ? moment(task.started).startOf('isoWeek').format('YYYY-WW_') :
+                                         '') + task.id))
     }
 }
 
@@ -134,3 +151,4 @@ export default function reducer(state = initialState, action) {
             return state
     }
 }
+
