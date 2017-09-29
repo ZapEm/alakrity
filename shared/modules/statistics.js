@@ -103,13 +103,14 @@ export function recordBeginTask(task, { started, isOver = false }) {
 
 export function recordCompleteTask(task, { time, rating }) {
     const completeDelay = moment(time).diff(moment(task.start).add(task.duration, 'minutes'), 'minutes')
+    const weekDate = time.clone().startOf('isoWeek')
 
     return (dispatch) => {
         return Promise.all([
             dispatch(recordStatistic(
                 {
                     type: STATISTIC_TYPES.TASK,
-                    id: task.id,
+                    id: (task.repeating ? weekDate.format('YYYY-WW_') : '') + task.id,
                     completed: time,
                     rating: rating ? rating : false,
                     extended: task.extend ? task.extend : false,
@@ -142,7 +143,8 @@ const initialState = Immutable.fromJS({
 export default function reducer(state = initialState, action) {
     switch (action.type) {
         case LOAD + SUCCESS:
-            return state.set('userStatistics', compileUser(action.payload.data))
+            console.log(action.payload.data)
+            return state.set('userStatistics', Immutable.fromJS(action.payload.data))
 
         case LOAD_GLOBAL + SUCCESS:
             return state.set('globalStatistics', Immutable.fromJS(action.payload.data))

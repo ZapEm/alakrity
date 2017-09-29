@@ -4,11 +4,11 @@ import React from 'react'
 import { DropTarget } from 'react-dnd'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import momentPropTypes from 'react-moment-proptypes'
-import { DndTypes } from '../../../utils/enums'
+import { DndTypes } from '/utils/enums'
 import { getTargetDate } from '../../dnd/dndFunctions'
 import CustomDragLayer from '../../dnd/TimetableDragLayer'
 import Column from './Column'
-import { dayTasksFilter, taskDayFilters } from '../../../utils/helpers'
+import { dayTasksFilter } from '/utils/helpers'
 
 let contentTarget = {
     drop(props, monitor) {

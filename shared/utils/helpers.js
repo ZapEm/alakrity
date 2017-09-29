@@ -69,7 +69,7 @@ export function getTaskListFilter(selection, projectID, filterByMoment) {
 }
 
 export function dayTasksFilter(task, date) {
-    if ( task.get('repeating') ) {
+    if ( !task.get('repeating') ) {
         return moment(task.get('start')).isSame(date, 'day')
     } else {
         return ((taskStartMoment) => (taskStartMoment.isSameOrBefore(date, 'day')
@@ -142,8 +142,12 @@ export function getMascotSplash(type, { startDelay, completeDelay, rating }) {
     }
 }
 
+export function getProjectFromTask(task, projectList) {
+    return Immutable.Map.isMap(task) ? projectList.find((project) => project.get('id') === task.get('projectID')) : false
+}
+
 export function getProjectTypeFromTask(task, projectList){
-    const project = Immutable.Map.isMap(task) ? projectList.find((project) => project.get('id') === task.get('projectID')) : false
+    const project = getProjectFromTask(task, projectList)
     return project ? project.get('type') : false
 }
 

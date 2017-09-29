@@ -1,24 +1,31 @@
 import * as Immutable from 'immutable'
-import * as _ from 'lodash'
+import moment from 'moment'
 import * as tasksCompilers from './tasksCompilers'
 
 
-export function compileUser(stats, weekDate = false) {
+export function compileUser(stats, weeks = 5) {
 
-    const tasksStats = !stats.task
-        ? false
-        : !weekDate
-                           ? _.flatMap(stats.task)
-                           : stats.task.weekDate
+    if ( !Immutable.Map.isMap(stats) ) {
+        stats = Immutable.fromJS(stats)
+    }
 
-    console.log('tasksStats:', tasksStats)
+    const sortedTaskStats = stats.get('task')
+                                 .sortBy((val, key) => moment(key),
+                                     (date1, date2) => {
+                                         // newest first
+                                         if ( date1.isBefore(date2) ) { return 1 }
+                                         if ( date1.isAfter(date2) ) { return -1 }
+                                         if ( date1.isSame(date2) ) { return 0 }
+                                     })
+                                 .take(weeks)
+
+    const numberOfWeeks = sortedTaskStats.size
 
     return Immutable.fromJS({
-        raw: stats,
         tasks: {
-            ...tasksCompilers.counter(tasksStats)
+            totals: tasksCompilers.counter(sortedTaskStats.flatten(true), numberOfWeeks),
+            byWeek: sortedTaskStats.map(weekStats => tasksCompilers.counter(weekStats))
         }
-
     })
 }
 
@@ -30,4 +37,3 @@ export function compileGlobal(stats) {
 
     })
 }
-

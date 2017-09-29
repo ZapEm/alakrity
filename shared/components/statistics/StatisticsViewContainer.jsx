@@ -35,11 +35,11 @@ export default class StatisticsViewContainer extends React.Component {
     }
 
     render() {
-        const { prop } = this.props
+        const { statistics } = this.props
 
         return <div className="statistics-view w3-card-4 w3-padding w3-round-large w3-border w3-border-theme">
             <ChartComponent
-                data={{}}
+                statistics={statistics}
             />
             lorem ipsum
         </div>

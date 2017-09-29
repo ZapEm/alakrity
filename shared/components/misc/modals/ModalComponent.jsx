@@ -153,6 +153,7 @@ export default class ModalComponent extends React.Component {
                         started={this.state.started}
                         completed={this.state.completed}
                         modalsList={this.props.modalsList}
+                        projectList={this.props.projectList}
                     />
                     <ModalFooter
                         modal={currentModal}

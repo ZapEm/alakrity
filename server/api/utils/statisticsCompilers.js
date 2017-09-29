@@ -4,7 +4,7 @@ export function compileUserStatistics(stats) {
 
 
     const compiled = group(stats)
-    console.log('\n--- USER STATISTICS ---\n', compiled, '\n-------------------\n')
+    //console.log('\n--- USER STATISTICS ---\n', compiled, '\n-------------------\n')
     return compiled
 }
 
@@ -13,7 +13,7 @@ export function compileGlobalStatistics(stats) {
 
 
     const compiled = group(anonymize(stats))
-    console.log('\n--- GLOBAL STATISTICS ---\n', compiled, '\n-------------------\n')
+    //console.log('\n--- GLOBAL STATISTICS ---\n', compiled, '\n-------------------\n')
     return compiled
 }
 

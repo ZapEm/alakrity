@@ -1,6 +1,13 @@
 import * as _ from 'lodash'
 
-export function counter(taskStats) {
+export function counter(taskStats, numberOfWeeks = 1) {
+
+    try {
+        taskStats = taskStats.toJS()
+    } catch (err) {
+        console.warn(err)
+    }
+
 
     let count = {
         total: 0,
@@ -43,7 +50,9 @@ export function counter(taskStats) {
     )
 
     count.averageRating = totalRated !== 0 ? totalRating / totalRated : 0
-    count.ratedRatio = count.total !== 0 || count.completed !== 0 ? totalRated / count.completed : 0
-    console.log('COUNT:', count)
+    count.ratedRatio = count.completed !== 0 ? totalRated / count.completed : 0
+
+    count.numberOfWeeks = numberOfWeeks
+
     return count
 }
