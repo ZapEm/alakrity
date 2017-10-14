@@ -9,21 +9,32 @@ export function compileUser(stats, weeks = 5) {
         stats = Immutable.fromJS(stats)
     }
 
-    const sortedTaskStats = stats.get('task')
-                                 .sortBy((val, key) => moment(key),
-                                     (date1, date2) => {
-                                         // newest first
-                                         if ( date1.isBefore(date2) ) { return 1 }
-                                         if ( date1.isAfter(date2) ) { return -1 }
-                                         if ( date1.isSame(date2) ) { return 0 }
-                                     })
-                                 .take(weeks)
+    // create padding with empty lists - for current and previous '#weeks' weeks
+    let weekKey = moment().startOf('isoWeek')
+    let taskStatsPadding = {}
+    for ( let i = 0; i <= weeks; i++ ) {
+        taskStatsPadding[weekKey.toISOString()] = Immutable.List()
+        weekKey.subtract(1, 'weeks')
+    }
 
-    const numberOfWeeks = sortedTaskStats.size
+    const sortedTaskStats = Immutable.Map(taskStatsPadding)
+                                     .merge(stats.get('task'))
+                                     .sortBy((val, key) => moment(key),
+                                         (date1, date2) => {
+                                             // newest first
+                                             if ( date1.isBefore(date2) ) { return 1 }
+                                             if ( date1.isAfter(date2) ) { return -1 }
+                                             if ( date1.isSame(date2) ) { return 0 }
+                                         })
+                                     .take(weeks+1)
+
+    // cut off trailing empty weeks
+    let truncatedSortedTaskStats = sortedTaskStats.skip(1).reverse().skipWhile(list => list.size === 0).reverse()
+    const numberOfPreviousWeeks = truncatedSortedTaskStats.size
 
     return Immutable.fromJS({
         tasks: {
-            totals: tasksCompilers.counter(sortedTaskStats.flatten(true), numberOfWeeks),
+            totals: tasksCompilers.counter(truncatedSortedTaskStats.flatten(true), numberOfPreviousWeeks),
             byWeek: sortedTaskStats.map(weekStats => tasksCompilers.counter(weekStats))
         }
     })

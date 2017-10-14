@@ -49,8 +49,8 @@ export function counter(taskStats, numberOfWeeks = 1) {
         }
     )
 
-    count.averageRating = totalRated !== 0 ? totalRating / totalRated : 0
-    count.ratedRatio = count.completed !== 0 ? totalRated / count.completed : 0
+    count.averageRating = totalRated !== 0 ? Math.round(totalRating / totalRated * 100) / 100 : 0
+    count.ratedRatio = count.completed !== 0 ? Math.round(totalRated / count.completed * 100) / 100 : 0
 
     count.numberOfWeeks = numberOfWeeks
 

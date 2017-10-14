@@ -58,37 +58,67 @@ export default class BarChartComponent extends React.Component {
         //     ]
         // }
 
-        return <div className="chart-container">
+        return <div className="stats-chart-container">
             <Bar
-                data={dataGenerators.getUserWeekVsTotalData(statistics, 5)}
+                data={dataGenerators.getCurrentVsPreviousAvgData2(statistics, 5)}
+                height={100}
                 options={
                     {
                         scales: {
                             yAxes: [
                                 {
                                     type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-                                    display: true,
-                                    position: 'left',
-                                    id: 'y-axis-default',
-                                    // gridLines: {
-                                    //     drawOnChartArea: false
-                                    // }
-                                },
-                                {
-                                    type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
                                     display: false,
-                                    id: 'y-axis-stars',
+                                    position: 'left',
+                                    id: 'y-absolute',
                                     gridLines: {
                                         drawOnChartArea: false
+                                    },
+                                    ticks:{
+                                        suggestedMax: 20,
+                                        min: 0
                                     }
                                 },
                                 {
-                                    type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-                                    display: true,
+                                    type: 'linear',
+                                    display: false,
+                                    id: 'y-stars',
+                                    gridLines: {
+                                        drawOnChartArea: true
+                                    },
+                                    ticks: {
+                                        min: 0,
+                                        max: 5
+                                    }
+                                },
+                                {
+                                    type: 'linear',
+                                    display: false,
                                     position: 'right',
-                                    id: 'y-axis-percent',
+                                    id: 'y-delay',
                                     gridLines: {
                                         drawOnChartArea: false
+                                    },
+                                    ticks:{
+                                        suggestedMax: 120,
+                                        min: 0
+                                    }
+                                },
+                                {
+                                    type: 'linear',
+                                    display: true,
+                                    position: 'left',
+                                    id: 'y-percent',
+                                    gridLines: {
+                                        drawOnChartArea: true
+                                    },
+                                    ticks: {
+                                        min: 0,
+                                        max: 100,
+                                        // Include a dollar sign in the ticks
+                                        callback: function(value, index, values) {
+                                            return ''
+                                        }
                                     }
                                 }
                             ]
