@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types'
 import React from 'react'
+import MomentPropTypes from 'react-moment-proptypes'
 import { DANGER_LEVELS } from '../../../utils/constants'
 import { MODAL_TYPES } from '../../../utils/enums'
 import LabeledIconButton from '../LabeledIconButton'
 import { Modal } from './Modals'
-import MomentPropTypes from 'react-moment-proptypes'
 
 export default class ModalFooter extends React.Component {
 
@@ -53,7 +53,7 @@ export default class ModalFooter extends React.Component {
         this.props.taskActions.rescheduleTask(this.props.modal.task, true)
     }
 
-    handleRemoveTask(e){
+    handleRemoveTask(e) {
         e.preventDefault()
         this.props.taskActions.removeOverTask(this.props.modal.task)
     }
@@ -72,11 +72,12 @@ export default class ModalFooter extends React.Component {
         const footers = {
             [MODAL_TYPES.REMINDER]: () => [
                 <LabeledIconButton
-                    key={0}
-                    iconName="play_circle_outline"//"slideshow"
-                    label="Begin"
-                    dangerLevel={DANGER_LEVELS.SAFE.hover}
-                    onClick={::this.handleBegin}
+                    key={2}
+                    iconName="timer_off" //"event_busy" //"cancel" //"remove_circle_outline" //"skip_next"
+                    label="Reschedule"
+                    tooltip={'Removes this task from the schedule.\nYou can reschedule it later.'}
+                    dangerLevel={DANGER_LEVELS.DANGER.hover}
+                    onClick={::this.handleReschedule}
                 />,
                 <LabeledIconButton
                     key={1}
@@ -87,21 +88,21 @@ export default class ModalFooter extends React.Component {
                     tooltip={'Remind again in 15 minutes.\n'}
                 />,
                 <LabeledIconButton
-                    key={2}
-                    iconName="timer_off" //"event_busy" //"cancel" //"remove_circle_outline" //"skip_next"
-                    label="Reschedule"
-                    tooltip={'Removes this task from the schedule.\nYou can reschedule it later.'}
-                    dangerLevel={DANGER_LEVELS.DANGER.hover}
-                    onClick={::this.handleReschedule}
+                    key={0}
+                    iconName="play_circle_outline"//"slideshow"
+                    label="Begin"
+                    dangerLevel={DANGER_LEVELS.SAFE.hover}
+                    onClick={::this.handleBegin}
                 />
+
             ],
             [MODAL_TYPES.COMPLETION]: () => [
                 <LabeledIconButton
-                    key={0}
-                    iconName="assignment_turned_in"//"slideshow"
-                    label="Complete"
-                    dangerLevel={DANGER_LEVELS.SAFE.hover}
-                    onClick={::this.handleComplete}
+                    key={2}
+                    iconName="cancel" //"event_busy" //"cancel" //"remove_circle_outline" //"skip_next"
+                    label="Abort"
+                    dangerLevel={DANGER_LEVELS.DANGER.hover}
+                    onClick={::this.handleAbort}
                 />,
                 <LabeledIconButton
                     key={1}
@@ -111,23 +112,20 @@ export default class ModalFooter extends React.Component {
                     onClick={::this.handleExtend}
                 />,
                 <LabeledIconButton
-                    key={2}
-                    iconName="cancel" //"event_busy" //"cancel" //"remove_circle_outline" //"skip_next"
-                    label="Abort"
-                    dangerLevel={DANGER_LEVELS.DANGER.hover}
-                    onClick={::this.handleAbort}
+                    key={0}
+                    iconName="assignment_turned_in"//"slideshow"
+                    label="Complete"
+                    dangerLevel={DANGER_LEVELS.SAFE.hover}
+                    onClick={::this.handleComplete}
                 />
             ],
             [MODAL_TYPES.OVER]: () => [
                 <LabeledIconButton
-                    key={0}
-                    iconName="save"//"slideshow"
-                    label="Confirm"
-                    dangerLevel={DANGER_LEVELS.SAFE.hover}
-                    onClick={::this.handleConfirmOver}
-                    disabled={!(this.props.started && this.props.completed)
-                        ? 'Please fill out start and completion times first.'
-                        : false}
+                    key={2}
+                    iconName="delete" //"event_busy" //"cancel" //"remove_circle_outline" //"skip_next"
+                    label="Delete"
+                    dangerLevel={DANGER_LEVELS.DANGER.hover}
+                    onClick={::this.handleRemoveTask}
                 />,
                 <LabeledIconButton
                     key={1}
@@ -137,11 +135,14 @@ export default class ModalFooter extends React.Component {
                     onClick={::this.handleReschedule}
                 />,
                 <LabeledIconButton
-                    key={2}
-                    iconName="delete" //"event_busy" //"cancel" //"remove_circle_outline" //"skip_next"
-                    label="Delete"
-                    dangerLevel={DANGER_LEVELS.DANGER.hover}
-                    onClick={::this.handleRemoveTask}
+                    key={0}
+                    iconName="save"//"slideshow"
+                    label="Confirm"
+                    dangerLevel={DANGER_LEVELS.SAFE.hover}
+                    onClick={::this.handleConfirmOver}
+                    disabled={!(this.props.started && this.props.completed)
+                        ? 'Please fill out start and completion times first.'
+                        : false}
                 />
             ]
         }

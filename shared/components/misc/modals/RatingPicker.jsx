@@ -8,13 +8,17 @@ export default class RatingPicker extends React.Component {
         rating: PropTypes.oneOfType([PropTypes.number, PropTypes.bool])
     }
 
-    handleClick(e){
+    handleClick(e) {
         e.preventDefault()
         this.props.setRating(+e.target.dataset.rating)
     }
 
     render() {
-        const { rating } = this.props
+        let { rating } = this.props
+
+        if ( rating === false ) {
+            rating = 0
+        }
 
         let stars = []
 

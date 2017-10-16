@@ -11,7 +11,7 @@ import { PROJECT_TYPES } from '../../../utils/enums'
 import TaskPreview from '../../dnd/TaskItemDragPreview'
 import IconButton from '../IconButton'
 import { Modal } from './Modals'
-import RatePicker from './RatingPicker'
+import RatingPicker from './RatingPicker'
 
 export default class ModalContent extends React.Component {
 
@@ -45,7 +45,8 @@ export default class ModalContent extends React.Component {
     componentWillMount() {
         this.props.changeModalState({
             started: moment(this.props.modal.task.get('start')),
-            completed: moment(this.props.modal.task.get('start')).add(this.props.modal.task.get('duration'), 'minutes')
+            completed: moment(this.props.modal.task.get('start')).add(this.props.modal.task.get('duration'), 'minutes'),
+            rating: false
         })
     }
 
@@ -53,7 +54,8 @@ export default class ModalContent extends React.Component {
         if ( nextProps.modal && this.props.modal !== nextProps.modal ) {
             this.props.changeModalState({
                 started: moment(nextProps.modal.task.get('start')),
-                completed: moment(nextProps.modal.task.get('start')).add(nextProps.modal.task.get('duration'), 'minutes')
+                completed: moment(nextProps.modal.task.get('start')).add(nextProps.modal.task.get('duration'), 'minutes'),
+                rating: false
             }, nextProps.modalsList.keySeq())
         }
     }
@@ -158,7 +160,7 @@ export default class ModalContent extends React.Component {
                         locale={locale}
                     />
                     {modal.type === MODAL_TYPES.COMPLETION || modal.type === MODAL_TYPES.OVER &&
-                    <RatePicker
+                    <RatingPicker
                         setRating={::this.handleSetRating}
                         rating={rating}
                     />
