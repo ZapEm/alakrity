@@ -48,3 +48,16 @@ export function compileGlobal(stats) {
 
     })
 }
+
+export function compileAppStats(timetable) {
+
+
+
+
+    return Immutable.fromJS({
+        timetable: {
+            totalWorkPlanned: 0,
+            projectWorkPlanned: {}
+        }
+    })
+}

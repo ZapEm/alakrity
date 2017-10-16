@@ -2,7 +2,7 @@ import { RESOLVED_NAME as SUCCESS } from '/utils/constants'
 import * as Immutable from 'immutable'
 import * as _ from 'lodash/object'
 import moment from 'moment'
-import { compileUser } from '../functions/compileStatistics'
+import { SPECIAL_PROJECTS } from '../utils/constants'
 import { STATISTIC_TYPES } from '../utils/enums'
 import fetch from '../utils/fetcher'
 import { getMascotSplash, SPLASH_TYPES } from '../utils/helpers'
@@ -114,7 +114,9 @@ export function recordCompleteTask(task, { time, rating }) {
                     completed: time,
                     rating: rating ? rating : false,
                     extended: task.extend ? task.extend : false,
-                    completeDelay: completeDelay
+                    completeDelay: completeDelay,
+                    timeInProject: 0,
+                    timeInBuffer: 0
                 }
             )),
             dispatch(backendActions.mascotSplash(getMascotSplash(SPLASH_TYPES.COMPLETED, {
@@ -154,3 +156,60 @@ export default function reducer(state = initialState, action) {
     }
 }
 
+
+/**
+ * Helpers:
+ * */
+
+
+/**
+ * Computes the time a task was worked on in Project or Buffer periods - in minutes.
+ * @param started
+ * @param completed
+ * @param projectID
+ * @param projectPeriods
+ * @returns {{inProject: number, inBuffer: number}}
+ */
+function getCoverage(started, completed, projectID, projectPeriods) {
+    started = moment(started).startOf('minute')
+    completed = moment(completed).startOf('minute')
+
+    let periodProjectID
+    let count = {
+        inProject: 0,
+        inBuffer: 0
+    }
+
+    let current = started.clone().startOf('hour').add((started.minutes() >= 30 ? 30 : 0), 'minutes')
+    for ( current; current.isBefore(completed); current.add(30, 'minutes') ) {
+        periodProjectID = momentToProjectID(current, projectPeriods)
+
+        const coverType = (projectID === periodProjectID)
+            ? 'inProject'
+            : (projectID === SPECIAL_PROJECTS.BUFFER.key)
+                              ? 'inBuffer'
+                              : false
+
+        if ( coverType !== false ) {
+            if ( started.diff(current, 'minutes') < 30 && completed.diff(current, 'minutes') < 30 ) {
+                count[coverType] += completed.diff(started, 'minutes')
+            } else if ( started.diff(current, 'minutes') < 30 ) {
+                count[coverType] += (30 - started.diff(current, 'minutes'))
+            } else if ( completed.diff(current, 'minutes') < 30 ) {
+                count[coverType] += (completed.diff(current, 'minutes'))
+            } else {
+                count[coverType] += 30
+            }
+        }
+    }
+
+    return count
+}
+
+
+function momentToProjectID(m, projectPeriods) {
+    const day = m.isoWeekday() - 1
+    const slot = m.hours() * 2 + Math.floor(m.minutes() / 30) // only for 2 step timetables
+
+    return projectPeriods.selection[day][slot]
+}

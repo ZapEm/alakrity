@@ -1,101 +1,16 @@
 import * as Immutable from 'immutable'
+import moment from 'moment'
 import tinycolor from 'tinycolor2'
-import { compileUser } from '../../functions/compileStatistics'
 import { PROJECT_COLORS } from '../../utils/constants'
 
-export function getUserTotalData(statistics, weeks) {
 
-    if ( !statistics.get('userStatistics').size > 0 ) {
-        return {
-            labels: [],
-            datasets: []
-        }
-    }
-    const userTotals = compileUser(statistics.get('userStatistics'), weeks).getIn(['tasks', 'totals'])
+export function getCurrentVsPreviousAvgData(compiledStats, appStats) {
 
-    return {
-        labels: ['Last ' + weeks + ' weeks'],
-        datasets: []//getDataSets(userTotals)
-    }
-}
+    const userTotals = mapToLabels(compiledStats.getIn(['tasks', 'totals']), appStats)
+    const userWeek = mapToLabels(compiledStats.getIn(['tasks', 'byWeek']).first(), appStats)
 
-export function getCurrentVsPreviousAvgData(statistics, weeks = 5) {
+    const numberOfWeeks = compiledStats.getIn(['tasks', 'totals', 'numberOfWeeks'])
 
-    if ( statistics.get('userStatistics').size <= 0 ) {
-        return {
-            labels: [],
-            datasets: []
-        }
-    }
-
-    const compiled = compileUser(statistics.get('userStatistics'), weeks)
-    const userTotals = mapToLabels(compiled.getIn(['tasks', 'totals']))
-    const userWeek = mapToLabels(compiled.getIn(['tasks', 'byWeek']).first())
-
-    const numberOfWeeks = compiled.getIn(['tasks', 'totals', 'numberOfWeeks'])
-
-    return {
-        labels: userTotals.keySeq().toArray(),
-        datasets: [
-            {
-                label: 'Previous ' + numberOfWeeks + ' weeks avg.',
-                backgroundColor: 'rgba(255,99,132,0.2)',
-                borderColor: 'rgba(255,99,132,1)',
-                borderWidth: 1,
-                hoverBackgroundColor: 'rgba(255,99,132,0.4)',
-                hoverBorderColor: 'rgba(255,99,132,1)',
-                data: userTotals.toArray()
-            },
-            {
-                label: 'This Week',
-                backgroundColor: 'rgba(99,255,132,0.2)',
-                borderColor: 'rgba(99,255,132,1)',
-                borderWidth: 1,
-                hoverBackgroundColor: 'rgba(99,255,132,0.4)',
-                hoverBorderColor: 'rgba(99,255,132,1)',
-                data: userWeek.toArray()
-            }
-        ]
-    }
-}
-
-export function getCurrentVsPreviousAvgData2(statistics, weeks = 5) {
-
-    if ( statistics.get('userStatistics').size <= 0 ) {
-        return {
-            labels: [],
-            datasets: []
-        }
-    }
-
-    const compiled = compileUser(statistics.get('userStatistics'), weeks)
-    const userTotals = mapToLabels(compiled.getIn(['tasks', 'totals']))
-    const userWeek = mapToLabels(compiled.getIn(['tasks', 'byWeek']).first())
-
-    const numberOfWeeks = compiled.getIn(['tasks', 'totals', 'numberOfWeeks'])
-
-    const keyMap = {
-        'Completed': {
-            yAxisID: 'y-absolute',
-            color: PROJECT_COLORS[1]
-        },
-        'Avg. Rating': {
-            yAxisID: 'y-stars',
-            color: PROJECT_COLORS[6]
-        },
-        'Start Delay': {
-            yAxisID: 'y-delay',
-            color: PROJECT_COLORS[3]
-        },
-        'Completion Delay': {
-            yAxisID: 'y-delay',
-            color: PROJECT_COLORS[4]
-        },
-        'Completion Percent': {
-            yAxisID: 'y-percent',
-            color: PROJECT_COLORS[5]
-        }
-    }
 
     let datasets = []
     userWeek.forEach((value, key) => {
@@ -114,22 +29,79 @@ export function getCurrentVsPreviousAvgData2(statistics, weeks = 5) {
     }
 }
 
+export function getWeeklyLineData(compiledStats) {
 
-function mapToLabels(precompiledStats) {
-    if ( !Immutable.Map.isMap(precompiledStats) ) {
-        precompiledStats = Immutable.Map(precompiledStats)
+    //const userTotals = mapToLabels(compiledStats.getIn(['tasks', 'totals']))
+    const allWeeks = compiledStats.getIn(['tasks', 'byWeek']).reverse().map(weekStats => mapToLabels(weekStats))
+
+    //const numberOfWeeks = compiledStats.getIn(['tasks', 'totals', 'numberOfWeeks'])
+
+    //console.log(allWeeks, allWeeks.first())
+
+    let datasets = []
+    allWeeks.first().forEach((value, key) => {
+        datasets.push({
+            label: key,
+            yAxisID: keyMap[key].yAxisID,
+            borderWidth: 2,
+            fill: false,
+            lineTension: 0,
+            ...getLineColors(keyMap[key].color),
+            data: allWeeks.map(week => week.get(key)).toArray()
+        })
+    })
+
+    return {
+        labels: allWeeks.map((week, key) => moment(key).format('L')).toArray(),
+        datasets: datasets
     }
+}
 
-    const total = precompiledStats.get('total')
+
+function mapToLabels(precompiledStats, appStats) {
+    if ( !Immutable.Map.isMap(precompiledStats) ) { precompiledStats = Immutable.Map(precompiledStats) }
+    if ( !Immutable.Map.isMap(appStats) ) { appStats = Immutable.Map(appStats) }
+
+    //const total = precompiledStats.get('total')
     const numberOfWeeks = precompiledStats.get('numberOfWeeks')
 
     return Immutable.fromJS({
-        'Completed': precompiledStats.get('completed') / numberOfWeeks,
-        'Avg. Rating': precompiledStats.get('averageRating'),
-        'Start Delay': precompiledStats.get('totalStartDelay') / numberOfWeeks,
-        'Completion Delay': precompiledStats.get('totalCompletionDelay') / numberOfWeeks,
-        'Completion Percent': total > 0 ? (precompiledStats.get('completed') / total) * 100 : 0
+        [keyMap.COMPLETED.label]: precompiledStats.get('completed') / numberOfWeeks,
+        [keyMap.AVG_RATING.label]: precompiledStats.get('averageRating'),
+        [keyMap.START_DELAY.label]: precompiledStats.get('totalStartDelay') / numberOfWeeks,
+        [keyMap.COMPLETION_DELAY.label]: precompiledStats.get('totalCompletionDelay') / numberOfWeeks,
+        ...(appStats.size !== 0) && {
+            [keyMap.COVERAGE.label]: ''
+        }
     })
+}
+
+const keyMap = {
+    COMPLETED: {
+        label: 'Completed',
+        yAxisID: 'y-absolute',
+        color: PROJECT_COLORS[1]
+    },
+    AVG_RATING: {
+        label: 'Avg. Rating',
+        yAxisID: 'y-stars',
+        color: PROJECT_COLORS[6]
+    },
+    START_DELAY: {
+        label: 'Start Delay',
+        yAxisID: 'y-delay',
+        color: PROJECT_COLORS[3]
+    },
+    COMPLETION_DELAY: {
+        label: 'Completion Delay',
+        yAxisID: 'y-delay',
+        color: PROJECT_COLORS[4]
+    },
+    COVERAGE: {
+        label: 'Coverage Percent',
+        yAxisID: 'y-percent',
+        color: PROJECT_COLORS[7]
+    }
 }
 
 function getBarColors(color) {
@@ -140,3 +112,13 @@ function getBarColors(color) {
         hoverBorderColor: tinycolor(color).darken(20).toRgbString()
     }
 }
+
+function getLineColors(color) {
+    return {
+        backgroundColor: tinycolor(color).setAlpha(0.6).toRgbString(),
+        borderColor: tinycolor(color).darken(20).toRgbString(),
+        hoverBackgroundColor: tinycolor(color).setAlpha(0.8).toRgbString(),
+        hoverBorderColor: tinycolor(color).darken(20).toRgbString()
+    }
+}
+

@@ -1,4 +1,5 @@
 import * as _ from 'lodash'
+import moment from 'moment'
 
 export function counter(taskStats, numberOfWeeks = 1) {
 
@@ -18,7 +19,9 @@ export function counter(taskStats, numberOfWeeks = 1) {
         delayedCompletions: 0,
         totalCompletionDelay: 0,
         totalSnooze: 0,
-        totalExtended: 0
+        totalExtended: 0,
+        totalWorkTime: 0,
+        projectWorkTime: {}
         // averageRating: 0,
         // ratedRatio: 0
     }
@@ -35,6 +38,14 @@ export function counter(taskStats, numberOfWeeks = 1) {
                     totalRated++
                     totalRating += taskStat.rating
                 }
+                if ( taskStat.started ) {
+                    const workDuration = moment(taskStat.completed).diff(taskStat.started, 'minutes')
+                    count.totalWorkTime += (workDuration > 0) ? workDuration : 0
+                    if ( !count.projectWorkTime[taskStat.task.projectID] ) { count.projectWorkTime[taskStat.task.projectID] = 0 }
+                    count.projectWorkTime[taskStat.task.projectID] += (workDuration > 0)
+                        ? workDuration
+                        : 0
+                }
             }
             if ( taskStat.startDelay ) {
                 count.delayedStarts++
@@ -45,7 +56,7 @@ export function counter(taskStats, numberOfWeeks = 1) {
                 count.totalCompletionDelay += taskStat.completeDelay
             }
             if ( taskStat.snooze ) { count.totalSnooze += taskStat.snooze }
-            if ( taskStat.extended ) {count.totalExtended += taskStat.extended }
+            if ( taskStat.extended ) { count.totalExtended += taskStat.extended }
         }
     )
 
