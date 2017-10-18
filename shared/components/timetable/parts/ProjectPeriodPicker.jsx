@@ -78,21 +78,21 @@ export default class ProjectPeriodPicker extends React.Component {
                 label: 'Clear',
                 key: '_0-clear',
                 dataId: '',
-                specialProject: SPECIAL_PROJECTS.CLEAR,
+                specialProject: SPECIAL_PROJECTS._CLEAR,
                 iconName: 'clear'
             }),
             this.renderSpecialProjects({
                 label: 'Buffer',
                 key: '_1-buffer',
-                dataId: 'BUFFER',
-                specialProject: SPECIAL_PROJECTS.BUFFER,
+                dataId: SPECIAL_PROJECTS._BUFFER.key,
+                specialProject: SPECIAL_PROJECTS._BUFFER,
                 iconName: 'swap_calls' // 'cached' //'filter_drama'
             }),
             this.renderSpecialProjects({
                 label: 'Break',
                 key: '_2-break',
-                dataId: 'BREAK',
-                specialProject: SPECIAL_PROJECTS.BREAK,
+                dataId: SPECIAL_PROJECTS._BREAK.key,
+                specialProject: SPECIAL_PROJECTS._BREAK,
                 iconName: 'restaurant'
             })
         ]

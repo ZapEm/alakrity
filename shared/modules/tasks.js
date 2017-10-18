@@ -268,6 +268,8 @@ export function confirmOverTask(task, { rating, completed, started }) {
     }
 
     task = _merge({}, task, {
+        started: started,
+        completed: completed,
         status: task.repeating
             ? { [moment().startOf('isoWeek')]: TASK_STATUS.DONE.key }
             : TASK_STATUS.DONE.key
@@ -278,7 +280,7 @@ export function confirmOverTask(task, { rating, completed, started }) {
         return dispatch(editTask(task)).then(Promise.all([
             dispatch(backendActions.updateModals()),
             dispatch(statistics.recordBeginTask(task, { started: started, isOver: true }))
-                .then(dispatch(statistics.recordCompleteTask(task, { rating: rating, time: completed })))
+                .then(dispatch(statistics.recordCompleteTask(task, { rating: rating })))
         ]))
     }
 }
@@ -300,19 +302,16 @@ export function completeTask(task, options = { rating: false }) {
     return (dispatch, getState) => {
 
         task = _merge({}, task, {
+            completed: moment(),
             status: task.repeating
                 ? { [moment().startOf('isoWeek')]: TASK_STATUS.DONE.key }
                 : TASK_STATUS.DONE.key
         })
 
-        const newOptions = _merge({}, options, {
-            time: moment()
-        })
-
         return dispatch(editTask(task))
             .then(Promise.all([
                     dispatch(backendActions.updateModals()),
-                    dispatch(statistics.recordCompleteTask(task, newOptions))
+                    dispatch(statistics.recordCompleteTask(task, options))
                 ])
             )
     }

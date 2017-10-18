@@ -101,22 +101,21 @@ export function recordBeginTask(task, { started, isOver = false }) {
 }
 
 
-export function recordCompleteTask(task, { time, rating }) {
-    const completeDelay = moment(time).diff(moment(task.start).add(task.duration, 'minutes'), 'minutes')
-    const weekDate = time.clone().startOf('isoWeek')
+export function recordCompleteTask(task, { rating }) {
+    const completeDelay = moment(task.completed).diff(moment(task.start).add(task.duration, 'minutes'), 'minutes')
+    const weekDate = task.completed.clone().startOf('isoWeek')
 
-    return (dispatch) => {
+    return (dispatch, getState) => {
         return Promise.all([
             dispatch(recordStatistic(
                 {
                     type: STATISTIC_TYPES.TASK,
                     id: (task.repeating ? weekDate.format('YYYY-WW_') : '') + task.id,
-                    completed: time,
+                    completed: task.completed,
                     rating: rating ? rating : false,
                     extended: task.extend ? task.extend : false,
                     completeDelay: completeDelay,
-                    timeInProject: 0,
-                    timeInBuffer: 0
+                    ...getCoverage(task.started, task.completed, task.projectID, getState().timetables.getIn(['timetable', 'projectPeriods']))
                 }
             )),
             dispatch(backendActions.mascotSplash(getMascotSplash(SPLASH_TYPES.COMPLETED, {
@@ -167,8 +166,8 @@ export default function reducer(state = initialState, action) {
  * @param started
  * @param completed
  * @param projectID
- * @param projectPeriods
- * @returns {{inProject: number, inBuffer: number}}
+ * @param projectPeriods from state.timetables.get('timetable')
+ * @returns {{timeInProject: number, timeInBuffer: number}}
  */
 function getCoverage(started, completed, projectID, projectPeriods) {
     started = moment(started).startOf('minute')
@@ -176,33 +175,47 @@ function getCoverage(started, completed, projectID, projectPeriods) {
 
     let periodProjectID
     let count = {
-        inProject: 0,
-        inBuffer: 0
+        timeInProject: 0,
+        timeInBuffer: 0
     }
 
     let current = started.clone().startOf('hour').add((started.minutes() >= 30 ? 30 : 0), 'minutes')
     for ( current; current.isBefore(completed); current.add(30, 'minutes') ) {
         periodProjectID = momentToProjectID(current, projectPeriods)
 
-        const coverType = (projectID === periodProjectID)
-            ? 'inProject'
-            : (projectID === SPECIAL_PROJECTS.BUFFER.key)
-                              ? 'inBuffer'
+        // select were to add the worked time. Has to match the count Object.
+        const coverType = (periodProjectID === projectID)
+            ? 'timeInProject'
+            : (periodProjectID === SPECIAL_PROJECTS._BUFFER.key)
+                              ? 'timeInBuffer'
                               : false
 
         if ( coverType !== false ) {
-            if ( started.diff(current, 'minutes') < 30 && completed.diff(current, 'minutes') < 30 ) {
+            const startedToCurrent = started.diff(current, 'minutes')
+            const completedFromCurrent = completed.diff(current, 'minutes')
+            console.log('coverType', coverType, '--- sTC', startedToCurrent, '/ cFC', completedFromCurrent)
+
+            if ( 0 < startedToCurrent && startedToCurrent < 30 && 0 < completedFromCurrent && completedFromCurrent < 30 ) {
+                // whole task worked inside one slot =
+                console.log('Inside Slot > add', completed.diff(started, 'minutes'))
                 count[coverType] += completed.diff(started, 'minutes')
-            } else if ( started.diff(current, 'minutes') < 30 ) {
-                count[coverType] += (30 - started.diff(current, 'minutes'))
-            } else if ( completed.diff(current, 'minutes') < 30 ) {
-                count[coverType] += (completed.diff(current, 'minutes'))
+            } else if ( 0 < startedToCurrent && startedToCurrent < 30 ) {
+                // started after slot start
+                console.log('Start After Slot > add', 30 - startedToCurrent)
+                count[coverType] += (30 - startedToCurrent)
+            } else if ( 0 < completedFromCurrent && completedFromCurrent < 30 ) {
+                // completed before slot end
+                console.log('Completed Before Slot > add', completedFromCurrent)
+                count[coverType] += completedFromCurrent
             } else {
+                // fully filling slot
+                console.log('Filling Slot > add', 30)
                 count[coverType] += 30
             }
         }
     }
 
+    console.log('COVERAGE!', count)
     return count
 }
 
@@ -211,5 +224,5 @@ function momentToProjectID(m, projectPeriods) {
     const day = m.isoWeekday() - 1
     const slot = m.hours() * 2 + Math.floor(m.minutes() / 30) // only for 2 step timetables
 
-    return projectPeriods.selection[day][slot]
+    return projectPeriods.get('selection').toJS()[day][slot]
 }

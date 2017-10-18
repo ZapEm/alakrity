@@ -17,14 +17,14 @@ export const PROJECT_COLORS = [
 
 export const SPECIAL_PROJECTS = Object.freeze(
     {
-        CLEAR: {
+        _CLEAR: {
             title: 'Clear',
             key: '_CLEAR',
             dark: '#777777',
             normal: '#cccccc',
             light: '#eeeeee'
         },
-        BUFFER: {
+        _BUFFER: {
             title: 'Buffer',
             key: '_BUFFER',
             dark: '#5673a6',
@@ -32,7 +32,7 @@ export const SPECIAL_PROJECTS = Object.freeze(
             light: '#b5d1ff',
             backgroundPattern: `${generateRepeatingLinearLines(255, 255, 255, 0.4, 0, 5)}, ${generateRepeatingLinearLines(255, 255, 255, 0.4, 90, 5)}`
         },
-        BREAK: {
+        _BREAK: {
             title: 'Break',
             key: '_BREAK',
             dark: '#48774c',

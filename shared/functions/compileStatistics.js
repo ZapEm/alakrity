@@ -49,7 +49,7 @@ export function compileGlobal(stats) {
     })
 }
 
-export function compileAppStats(timetable) {
+export function compileTimetableStats(timetable) {
 
 
 

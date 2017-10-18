@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import * as React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import { connect } from 'react-redux'
-import { compileAppStats, compileUser } from '../../functions/compileStatistics'
+import { compileTimetableStats, compileUser } from '../../functions/compileStatistics'
 import { getProjectColorMap } from '../../utils/helpers'
 import DetailLineChart from './DetailLineChart'
 import OverviewBarChart from './OverviewBarChart'
@@ -48,7 +48,7 @@ export default class StatisticsViewContainer extends React.Component {
             ? compileUser(statistics.get('userStatistics'), 5)
             : false
 
-        const appStats = compileAppStats(timetable)
+        const appStats = compileTimetableStats(timetable)
 
         if (!compiled){
             return <div className="statistics-view w3-card-4 w3-padding w3-round-large w3-border w3-border-theme"/>

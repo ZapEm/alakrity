@@ -6,21 +6,27 @@ import { PROJECT_COLORS } from '../../utils/constants'
 
 export function getCurrentVsPreviousAvgData(compiledStats, appStats) {
 
-    const userTotals = mapToLabels(compiledStats.getIn(['tasks', 'totals']), appStats)
-    const userWeek = mapToLabels(compiledStats.getIn(['tasks', 'byWeek']).first(), appStats)
+    const userTotals = mapToKeys(compiledStats.getIn(['tasks', 'totals']), appStats)
+    const userWeek = mapToKeys(compiledStats.getIn(['tasks', 'byWeek']).first(), appStats)
 
     const numberOfWeeks = compiledStats.getIn(['tasks', 'totals', 'numberOfWeeks'])
 
 
     let datasets = []
     userWeek.forEach((value, key) => {
-        datasets.push({
-            label: key,
-            yAxisID: keyMap[key].yAxisID,
-            borderWidth: 1,
-            ...getBarColors(keyMap[key].color),
-            data: [userTotals.get(key), value]
-        })
+        const dataType = keyMap[key]
+        if ( dataType ) {
+            datasets.push({
+                label: dataType.label,
+                yAxisID: dataType.yAxisID,
+                borderWidth: 1,
+                ...getBarColors(dataType.color),
+                data: [userTotals.get(key), value]
+            })
+        } else {
+            console.warn('"', key, '" is not in keyMap!')
+        }
+
     })
 
     return {
@@ -32,7 +38,7 @@ export function getCurrentVsPreviousAvgData(compiledStats, appStats) {
 export function getWeeklyLineData(compiledStats) {
 
     //const userTotals = mapToLabels(compiledStats.getIn(['tasks', 'totals']))
-    const allWeeks = compiledStats.getIn(['tasks', 'byWeek']).reverse().map(weekStats => mapToLabels(weekStats))
+    const allWeeks = compiledStats.getIn(['tasks', 'byWeek']).reverse().map(weekStats => mapToKeys(weekStats))
 
     //const numberOfWeeks = compiledStats.getIn(['tasks', 'totals', 'numberOfWeeks'])
 
@@ -40,15 +46,20 @@ export function getWeeklyLineData(compiledStats) {
 
     let datasets = []
     allWeeks.first().forEach((value, key) => {
-        datasets.push({
-            label: key,
-            yAxisID: keyMap[key].yAxisID,
-            borderWidth: 2,
-            fill: false,
-            lineTension: 0,
-            ...getLineColors(keyMap[key].color),
-            data: allWeeks.map(week => week.get(key)).toArray()
-        })
+        const dataType = keyMap[key]
+        if ( dataType ) {
+            datasets.push({
+                label: dataType.label,
+                yAxisID: dataType.yAxisID,
+                borderWidth: 2,
+                fill: false,
+                lineTension: 0,
+                ...getLineColors(dataType.color),
+                data: allWeeks.map(week => week.get(key)).toArray()
+            })
+        } else {
+            console.warn('"', key, '" is not in keyMap!!')
+        }
     })
 
     return {
@@ -58,7 +69,7 @@ export function getWeeklyLineData(compiledStats) {
 }
 
 
-function mapToLabels(precompiledStats, appStats) {
+function mapToKeys(precompiledStats, appStats) {
     if ( !Immutable.Map.isMap(precompiledStats) ) { precompiledStats = Immutable.Map(precompiledStats) }
     if ( !Immutable.Map.isMap(appStats) ) { appStats = Immutable.Map(appStats) }
 
@@ -66,38 +77,44 @@ function mapToLabels(precompiledStats, appStats) {
     const numberOfWeeks = precompiledStats.get('numberOfWeeks')
 
     return Immutable.fromJS({
-        [keyMap.COMPLETED.label]: precompiledStats.get('completed') / numberOfWeeks,
-        [keyMap.AVG_RATING.label]: precompiledStats.get('averageRating'),
-        [keyMap.START_DELAY.label]: precompiledStats.get('totalStartDelay') / numberOfWeeks,
-        [keyMap.COMPLETION_DELAY.label]: precompiledStats.get('totalCompletionDelay') / numberOfWeeks,
+        [keyMap.COMPLETED.key]: precompiledStats.get('completed') / numberOfWeeks,
+        [keyMap.AVG_RATING.key]: precompiledStats.get('averageRating'),
+        [keyMap.START_DELAY.key]: precompiledStats.get('totalStartDelay') / numberOfWeeks,
+        [keyMap.COMPLETION_DELAY.key]: precompiledStats.get('totalCompletionDelay') / numberOfWeeks,
         ...(appStats.size !== 0) && {
-            [keyMap.COVERAGE.label]: ''
+            [keyMap.COVERAGE.key]: ''
         }
     })
 }
 
+
 const keyMap = {
     COMPLETED: {
+        key: 'COMPLETED',
         label: 'Completed',
         yAxisID: 'y-absolute',
         color: PROJECT_COLORS[1]
     },
     AVG_RATING: {
+        key: 'AVG_RATING',
         label: 'Avg. Rating',
         yAxisID: 'y-stars',
         color: PROJECT_COLORS[6]
     },
     START_DELAY: {
+        key: 'START_DELAY',
         label: 'Start Delay',
         yAxisID: 'y-delay',
         color: PROJECT_COLORS[3]
     },
     COMPLETION_DELAY: {
+        key: 'COMPLETION_DELAY',
         label: 'Completion Delay',
         yAxisID: 'y-delay',
         color: PROJECT_COLORS[4]
     },
     COVERAGE: {
+        key: 'COVERAGE',
         label: 'Coverage Percent',
         yAxisID: 'y-percent',
         color: PROJECT_COLORS[7]
