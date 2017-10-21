@@ -4,6 +4,7 @@ import * as _ from 'lodash/object'
 import { merge as _merge } from 'lodash/object'
 import moment from 'moment'
 import PropTypes from 'prop-types'
+import MomentPropTypes from 'react-moment-proptypes'
 import React from 'react'
 
 import { DragSource } from 'react-dnd'
@@ -95,7 +96,8 @@ export default class Task extends React.Component {
         locale: PropTypes.string.isRequired,
         editMode: PropTypes.bool,
         editTaskStart: PropTypes.func,
-        setEditingTask: PropTypes.func
+        setEditingTask: PropTypes.func,
+        displayMoment: MomentPropTypes.moment
     }
 
     static defaultProps = {
@@ -158,7 +160,7 @@ export default class Task extends React.Component {
     render() {
         const {
             task, taskActions: { removeTask }, editable, draggable, connectDragSource, isDragging, dragShadow, liWrapper,
-            projectColorMap, locale
+            projectColorMap, locale, displayMoment
         } = this.props
 
 
@@ -166,8 +168,10 @@ export default class Task extends React.Component {
             return null
         }
 
-        const status = (editable || task.get('status') !== TASK_STATUS.SCHEDULED.key) ?
-                       TASK_STATUS[task.get('status')] : false
+        const taskStatus = displayMoment ? getTaskStatus(task, displayMoment.clone().startOf('isoWeek')) : task.get('status')
+        const status = (editable || taskStatus !== TASK_STATUS.SCHEDULED.key) ?
+                       TASK_STATUS[taskStatus] : false
+
 
         const durationCutoff = task.get('duration') >= 90
 
@@ -244,7 +248,7 @@ export default class Task extends React.Component {
                 >
                     {status && status.icon &&
                     <div
-                        className="material-icons w3-display-topleft task-status-icon"
+                        className={'material-icons w3-display-topleft task-status-icon' + (task.get('duration') < 60 ? ' small' : '')}
                         title={iconTooltip}
                     >
                         {status.icon}

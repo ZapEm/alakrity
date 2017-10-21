@@ -174,7 +174,7 @@ function getCoverage(started, completed, projectID, projectPeriods) {
     completed = moment(completed).startOf('minute')
 
     let periodProjectID
-    let count = {
+    let coveredTimes = {
         timeInProject: 0,
         timeInBuffer: 0
     }
@@ -193,30 +193,23 @@ function getCoverage(started, completed, projectID, projectPeriods) {
         if ( coverType !== false ) {
             const startedToCurrent = started.diff(current, 'minutes')
             const completedFromCurrent = completed.diff(current, 'minutes')
-            console.log('coverType', coverType, '--- sTC', startedToCurrent, '/ cFC', completedFromCurrent)
 
             if ( 0 < startedToCurrent && startedToCurrent < 30 && 0 < completedFromCurrent && completedFromCurrent < 30 ) {
-                // whole task worked inside one slot =
-                console.log('Inside Slot > add', completed.diff(started, 'minutes'))
-                count[coverType] += completed.diff(started, 'minutes')
+                // whole task worked inside one slot
+                coveredTimes[coverType] += completed.diff(started, 'minutes')
             } else if ( 0 < startedToCurrent && startedToCurrent < 30 ) {
                 // started after slot start
-                console.log('Start After Slot > add', 30 - startedToCurrent)
-                count[coverType] += (30 - startedToCurrent)
+                coveredTimes[coverType] += (30 - startedToCurrent)
             } else if ( 0 < completedFromCurrent && completedFromCurrent < 30 ) {
                 // completed before slot end
-                console.log('Completed Before Slot > add', completedFromCurrent)
-                count[coverType] += completedFromCurrent
+                coveredTimes[coverType] += completedFromCurrent
             } else {
                 // fully filling slot
-                console.log('Filling Slot > add', 30)
-                count[coverType] += 30
+                coveredTimes[coverType] += 30
             }
         }
     }
-
-    console.log('COVERAGE!', count)
-    return count
+    return coveredTimes
 }
 
 

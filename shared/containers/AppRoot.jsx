@@ -21,6 +21,7 @@ import { checkWorking } from '../utils/stateChecks'
     isWorking: checkWorking(state),
     isAuthenticated: state.auth.get('isAuthenticated'),
     message: state.auth.get('message') || '',
+    userID: state.auth.getIn(['user', 'id']),
     settings: state.settings,
     taskList: state.tasks.get('taskList'),
     currentPath: state.routing.locationBeforeTransitions.pathname || '/'
@@ -35,7 +36,8 @@ export default class AppRoot extends React.Component {
         taskList: ImmutablePropTypes.list,
         dispatch: PropTypes.func,
         currentPath: PropTypes.string,
-        settings: ImmutablePropTypes.map
+        settings: ImmutablePropTypes.map,
+        userID: PropTypes.string
     }
 
     static childContextTypes = {
@@ -45,7 +47,7 @@ export default class AppRoot extends React.Component {
 
 
     render() {
-        const { isWorking, isAuthenticated, message, dispatch, currentPath, taskList, settings } = this.props
+        const { isWorking, isAuthenticated, message, dispatch, currentPath, taskList, settings, userID } = this.props
 
         // set global moment locale
         moment.locale(settings.get('locale'))
@@ -64,6 +66,7 @@ export default class AppRoot extends React.Component {
                     logout={bindActionCreators(logout, dispatch)}
                     taskList={taskList}
                     backendActions={bindActionCreators(backendActions, dispatch)}
+                    userID={userID}
                 />
                 <div id="main-view">{this.props.children}</div>
             </div>

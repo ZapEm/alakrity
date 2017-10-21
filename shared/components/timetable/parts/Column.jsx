@@ -65,6 +65,7 @@ export default class Column extends React.Component {
                     taskActions={taskActions}
                     locale={locale}
                     editMode={editMode}
+                    displayMoment={momentDayDate}
                     liWrapper={
                         {
                             className: 'tt-task-item',

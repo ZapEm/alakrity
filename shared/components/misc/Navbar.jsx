@@ -15,7 +15,8 @@ export default class Navbar extends React.Component {
         logout: PropTypes.func.isRequired,
         currentPath: PropTypes.string,
         taskList: ImmutablePropTypes.list.isRequired,
-        backendActions: PropTypes.objectOf(PropTypes.func).isRequired
+        backendActions: PropTypes.objectOf(PropTypes.func).isRequired,
+        userID: PropTypes.string.isRequired
     }
 
     static contextTypes = {
@@ -27,7 +28,7 @@ export default class Navbar extends React.Component {
     }
 
     render() {
-        const { isWorking, isAuthenticated, message, logout, currentPath, taskList, backendActions } = this.props
+        const { isWorking, isAuthenticated, message, logout, currentPath, taskList, backendActions, userID } = this.props
         const style = { width: '15%' }
 
         return (
@@ -73,23 +74,28 @@ export default class Navbar extends React.Component {
                             <LogoutButton onLogoutClick={logout}/>
                         </div>}
 
-                        {process.env.NODE_ENV !== 'production' &&
-                        <div className="w3-right w3-medium">
-                            <Spinner status={isWorking ? 'WORKING' : isAuthenticated ? 'IDLE' : 'WARNING'}/>
-                        </div>}
+                        {/*{process.env.NODE_ENV !== 'production' &&*/}
+                        {/*<div className="w3-right w3-medium">*/}
+                            {/*<Spinner status={isWorking ? 'WORKING' : isAuthenticated ? 'IDLE' : 'WARNING'}/>*/}
+                        {/*</div>}*/}
+
+                        <div
+                            className="navbar-user-id w3-right w3-margin-right"
+                            title={'Logged in as "' + userID + '"'}
+                        >{'( ' + userID + ' )'}</div>
 
                         {isAuthenticated &&
-                        <div className="w3-right">
+                        <div className="navbar-clock-wrapper">
                             <Clock
                                 taskList={taskList}
                                 backendActions={backendActions}
                             />
                         </div>}
 
-                        {message && process.env.NODE_ENV !== 'production' &&
-                        <div className="w3-right">
-                            <div className="w3-right navbar-message w3-animate-opacity">{message}</div>
-                        </div>}
+                        {/*{message && process.env.NODE_ENV !== 'production' &&*/}
+                        {/*<div className="w3-right">*/}
+                            {/*<div className="w3-right navbar-message w3-animate-opacity">{message}</div>*/}
+                        {/*</div>}*/}
                     </div>
                 </nav>
             </div>
