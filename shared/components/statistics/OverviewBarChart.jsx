@@ -7,16 +7,16 @@ import * as dataGenerators from './chartDataGenerators'
 export default class OverviewBarChart extends React.Component {
 
     static propTypes = {
-        compiledStats: ImmutablePropTypes.map.isRequired,
+        userStats: ImmutablePropTypes.map.isRequired,
         appStats: ImmutablePropTypes.map.isRequired
     }
 
     render() {
-        const { compiledStats, appStats } = this.props
+        const { userStats, appStats } = this.props
 
         return <div className="stats-overview-chart-container">
             <Bar
-                data={dataGenerators.getCurrentVsPreviousAvgData(compiledStats, appStats)}
+                data={dataGenerators.getCurrentVsPreviousAvgData(userStats, appStats)}
                 height={100}
                 options={
                     {

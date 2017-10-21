@@ -20,7 +20,7 @@ const dragSource = {
     canDrag(props) {
         if ( props.draggable && !props.editMode && props.task.get('repeating') ) {
             if ( alert('Repeating tasks can only be moved while in the "Basic Schedule" view.\n\n' +
-                    'In the future, there should be a way to create one-time exceptions here.') ) {
+                    'In the future, there could be a way to create one-time exceptions here.') ) {
                 //TODO: exceptions for repeating tasks
             }
             return false
@@ -48,12 +48,14 @@ const dragSource = {
                 }
             }
 
+            //
+            // props.taskActions.editTask(_merge({}, task, {
+            //         start: null,
+            //         status: task.repeating ? { [thisWeek]: TASK_STATUS.DEFAULT.key } : TASK_STATUS.DEFAULT.key
+            //     })
+            // )
 
-            props.taskActions.editTask(_merge({}, task, {
-                    start: null,
-                    status: task.repeating ? { [thisWeek]: TASK_STATUS.DEFAULT.key } : TASK_STATUS.DEFAULT.key
-                })
-            )
+            props.taskActions.rescheduleTask(task, !!task.started)
 
             return
         }
@@ -97,7 +99,7 @@ export default class Task extends React.Component {
         editMode: PropTypes.bool,
         editTaskStart: PropTypes.func,
         setEditingTask: PropTypes.func,
-        displayMoment: MomentPropTypes.moment
+        displayMoment: MomentPropTypes.momentObj
     }
 
     static defaultProps = {

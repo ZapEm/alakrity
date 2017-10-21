@@ -7,15 +7,16 @@ import * as dataGenerators from './chartDataGenerators'
 export default class DetailLineChart extends React.Component {
 
     static propTypes = {
-        compiledStats: ImmutablePropTypes.map.isRequired
+        userStats: ImmutablePropTypes.map.isRequired,
+        appStats: ImmutablePropTypes.map.isRequired
     }
 
     render() {
-        const { compiledStats } = this.props
+        const { userStats, appStats } = this.props
 
         return <div className="stats-detail-chart-container">
             <Line
-                data={dataGenerators.getWeeklyLineData(compiledStats, 5)}
+                data={dataGenerators.getWeeklyLineData(userStats, appStats, 10)}
                 height={100}
                  options={
                     {

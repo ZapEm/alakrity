@@ -41,13 +41,12 @@ export default class HeaderRow extends React.Component {
 
         return <div className="tt-header-row">
             <div className="tt-header-corner">
-                {editMode &&
                 <IconButton
                     tooltip={LOCALE_STRINGS[locale].changeFrom}
-                    iconName={(locale === 'en') ? 'settingspublic' : 'settingslanguage'}
+                    iconName={'public'}
                     dangerLevel={(locale === 'en') ? DANGER_LEVELS.SAFE.hover : DANGER_LEVELS.WARN.hover}
                     onClick={::this.handleLocaleToggle}
-                />}
+                />
             </div>
             {headers}
         </div>

@@ -20,8 +20,11 @@ export function counter(taskStats, numberOfWeeks = 1) {
         totalCompletionDelay: 0,
         totalSnooze: 0,
         totalExtended: 0,
-        totalWorkTime: 0,
-        projectWorkTime: {}
+        totalWorkTimeTarget: 0,
+        totalWorkTimeActual: 0,
+        totalWorkTimeBuffer: 0,
+        projectWorkTimeTarget: {},
+        projectWorkTimeActual: {}
         // averageRating: 0,
         // ratedRatio: 0
     }
@@ -38,13 +41,25 @@ export function counter(taskStats, numberOfWeeks = 1) {
                     totalRated++
                     totalRating += taskStat.rating
                 }
+
+                // Targeted worked time in Projects/Buffer (how tasks where placed)
+                if ( !count.projectWorkTimeTarget[taskStat.task.projectID] ) { count.projectWorkTimeTarget[taskStat.task.projectID] = 0 }
                 if ( taskStat.started ) {
                     const workDuration = moment(taskStat.completed).diff(taskStat.started, 'minutes')
-                    count.totalWorkTime += (workDuration > 0) ? workDuration : 0
-                    if ( !count.projectWorkTime[taskStat.task.projectID] ) { count.projectWorkTime[taskStat.task.projectID] = 0 }
-                    count.projectWorkTime[taskStat.task.projectID] += (workDuration > 0)
+                    count.totalWorkTimeTarget += (workDuration > 0) ? workDuration : 0
+                    count.projectWorkTimeTarget[taskStat.task.projectID] += (workDuration > 0)
                         ? workDuration
                         : 0
+                }
+
+                // Actual worked time in Projects/Buffer (with delays/extends)
+                if ( !count.projectWorkTimeActual[taskStat.task.projectID] ) { count.projectWorkTimeActual[taskStat.task.projectID] = 0 }
+                if ( taskStat.timeInProject ) {
+                    count.totalWorkTimeActual += taskStat.timeInProject
+                    count.projectWorkTimeActual[taskStat.task.projectID] += taskStat.timeInProject
+                }
+                if ( taskStat.timeInBuffer ) {
+                    count.totalWorkTimeBuffer += taskStat.timeInBuffer
                 }
             }
             if ( taskStat.startDelay ) {
