@@ -16,7 +16,7 @@ export default class Navbar extends React.Component {
         currentPath: PropTypes.string,
         taskList: ImmutablePropTypes.list.isRequired,
         backendActions: PropTypes.objectOf(PropTypes.func).isRequired,
-        userID: PropTypes.string.isRequired
+        userID: PropTypes.string
     }
 
     static contextTypes = {
@@ -79,10 +79,12 @@ export default class Navbar extends React.Component {
                             {/*<Spinner status={isWorking ? 'WORKING' : isAuthenticated ? 'IDLE' : 'WARNING'}/>*/}
                         {/*</div>}*/}
 
+                        {userID &&
                         <div
                             className="navbar-user-id w3-right w3-margin-right"
                             title={'Logged in as "' + userID + '"'}
                         >{'( ' + userID + ' )'}</div>
+                        }
 
                         {isAuthenticated &&
                         <div className="navbar-clock-wrapper">

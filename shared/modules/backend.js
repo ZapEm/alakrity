@@ -73,17 +73,20 @@ export function getUpcomingTasks(taskList, time, lookaheadMinutes = 0, initial =
             groupedTasks = groupedTasks.withMutations(
                 groupedTasks => {
                     groupedTasks.update(TASK_STATUS.SCHEDULED.key, list => list ? list.filter(task => {
-                        const start = moment(task.get('start'))
+                        let start = moment(task.get('start'))
+                        start = repeatingTimeToWeek(start, task, time)
                         return start.isSameOrBefore(checkMoment)
                     }) : List())
                     groupedTasks.update(TASK_STATUS.SNOOZED.key, list => list ? list.filter(task => {
-                        const snoozedStart = moment(task.get('start'))
+                        let snoozedStart = moment(task.get('start'))
                             .add(task.get('snooze') ? task.get('snooze') : 0, 'minutes')
+                        snoozedStart = repeatingTimeToWeek(snoozedStart, task, time)
                         return snoozedStart.isSameOrBefore(time)
                     }) : List())
                     groupedTasks.update(TASK_STATUS.ACTIVE.key, list => list ? list.filter(task => {
-                        const end = moment(task.get('start'))
+                        let end = moment(task.get('start'))
                             .add(task.get('duration') + (task.get('extend') ? task.get('extend') : 0), 'minutes')
+                        end = repeatingTimeToWeek(end, task, time)
                         return end.isSameOrBefore(checkMoment)
                     }) : List())
                 })
@@ -203,3 +206,18 @@ export default function reducer(state = initialState, action) {
 //     [TASK_STATUS.DONE]: 'ignore',
 //     [TASK_STATUS.SNOOZED]: 'snoozed'
 // }
+
+/**
+ * Returns the moment set to provided or current week, if the task is repeating. This is dirty a hack.
+ * @param startOrEnd
+ * @param task
+ * @param weekMoment
+ * @returns { momentObj }
+ */
+function repeatingTimeToWeek(startOrEnd, task, weekMoment = moment()) {
+    if(task.get('repeating')){
+        weekMoment = moment.isMoment(weekMoment) ? weekMoment : moment(weekMoment)
+        return startOrEnd.clone().week(weekMoment.week()).year(weekMoment.year()) // prevents possible error at change of year
+    }
+    return startOrEnd
+}
