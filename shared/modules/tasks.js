@@ -184,6 +184,7 @@ export function rescheduleTask(task, started = false) {
                 ? { [moment().startOf('isoWeek')]: TASK_STATUS.DEFAULT.key }
                 : TASK_STATUS.DEFAULT.key,
             started: false,
+            completed: false,
             snooze: false,
             extend: false
         })

@@ -85,7 +85,8 @@ export default class ModalFooter extends React.Component {
                     label="Snooze"
                     dangerLevel={DANGER_LEVELS.WARN.hover}
                     onClick={::this.handleSnooze}
-                    tooltip={'Remind again in 15 minutes.\n'}
+                    tooltip={'Remind again in 15 minutes'}
+                    disabled={this.props.modal.task.get('repeating') ? 'Not yet implemented for repeating tasks' : false}
                 />,
                 <LabeledIconButton
                     key={0}
@@ -103,6 +104,7 @@ export default class ModalFooter extends React.Component {
                     label="Abort"
                     dangerLevel={DANGER_LEVELS.DANGER.hover}
                     onClick={::this.handleAbort}
+                    tooltip={'Abort task and move it back to unscheduled tasks'}
                 />,
                 <LabeledIconButton
                     key={1}
@@ -110,6 +112,8 @@ export default class ModalFooter extends React.Component {
                     label="Extend"
                     dangerLevel={DANGER_LEVELS.WARN.hover}
                     onClick={::this.handleExtend}
+                    tooltip={'Remind me again in 15 minutes'}
+                    disabled={this.props.modal.task.get('repeating') ? 'Not yet implemented for repeating tasks' : false}
                 />,
                 <LabeledIconButton
                     key={0}
@@ -117,6 +121,7 @@ export default class ModalFooter extends React.Component {
                     label="Complete"
                     dangerLevel={DANGER_LEVELS.SAFE.hover}
                     onClick={::this.handleComplete}
+                    tooltip={'Confirm task completion'}
                 />
             ],
             [MODAL_TYPES.OVER]: () => [

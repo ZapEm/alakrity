@@ -102,8 +102,14 @@ export function getTaskStatus(task, startOfThisWeek = moment().startOf('isoWeek'
     const status = !task.repeating
         ? task.status
         : task.status
-                       ? task.status[startOfThisWeek] ? task.status[startOfThisWeek] : TASK_STATUS.DEFAULT.key
-                       : TASK_STATUS.DEFAULT.key
+                       ? task.status[startOfThisWeek]
+              ? task.status[startOfThisWeek]
+              : task.start
+                             ? TASK_STATUS.SCHEDULED.key
+                             : TASK_STATUS.DEFAULT.key
+                       : task.start
+              ? TASK_STATUS.SCHEDULED.key
+              : TASK_STATUS.DEFAULT.key
 
     if ( task.repeating && typeof task.status !== 'object' ) { console.warn('Status of', task.title, 'needs to be an Object! Is "', task.status, '" instead.\n   returning', status) }
 
@@ -143,10 +149,11 @@ export function getMascotSplash(type, { startDelay, completeDelay, rating }) {
 }
 
 export function getProjectFromTask(task, projectList) {
-    return Immutable.Map.isMap(task) ? projectList.find((project) => project.get('id') === task.get('projectID')) : false
+    return Immutable.Map.isMap(task) ? projectList.find((project) => project.get('id') === task.get('projectID')) :
+           false
 }
 
-export function getProjectTypeFromTask(task, projectList){
+export function getProjectTypeFromTask(task, projectList) {
     const project = getProjectFromTask(task, projectList)
     return project ? project.get('type') : false
 }

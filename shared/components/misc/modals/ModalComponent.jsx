@@ -1,6 +1,7 @@
 import * as BackendActions from '/modules/backend'
 import * as TaskActions from '/modules/tasks'
 import Immutable from 'immutable'
+import moment from 'moment'
 import PropTypes from 'prop-types'
 import React from 'react'
 import * as ImmutablePropTypes from 'react-immutable-proptypes'
@@ -98,7 +99,7 @@ export default class ModalComponent extends React.Component {
     handleNext(e) {
         e.preventDefault()
         this.setState(({ modalIndex }) => ({
-            modalIndex: (modalIndex + 1 >= this.props.modalsList.size) ?  0 : modalIndex + 1
+            modalIndex: (modalIndex + 1 >= this.props.modalsList.size) ? 0 : modalIndex + 1
         }))
     }
 
@@ -160,8 +161,9 @@ export default class ModalComponent extends React.Component {
                         taskActions={bindActionCreators(TaskActions, dispatch)}
                         backendActions={bindActionCreators(BackendActions, dispatch)}
                         rating={this.state.rating}
-                        started={this.state.started}
-                        completed={this.state.completed}
+                        started={this.state.started ? this.state.started : moment(currentModal.task.get('start'))}
+                        completed={this.state.completed ? this.state.completed :
+                                   moment(currentModal.task.get('start')).add(currentModal.task.get('duration'), 'minutes')}
                     />
                 </div>
             </div>

@@ -52,18 +52,17 @@ function getIdleImg(time = moment()) {
     if ( 0 <= hour && hour <= 5 ) {
         return require('img/sleep.png')
     }
+
     else if ( 6 <= hour && hour <= 7 ) {
         return require('img/wakeup.png')
     }
 
-    // 9 to 18 is default
+    // 9 to 21 is default, for now
 
-    else if ( 19 <= hour && hour <= 22 ) {
-        return require('img/goodwork.png') // TODO: appropriate img
-    }
-    else if ( hour === 23 ) {
+    else if ( 22 <= hour && hour <= 23 ) {
         return require('img/tired.png')
     }
+
     // default
     return getRandomItem(
         [

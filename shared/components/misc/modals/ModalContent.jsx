@@ -35,7 +35,7 @@ export default class ModalContent extends React.Component {
     static generateHiddenMinutes() {
         const arr = []
         for ( let value = 0; value < 60; value++ ) {
-            if ( value % 5 !== 0 ) {
+            if ( value % 15 !== 0 ) {
                 arr.push(value)
             }
         }
@@ -43,18 +43,25 @@ export default class ModalContent extends React.Component {
     }
 
     componentWillMount() {
+        const started = this.props.modal.task.get('started') ? moment(this.props.modal.task.get('started')) : false
+        const completed = this.props.modal.task.get('completed') ? moment(this.props.modal.task.get('completed')) :
+                          false
+
         this.props.changeModalState({
-            started: moment(this.props.modal.task.get('start')),
-            completed: moment(this.props.modal.task.get('start')).add(this.props.modal.task.get('duration'), 'minutes'),
+            started: started,
+            completed: completed,
             rating: false
         })
     }
 
     componentWillUpdate(nextProps) {
-        if ( nextProps.modal && this.props.modal !== nextProps.modal ) {
+        const started = nextProps.modal.task.get('started') ? moment(nextProps.modal.task.get('started')) : false
+        const completed = nextProps.modal.task.get('completed') ? moment(nextProps.modal.task.get('completed')) : false
+
+        if ( nextProps.modal && this.props.modal.id !== nextProps.modal.id ) {
             this.props.changeModalState({
-                started: moment(nextProps.modal.task.get('start')),
-                completed: moment(nextProps.modal.task.get('start')).add(nextProps.modal.task.get('duration'), 'minutes'),
+                started: started,
+                completed: completed,
                 rating: false
             }, nextProps.modalsList.keySeq())
         }
@@ -74,9 +81,12 @@ export default class ModalContent extends React.Component {
 
     handleResetTimes(e) {
         e.preventDefault()
+        const started = this.props.modal.task.get('started') ? moment(this.props.modal.task.get('started')) : false
+        const completed = this.props.modal.task.get('completed') ? moment(this.props.modal.task.get('completed')) :
+                          false
         this.props.changeModalState({
-            started: moment(this.props.modal.task.get('start')),
-            completed: moment(this.props.modal.task.get('start')).add(this.props.modal.task.get('duration'), 'minutes')
+            started: started,
+            completed: completed
         })
     }
 
@@ -87,15 +97,17 @@ export default class ModalContent extends React.Component {
         const locale = settings.get('locale')
 
         const startMoment = moment(task.get('start')).startOf('minute')
+        const snoozeStartMoment = startMoment.clone().add(task.get('snooze') ? task.get('snooze') : 0, 'minutes')
+
         const endMoment = moment(task.get('start')).add(task.get('duration'), 'minutes').startOf('minute')
-        const now = moment().startOf('minute')
+        const extendEndMoment = endMoment.clone().add(task.get('extend') ? task.get('extend') : 0, 'minutes')
 
         const project = getProjectFromTask(task, projectList)
 
         const hiddenMinutes = ModalContent.generateHiddenMinutes()
 
         let overElements = null
-        if ( modal.type === MODAL_TYPES.OVER && started && completed ) {
+        if ( modal.type === MODAL_TYPES.OVER ) {
             overElements = (
                 <div className="modal-content-over-elements w3-padding">
                     <div className="modal-content-over-label">
@@ -112,7 +124,7 @@ export default class ModalContent extends React.Component {
                         <TimePicker
                             className="modal-content-over-timepicker"
                             popupClassName={locale !== 'en' ? 'modal-content-over-popup w3-card' : ' w3-card'}
-                            value={started}
+                            value={started ? started : startMoment}
                             showSecond={false}
                             use12Hours={locale === 'en'}
                             disabledMinutes={() => hiddenMinutes}
@@ -126,7 +138,7 @@ export default class ModalContent extends React.Component {
                         <TimePicker
                             className="modal-content-over-timepicker"
                             popupClassName={locale !== 'en' ? 'modal-content-over-popup' : ''}
-                            value={completed}
+                            value={completed ? completed : endMoment}
                             showSecond={false}
                             use12Hours={locale === 'en'}
                             disabledMinutes={() => hiddenMinutes}
@@ -159,7 +171,7 @@ export default class ModalContent extends React.Component {
                         task={task.toJSON()}
                         locale={locale}
                     />
-                    {modal.type === MODAL_TYPES.COMPLETION || modal.type === MODAL_TYPES.OVER &&
+                    {(modal.type === MODAL_TYPES.COMPLETION || modal.type === MODAL_TYPES.OVER) &&
                     <RatingPicker
                         setRating={::this.handleSetRating}
                         rating={rating}
@@ -176,6 +188,8 @@ export default class ModalContent extends React.Component {
                         {/*<p>{task.get('description')}</p>*/}
                     </div>
                         :
+                    (modal.type === MODAL_TYPES.REMINDER)
+                        ?
                     <div className="modal-middle-right w3-padding">
                         <div className="modal-content-grid">
                             <div className="modal-content-label">Project:</div>
@@ -197,16 +211,83 @@ export default class ModalContent extends React.Component {
                             <div className="modal-content-text">{startMoment.format('LL')}</div>
 
                             <div className="modal-content-label">Start:</div>
-                            <div className="modal-content-text">{startMoment.format('LT')}</div>
-                            <div className="modal-content-extra-text">{startMoment.from(now)}</div>
+                            <TimePicker
+                                className="modal-content-over-timepicker"
+                                popupClassName={locale !== 'en' ? 'modal-content-over-popup w3-card' : ' w3-card'}
+                                value={started ? started : snoozeStartMoment}
+                                showSecond={false}
+                                use12Hours={locale === 'en'}
+                                disabledMinutes={() => hiddenMinutes}
+                                hideDisabledOptions
+                                allowEmpty={false}
+                                onChange={::this.handleSetStarted}
+                            />
 
-                            <div className="modal-content-label">End:</div>
-                            <div className="modal-content-text">{endMoment.format('LT')}</div>
-                            <div className="modal-content-extra-text">{endMoment.from(now)}</div>
+                            <div className="modal-content-label">{'End:'}</div>
+                            <div className="modal-content-text">
+                                {
+                                    (started)
+                                        ?
+                                    started.clone().add(task.get('duration'), 'minutes').format('LT') + '  (Planned ' + endMoment.format('LT') + ')'
+                                        :
+                                    endMoment.format('LT')
+                                }
+                            </div>
                         </div>
                     </div>
-                }
+                        :
+                    (modal.type === MODAL_TYPES.COMPLETION)
+                        ?
+                    <div className="modal-middle-right w3-padding">
+                        <div className="modal-content-grid">
+                            <div className="modal-content-label">Project:</div>
+                            <div className="modal-content-text">{project.get('title')}
+                                <div
+                                    className="material-icons project-type-option-icon"
+                                    title={project.get('type')}
+                                    style={{
+                                        marginLeft: '8px',
+                                        marginTop: '-8px',
+                                        color: 'rgba(0,0,0,0.6)'
+                                    }}
+                                >
+                                    {PROJECT_TYPES[project.get('type')].icon}
+                                </div>
+                            </div>
 
+                            <div className="modal-content-label">Date:</div>
+                            <div className="modal-content-text">{startMoment.format('LL')}</div>
+
+                            <div className="modal-content-label">Started:</div>
+                            <div className="modal-content-text">
+                                {
+                                    started && (
+                                        (started.isSame(startMoment, 'minute'))
+                                            ?
+                                        started.format('LT')
+                                            :
+                                        started.format('LT') + '  (Planned ' + startMoment.format('LT') + ')'
+                                    )
+                                }
+                            </div>
+
+                            <div className="modal-content-label">Completed:</div>
+                            <TimePicker
+                                className="modal-content-over-timepicker"
+                                popupClassName={locale !== 'en' ? 'modal-content-over-popup' : ''}
+                                value={completed ? completed : extendEndMoment}
+                                showSecond={false}
+                                use12Hours={locale === 'en'}
+                                disabledMinutes={() => hiddenMinutes}
+                                hideDisabledOptions
+                                allowEmpty={false}
+                                onChange={::this.handleSetCompleted}
+                            />
+                        </div>
+                    </div>
+                        :
+                    <div className="modal-middle-right w3-padding"/>
+                }
             </div>
             {overElements}
         </div>
