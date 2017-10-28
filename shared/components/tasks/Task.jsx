@@ -4,12 +4,12 @@ import * as _ from 'lodash/object'
 import { merge as _merge } from 'lodash/object'
 import moment from 'moment'
 import PropTypes from 'prop-types'
-import MomentPropTypes from 'react-moment-proptypes'
 import React from 'react'
 
 import { DragSource } from 'react-dnd'
 import { getEmptyImage } from 'react-dnd-html5-backend'
 import ImmutablePropTypes from 'react-immutable-proptypes'
+import MomentPropTypes from 'react-moment-proptypes'
 import { DANGER_LEVELS, LOCALE_STRINGS } from '../../utils/constants'
 import { DndTypes, TASK_STATUS } from '../../utils/enums'
 import { getTaskStatus } from '../../utils/helpers'
@@ -158,6 +158,22 @@ export default class Task extends React.Component {
         this.props.setEditingTask(this.props.task.get('id'), false)
     }
 
+    getMilestoneTooltip() {
+        const milestones = this.props.projectColorMap.getIn([this.props.task.get('projectID'), 'project', 'milestones'])
+        if ( milestones && this.props.task.get('milestone')) {
+            const milestone = milestones.find(milestone => milestone.get('id') === this.props.task.get('milestone'))
+            if (milestone) {
+                const deadline = moment(milestone.get('deadline'))
+
+                return 'Milestone: \nTitle:\t'
+                    + milestone.get('title') + '\nDate:\t'
+                    + deadline.format('LL') + '\n\t('
+                    + deadline.fromNow() + ')'
+            }
+        }
+        return 'No Milestone'
+    }
+
 
     render() {
         const {
@@ -170,7 +186,8 @@ export default class Task extends React.Component {
             return null
         }
 
-        const taskStatus = displayMoment ? getTaskStatus(task, displayMoment.clone().startOf('isoWeek')) : task.get('status')
+        const taskStatus = displayMoment ? getTaskStatus(task, displayMoment.clone().startOf('isoWeek')) :
+                           task.get('status')
         const status = (editable || taskStatus !== TASK_STATUS.SCHEDULED.key) ?
                        TASK_STATUS[taskStatus] : false
 
@@ -245,12 +262,14 @@ export default class Task extends React.Component {
                             }, dragStyle
                         )
                     }
+                    title={this.getMilestoneTooltip()}
                     // data-start={task.get('start')}
                     // data-duration={task.get('duration')}
                 >
                     {status && status.icon &&
                     <div
-                        className={'material-icons w3-display-topleft task-status-icon' + (task.get('duration') < 60 ? ' small' : '')}
+                        className={'material-icons w3-display-topleft task-status-icon' + (task.get('duration') < 60 ?
+                                                                                           ' small' : '')}
                         title={iconTooltip}
                     >
                         {status.icon}

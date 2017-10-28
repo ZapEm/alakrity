@@ -1,14 +1,17 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import * as ImmutablePropTypes from 'react-immutable-proptypes'
-import notifyUser from '/utils/notifications'
+import { connect } from 'react-redux'
+import * as backendActions from '../../modules/backend'
 
-
+@connect(state => ({
+    editMode: state.timetables.get('editMode'),
+    //currentPath: state.routing.locationBeforeTransitions.pathname || '/'
+}))
 export default class Clock extends React.Component {
 
     static propTypes = {
-        taskList: ImmutablePropTypes.list.isRequired,
-        backendActions: PropTypes.objectOf(PropTypes.func).isRequired
+        editMode: PropTypes.bool,
+        dispatch: PropTypes.func
     }
 
     constructor(props) {
@@ -25,7 +28,7 @@ export default class Clock extends React.Component {
     }
 
     componentWillMount() {
-        if ( typeof window !== 'undefined') {
+        if ( typeof window !== 'undefined' ) {
             this.timerID = setInterval(() => this.tick(), 1000)
             this._isMounted = true
         }
@@ -54,8 +57,12 @@ export default class Clock extends React.Component {
             this.initial = false
 
             this.currentMinute = this.time.getMinutes()
-            this.props.backendActions.setCurrentTime(this.time)
-            this.props.backendActions.updateModals(this.time, initial)
+
+            // Don't notify while editing schedule
+            if(!this.props.editMode) {
+                this.props.dispatch(backendActions.setCurrentTime(this.time))
+                this.props.dispatch(backendActions.updateModals(this.time, initial))
+            }
         }
     }
 

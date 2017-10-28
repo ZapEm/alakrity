@@ -11,11 +11,12 @@ import { MASCOT_STATUS, PROJECT_TYPES, TASK_STATUS, TaskListFilters } from './en
  * @returns {any} - immutable map with normal, light and dark colors per projectID.
  */
 export function getProjectColorMap(projectList) {
-    let colorMap = {}
+    let projectMap = {}
     projectList.forEach(project => {
             const color = project.get('color')
 
-            colorMap[project.get('id')] = {
+            projectMap[project.get('id')] = {
+                project: project,
                 normal: color,
                 light: tinycolor(color).brighten(10).toHexString(),
                 dark: tinycolor(color).brighten(-35).toHexString(),
@@ -29,7 +30,8 @@ export function getProjectColorMap(projectList) {
     )
 
     Immutable.fromJS(SPECIAL_PROJECTS).forEach(project => {
-            colorMap[project.get('key')] = {
+            projectMap[project.get('key')] = {
+                project: false,
                 normal: project.get('normal'),
                 light: project.get('light'),
                 dark: project.get('dark')
@@ -37,7 +39,7 @@ export function getProjectColorMap(projectList) {
         }
     )
 
-    return Immutable.fromJS(colorMap)
+    return Immutable.fromJS(projectMap)
 }
 
 export function getTaskListFilter(selection, projectID, filterByMoment) {
@@ -111,7 +113,7 @@ export function getTaskStatus(task, startOfThisWeek = moment().startOf('isoWeek'
               ? TASK_STATUS.SCHEDULED.key
               : TASK_STATUS.DEFAULT.key
 
-    if ( task.repeating && typeof task.status !== 'object' ) { console.warn('Status of', task.title, 'needs to be an Object! Is "', task.status, '" instead.\n   returning', status) }
+    if ( task.repeating && typeof task.status !== 'object' ) { console.warn('Status of repeating task ', task.title, 'needs to be an Object! Is "', task.status, '" instead.\n   returning', status) }
 
     return status
 }

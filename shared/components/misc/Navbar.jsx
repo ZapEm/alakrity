@@ -88,10 +88,7 @@ export default class Navbar extends React.Component {
 
                         {isAuthenticated &&
                         <div className="navbar-clock-wrapper">
-                            <Clock
-                                taskList={taskList}
-                                backendActions={backendActions}
-                            />
+                            <Clock                            />
                         </div>}
 
                         {/*{message && process.env.NODE_ENV !== 'production' &&*/}

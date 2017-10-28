@@ -30,7 +30,12 @@ export default class TaskForm extends React.Component {
 
     handleSubmit(e) {
         e.preventDefault()
-        this.props.onSubmit(this.state.task)
+        if(this.state.task.get('repeating')){
+            this.props.onSubmit(this.state.task.set('status', {}))
+        } else {
+            this.props.onSubmit(this.state.task)
+        }
+        // reset for next task
         this.setState(({ task }) => ({
             task: task.merge({
                 title: '',
@@ -51,7 +56,7 @@ export default class TaskForm extends React.Component {
 
 
     render() {
-        const { editing, textLabel, projectList } = this.props
+        const {textLabel, projectList } = this.props
         const task = this.state.task
 
         const disabled = (projectList.size === 0) ? 'A project needs to be created first.' : false
