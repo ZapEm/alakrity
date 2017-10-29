@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import tinycolor from 'tinycolor2'
-import { TASK_TYPES } from '../../utils/constants'
 import newId from '../../utils/newId'
 import LabeledIconButton from '../misc/LabeledIconButton'
 import ProjectColorPicker from './ProjectColorPicker'
@@ -22,7 +21,8 @@ export default class ProjectEdit extends React.Component {
         this.state = {
             formID: newId('pjt-edit_'),
             errors: [],
-            project: this.props.project
+            project: this.props.project,
+            initial: this.props.project.get('tracked') === 'initial'
         }
     }
 
@@ -40,10 +40,10 @@ export default class ProjectEdit extends React.Component {
         })
     }
 
-    handleTypeSelect(typeKey){
+    handleTypeSelect(typeKey) {
         this.setState(({ project }) => ({
-            project: project.set('type', typeKey)
-        })
+                project: project.set('type', typeKey)
+            })
         )
     }
 
@@ -68,6 +68,15 @@ export default class ProjectEdit extends React.Component {
                 }
             )
         }))
+    }
+
+    handleTrackedChange(tracked) {
+        this.setState(({ project }) => (
+                {
+                    project: project.set('tracked', tracked)
+                }
+            )
+        )
     }
 
     render() {
@@ -108,7 +117,26 @@ export default class ProjectEdit extends React.Component {
             </div>
 
             <div className="project-line w3-display-container">
-                <div/>
+                <div>
+                    <label
+                        title={'Only tasks of tracked projects will have reminders and get recorded in the statistics.\n' +
+                        'Untracked projects are good for things like university lectures or regular work.'}>
+                        Track<br/>
+                        <input
+                            className="project-input checkbox w3-border w3-border-theme w3-round"
+                            id="project-monitored-input"
+                            type="checkbox"
+                            checked={this.state.project.get('tracked')}
+                            onChange={() => {
+                                if ( this.state.initial || confirm('Changing this on a project with recorded tasks may have unwanted side effects.\n' +
+                                        'Do you wish to proceed anyways?') ) {
+                                    this.handleTrackedChange(!this.state.project.get('tracked'))
+                                }
+                            }}
+                        />
+                    </label>
+
+                </div>
                 <ProjectColorPicker
                     currentColor={this.state.project.get('color')}
                     label={'Color'}

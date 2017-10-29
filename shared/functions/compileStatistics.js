@@ -1,10 +1,16 @@
 import * as Immutable from 'immutable'
 import moment from 'moment'
-import * as tasksCompilers from './tasksCompilers'
 import { SPECIAL_PROJECTS } from '../utils/constants'
+import * as tasksCompilers from './tasksCompilers'
 
-
-export function compileUser(stats, weeks = 5) {
+/**
+ *
+ * @param stats from DB
+ * @param weeks to look back
+ * @param trackedProjects map of projects to track { projectID: true, ... }
+ * @returns {any}
+ */
+export function compileUser(stats, weeks = 5, projectList) {
 
     if ( !Immutable.Map.isMap(stats) ) {
         stats = Immutable.fromJS(stats)
@@ -33,10 +39,24 @@ export function compileUser(stats, weeks = 5) {
     let truncatedSortedTaskStats = sortedTaskStats.skip(1).reverse().skipWhile(list => list.size === 0).reverse()
     const numberOfPreviousWeeks = truncatedSortedTaskStats.size
 
+    let trackedProjects = {}
+    projectList.forEach(project => {
+        if ( project.get('tracked') ) {
+            trackedProjects[project.get('id')] = true
+        } else {
+            trackedProjects[project.get('id')] = false
+        }
+    })
+
     return Immutable.fromJS({
         tasks: {
-            totals: tasksCompilers.counter(truncatedSortedTaskStats.flatten(true), numberOfPreviousWeeks),
-            byWeek: sortedTaskStats.map(weekStats => tasksCompilers.counter(weekStats))
+            totals: tasksCompilers.counter(truncatedSortedTaskStats.flatten(true), {
+                numberOfWeeks: numberOfPreviousWeeks,
+                trackedProjectsMap: trackedProjects
+            }),
+            byWeek: sortedTaskStats.map(weekStats => tasksCompilers.counter(weekStats, {
+                trackedProjectsMap: trackedProjects
+            }))
         }
     })
 }
@@ -65,7 +85,7 @@ export function compileTimetableStats(timetable) {
             } else {
                 timetableStats.projectWorkPlanned[projectID] += slotMinutes
             }
-            if (!(projectID in SPECIAL_PROJECTS)){
+            if ( !(projectID in SPECIAL_PROJECTS) ) {
                 timetableStats.totalWorkPlanned += slotMinutes
             }
         }

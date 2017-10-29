@@ -1,4 +1,3 @@
-import LodashModuleReplacementPlugin from 'lodash-webpack-plugin'
 import assign from 'object-assign'
 import webpack from 'webpack'
 import webpackDevMiddleware from 'webpack-dev-middleware'

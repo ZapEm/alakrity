@@ -47,7 +47,12 @@ export default class TasksSidebarView extends React.Component {
 
     handleQuickAddTask(e) {
         e.preventDefault()
-        this.props.taskActions.quickAddTask(this.state.project, 'default')
+        this.props.taskActions.quickAddTask(this.state.project, false)
+    }
+
+    handleQuickAddRepeatingTask(e) {
+        e.preventDefault()
+        this.props.taskActions.quickAddTask(this.state.project, true)
     }
 
     changeProject(project) {
@@ -87,6 +92,12 @@ export default class TasksSidebarView extends React.Component {
                             label="Quick Add Task"
                             onClick={::this.handleQuickAddTask}
                         />
+                        <LabeledIconButton
+                        iconName="add_box"
+                        disabled={!this.state.project ? 'Select a project first' : false}
+                        label="Quick Add Repeating Task"
+                        onClick={::this.handleQuickAddRepeatingTask}
+                    />
                     </div>
                     <form
                         className="w3-center w3-border-bottom w3-margin-top w3-border-theme"

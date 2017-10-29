@@ -6,7 +6,7 @@ import { PROJECT_COLORS, SPECIAL_PROJECTS } from '../../utils/constants'
 
 export function getCurrentVsPreviousAvgData(compiledStats, appStats) {
 
-    console.log(compiledStats)
+    //console.log(compiledStats)
 
     const userTotals = mapToKeys(compiledStats.getIn(['tasks', 'totals']), appStats)
     const userWeek = mapToKeys(compiledStats.getIn(['tasks', 'byWeek']).first(), appStats)

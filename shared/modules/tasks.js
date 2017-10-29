@@ -9,6 +9,7 @@ import fetch from '../utils/fetcher'
 import { dayTasksFilter, getTaskDayFilter, taskDayFilters } from '../utils/helpers'
 import newId from '../utils/newId'
 import { LOGIN, LOGOUT } from './auth'
+import { REMOVE as REMOVE_PROJECT } from './projects'
 
 import * as backendActions from './backend'
 import { updateModals } from './backend'
@@ -343,6 +344,9 @@ export default function reducer(state = initialState, action) {
         case REMOVE:
             return state.set('taskList', state.get('taskList').filterNot(task => task.get('id') === action.payload))
                         .set('isWorking', true)
+
+        case REMOVE_PROJECT:
+            return state.set('taskList', state.get('taskList').filterNot(task => task.get('projectID') === action.payload))
 
 
         case LOAD + SUCCESS:

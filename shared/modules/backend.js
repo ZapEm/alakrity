@@ -1,8 +1,10 @@
 import { fromJS, List } from 'immutable'
 import moment from 'moment'
 import { getTaskModal } from '../components/misc/modals/Modals'
-import { MASCOT_STATUS, projectToMascotStatusMap, TASK_STATUS } from '../utils/enums'
-import { getMascotStatusFromProjectType, getProjectTypeFromTask, getTaskStatus } from '../utils/helpers'
+import { MASCOT_STATUS, TASK_STATUS } from '../utils/enums'
+import {
+    getMascotStatusFromProjectType, getMapFromList, getProjectTypeFromTask, getTaskStatus
+} from '../utils/helpers'
 
 
 /**
@@ -54,20 +56,22 @@ export function getUpcomingTasks(taskList, time, lookaheadMinutes = 0, initial =
             const checkMoment = moment(time).add(lookaheadMinutes, 'minutes')
             const thisWeek = moment(time).startOf('isoWeek')
 
+            const projectMap = getMapFromList(getState().projects.get('projectList'), 'id')
 
 
-            let groupedTasks = taskList.filter(task =>
-                                           (
-                                               [
-                                                   TASK_STATUS.ACTIVE.key,
-                                                   TASK_STATUS.SCHEDULED.key,
-                                                   TASK_STATUS.SNOOZED.key
-                                               ].indexOf(getTaskStatus(task, thisWeek)) !== -1))
+            let groupedTasks = taskList.filter(task => (
+                                           projectMap.getIn([task.get('projectID'), 'tracked']) &&
+                                           [
+                                               TASK_STATUS.ACTIVE.key,
+                                               TASK_STATUS.SCHEDULED.key,
+                                               TASK_STATUS.SNOOZED.key
+                                           ].indexOf(getTaskStatus(task, thisWeek)) !== -1
+                                       ))
                                        .groupBy(task => getTaskStatus(task, thisWeek))
 
             // snatch Project Type for MascotStatus before filtering active tasks!
             const projectType = getProjectTypeFromTask(groupedTasks.has(TASK_STATUS.ACTIVE.key) && groupedTasks.get(TASK_STATUS.ACTIVE.key).size > 0
-                ? groupedTasks.get(TASK_STATUS.ACTIVE.key).first() : false, getState().projects.get('projectList'))
+                ? groupedTasks.get(TASK_STATUS.ACTIVE.key).first() : false, projectMap)
             // ------
 
             groupedTasks = groupedTasks.withMutations(
@@ -104,7 +108,6 @@ export function getUpcomingTasks(taskList, time, lookaheadMinutes = 0, initial =
                         if ( date1.isAfter(date2) ) { return 1 }
                         if ( date1.isSame(date2) ) { return 0 }
                     })
-
 
 
             return Promise.all([
@@ -215,7 +218,7 @@ export default function reducer(state = initialState, action) {
  * @returns { momentObj }
  */
 function repeatingTimeToWeek(startOrEnd, task, weekMoment = moment()) {
-    if(task.get('repeating')){
+    if ( task.get('repeating') ) {
         weekMoment = moment.isMoment(weekMoment) ? weekMoment : moment(weekMoment)
         return startOrEnd.clone().week(weekMoment.week()).year(weekMoment.year()) // prevents possible error at change of year
     }

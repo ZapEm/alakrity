@@ -13,7 +13,7 @@ import { LOGIN, LOGOUT } from './auth'
 const LOAD = 'alakrity/projects/LOAD'
 const CREATE = 'alakrity/projects/CREATE'
 const EDIT = 'alakrity/projects/EDIT'
-const REMOVE = 'alakrity/projects/REMOVE'
+export const REMOVE = 'alakrity/projects/REMOVE'
 const SET_CURRENT_ID = 'alakrity/projects/SET_CURRENT_ID'
 
 // action creators:

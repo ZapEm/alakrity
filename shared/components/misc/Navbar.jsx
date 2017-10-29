@@ -1,10 +1,9 @@
 import PropTypes from 'prop-types'
 import React from 'react'
+import ImmutablePropTypes from 'react-immutable-proptypes'
 import { Link } from 'react-router'
 import LogoutButton from '../auth/Logout'
-import Spinner from './Spinner'
 import Clock from '../backend/Clock'
-import ImmutablePropTypes from 'react-immutable-proptypes'
 
 
 export default class Navbar extends React.Component {
@@ -28,7 +27,7 @@ export default class Navbar extends React.Component {
     }
 
     render() {
-        const { isWorking, isAuthenticated, message, logout, currentPath, taskList, backendActions, userID } = this.props
+        const { isAuthenticated, logout, currentPath, userID } = this.props
         const style = { width: '15%' }
 
         return (
@@ -69,15 +68,20 @@ export default class Navbar extends React.Component {
                          >Login</Link>
                         }
 
+
                         {isAuthenticated &&
                         <div className="w3-right">
                             <LogoutButton onLogoutClick={logout}/>
                         </div>}
 
-                        {/*{process.env.NODE_ENV !== 'production' &&*/}
-                        {/*<div className="w3-right w3-medium">*/}
-                            {/*<Spinner status={isWorking ? 'WORKING' : isAuthenticated ? 'IDLE' : 'WARNING'}/>*/}
-                        {/*</div>}*/}
+                        <Link
+                            to={'/manual'}
+                            onClick={(e) => {
+                                e.preventDefault()
+                                window.open('/manual', 'Alakrity Manual', 'toolbar=no,status=no,menubar=no,left=0,top=100,width=1200,height=800')
+                            }}
+                            className="material-icons w3-hover-theme navbar-button no-underline w3-right navbar-help-icon"
+                        >help_outline</Link>
 
                         {userID &&
                         <div
@@ -88,13 +92,8 @@ export default class Navbar extends React.Component {
 
                         {isAuthenticated &&
                         <div className="navbar-clock-wrapper">
-                            <Clock                            />
+                            <Clock/>
                         </div>}
-
-                        {/*{message && process.env.NODE_ENV !== 'production' &&*/}
-                        {/*<div className="w3-right">*/}
-                            {/*<div className="w3-right navbar-message w3-animate-opacity">{message}</div>*/}
-                        {/*</div>}*/}
                     </div>
                 </nav>
             </div>

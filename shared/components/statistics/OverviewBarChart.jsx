@@ -72,7 +72,7 @@ export default class OverviewBarChart extends React.Component {
                                         min: 0,
                                         max: 100,
                                         // Include a dollar sign in the ticks
-                                        callback: (value, index, values) => ''
+                                        callback: () => '' // (value, index, values) => ()
                                     }
                                 }
                             ]

@@ -1,4 +1,4 @@
-import { RESOLVED_NAME as SUCCESS } from '/utils/constants'
+import { RESOLVED_NAME as SUCCESS, REJECTED_NAME as FAILURE } from '/utils/constants'
 import * as Immutable from 'immutable'
 import * as _ from 'lodash/object'
 import moment from 'moment'
@@ -115,7 +115,8 @@ export function recordCompleteTask(task, { rating }) {
                     rating: rating ? rating : false,
                     extended: task.extend ? task.extend : false,
                     completeDelay: completeDelay,
-                    ...getCoverage(task.started, task.completed, task.projectID, getState().timetables.getIn(['timetable', 'projectPeriods']))
+                    ...getCoverage(task.started, task.completed, task.projectID, getState().timetables.getIn(['timetable',
+                                                                                                              'projectPeriods']))
                 }
             )),
             dispatch(backendActions.mascotSplash(getMascotSplash(SPLASH_TYPES.COMPLETED, {
@@ -138,17 +139,35 @@ export function removeRecordedTask(task) {
  * */
 const initialState = Immutable.fromJS({
     userStatistics: {},
-    globalStatistics: {}
+    globalStatistics: {},
+    isWorkingMap: {
+        load: false,
+        loadGlobal: false
+    }
 })
 
 export default function reducer(state = initialState, action) {
     switch (action.type) {
+
+        case LOAD:
+            return state.setIn(['isWorkingMap', 'load'], true)
+
+        case LOAD_GLOBAL:
+            return state.setIn(['isWorkingMap', 'load'], true)
+
         case LOAD + SUCCESS:
-            console.log(action.payload.data)
-            return state.set('userStatistics', Immutable.fromJS(action.payload.data))
+            return state.setIn(['isWorkingMap', 'load'], false)
+                        .set('userStatistics', Immutable.fromJS(action.payload.data))
 
         case LOAD_GLOBAL + SUCCESS:
-            return state.set('globalStatistics', Immutable.fromJS(action.payload.data))
+            return state.setIn(['isWorkingMap', 'loadGlobal'], false)
+                        .set('globalStatistics', Immutable.fromJS(action.payload.data))
+
+        case LOAD + FAILURE:
+            return state.setIn(['isWorkingMap', 'load'], false)
+
+        case LOAD_GLOBAL + FAILURE:
+            return state.setIn(['isWorkingMap', 'loadGlobal'], false)
 
         default:
             return state

@@ -8,6 +8,7 @@ import { getProjectColorMap } from '../../utils/helpers'
 import DetailLineChart from './DetailLineChart'
 import OverviewBarChart from './OverviewBarChart'
 import ProjectsLineChart from './ProjectsLineChart'
+import Spinner from '../misc/Spinner'
 
 @connect(state => ({
     statistics: state.statistics,
@@ -46,7 +47,7 @@ export default class StatisticsViewContainer extends React.Component {
             ...(this.props.timetable !== nextProps.timetable) && { appStats: compileTimetableStats(nextProps.timetable) },
             ...(this.props.statistics !== nextProps.statistics) && {
                 userStats: ( nextProps.statistics.get('userStatistics').size > 0 )
-                    ? compileUser(nextProps.statistics.get('userStatistics'), 5)
+                    ? compileUser(nextProps.statistics.get('userStatistics'), 5, this.props.projectList)
                     : false
             }
         })
@@ -56,6 +57,15 @@ export default class StatisticsViewContainer extends React.Component {
         const { statistics, projectList } = this.props
         const { userStats, appStats } = this.state // state!
 
+        if(statistics.get('isWorkingMap').some(item => item === true)){
+            return <div className="w3-display-container"
+                        style={{height: '500px'}}>
+                <div className="w3-display-middle">
+                <Spinner status={'WORKING'}/>
+                </div>
+            </div>
+        }
+
         if ( !userStats || !appStats ) {
             return <div className="statistics-view w3-card-4 w3-padding w3-round-large w3-border w3-border-theme">
                 <h5 className="w3-center">
@@ -63,7 +73,7 @@ export default class StatisticsViewContainer extends React.Component {
                 </h5>
             </div>
         }
-        console.log('userStats:', userStats.toJS(), '\n appStats:' , appStats.toJS())
+        //console.log('userStats:', userStats.toJS(), '\n appStats:' , appStats.toJS())
 
         return <div className="statistics-view w3-card-4 w3-padding w3-round-large w3-border w3-border-theme">
             <h4 className="w3-center">Overview</h4>

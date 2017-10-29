@@ -150,14 +150,29 @@ export function getMascotSplash(type, { startDelay, completeDelay, rating }) {
     }
 }
 
-export function getProjectFromTask(task, projectList) {
-    return Immutable.Map.isMap(task) ? projectList.find((project) => project.get('id') === task.get('projectID')) :
-           false
+export function getProjectFromTask(task, projectMapOrList) {
+    if ( Immutable.List.isList(projectMapOrList) ) {
+        projectMapOrList = getMapFromList(projectMapOrList, 'id')
+    }
+    if ( Immutable.Map.isMap(projectMapOrList) ) {
+        return Immutable.Map.isMap(task) ? projectMapOrList.get(task.get('projectID')) :
+               false
+    }
+    // invalid parameter
+    console.warn('getProjectFromTask(task, projectMapOrList) needs Immutable.Map or .List of projects!')
+    return false
 }
 
-export function getProjectTypeFromTask(task, projectList) {
-    const project = getProjectFromTask(task, projectList)
+export function getProjectTypeFromTask(task, projectMap) {
+    const project = getProjectFromTask(task, projectMap)
     return project ? project.get('type') : false
+}
+
+export function getMapFromList(List, keyProp) {
+    if(typeof keyProp === 'undefined'){
+        return List.toMap()
+    }
+    return Immutable.Map(List.map(item => [item.get(keyProp), item]))
 }
 
 export function getMascotStatusFromProjectType(projectType) {

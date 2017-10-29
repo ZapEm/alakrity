@@ -23,7 +23,7 @@ export function editProject(req, res) {
 }
 
 export function removeProject(req, res) {
-    dbService.remove('projects', req.params.id)
+    dbService.removeProject(req.params.id)
              .then((resp) => res.json(resp))
              .catch(err => handleError(res, err, 400))
 }
