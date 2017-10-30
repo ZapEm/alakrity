@@ -57,7 +57,7 @@ export default function (app) {
                     ]
                 },
                 {
-                    test: /manifest\.json|\.(jpg|jpeg|gif|png|ico)$/,
+                    test: /\.(jpg|jpeg|gif|png|ico)$/,
                     exclude: /node_modules/,
                     loader: 'file-loader',
                     options: {
