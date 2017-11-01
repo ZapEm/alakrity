@@ -4,9 +4,9 @@ import moment from 'moment'
 import cookie from 'react-cookie'
 import xss from 'xss'
 import { REJECTED_NAME as FAILURE, RESOLVED_NAME as SUCCESS } from '../utils/constants'
+import { MASCOT_STATUS } from '../utils/enums'
 import fetch from '../utils/fetcher'
 import { mascotSplash } from './backend'
-import { MASCOT_STATUS } from '../utils/enums'
 
 
 /**
@@ -90,12 +90,12 @@ export function login(username = '', password = '') {
 }
 
 export function logout(errorMessage = false) {
-    return (dispatch) =>{
+    return (dispatch) => {
 
-        if(errorMessage){
-            dispatch(mascotSplash(MASCOT_STATUS.DENIED, 10))
+        if ( errorMessage ) {
+            dispatch(mascotSplash({ status: MASCOT_STATUS.DENIED, message: errorMessage }, 10))
         } else {
-            dispatch(mascotSplash(MASCOT_STATUS.BYE, 10))
+            dispatch(mascotSplash({ status: MASCOT_STATUS.BYE, message: 'See you soon!' }, 10))
         }
 
         return dispatch({

@@ -2,9 +2,7 @@ import { fromJS, List } from 'immutable'
 import moment from 'moment'
 import { getTaskModal } from '../components/misc/modals/Modals'
 import { MASCOT_STATUS, TASK_STATUS } from '../utils/enums'
-import {
-    getMascotStatusFromProjectType, getMapFromList, getProjectTypeFromTask, getTaskStatus
-} from '../utils/helpers'
+import { getMapFromList, getMascotStatusFromProjectType, getProjectTypeFromTask, getTaskStatus } from '../utils/helpers'
 
 
 /**
@@ -36,7 +34,7 @@ export function addModal(modal) {
     }
 }
 
-export function setMascotStatus(mascotStatus = MASCOT_STATUS.IDLE, setOverride = false) {
+export function setMascotStatus(mascotStatus = MASCOT_STATUS.IDLE, setOverride = false, message = false) {
 
     if ( !MASCOT_STATUS[mascotStatus] && !setOverride ) {
         console.warn('INVALID MASCOT STATUS')
@@ -45,8 +43,13 @@ export function setMascotStatus(mascotStatus = MASCOT_STATUS.IDLE, setOverride =
 
     return {
         type: SET_MASCOT,
-        payload: mascotStatus,
-        meta: { override: setOverride }
+        payload: {
+            mascotStatus: mascotStatus,
+            mascotMessage: message
+        },
+        meta: {
+            override: setOverride
+        }
     }
 }
 
@@ -144,21 +147,22 @@ export function updateModals(time = false, initial = false) {
                    : new Date()
 
         //const mascotStatus = getState().backend.get('mascotStatus')
-        return (initial)
-            ? Promise.all([
-                dispatch(getUpcomingTasks(taskList, time, 0, initial)),
-                dispatch(mascotSplash(MASCOT_STATUS.HI, 5))
-            ])
-            : dispatch(getUpcomingTasks(taskList, time, 0, initial))
+        return dispatch(getUpcomingTasks(taskList, time, 0, initial))
+        // return (initial)
+        //     ? Promise.all([
+        //         dispatch(getUpcomingTasks(taskList, time, 0, initial)),
+        //         dispatch(mascotSplash({ status: MASCOT_STATUS.HI, message: false }, 5))
+        //     ])
+        //     : dispatch(getUpcomingTasks(taskList, time, 0, initial))
     }
 }
 
-export function mascotSplash(mascotStatus, seconds = 7) {
+export function mascotSplash({ status, message = false }, seconds = 7) {
     return (dispatch) => {
 
-        setTimeout(() => dispatch(setMascotStatus(false, true)), seconds * 1000)
+        setTimeout(() => dispatch(setMascotStatus(false, true, false)), seconds * 1000)
 
-        return dispatch(setMascotStatus(mascotStatus, true))
+        return dispatch(setMascotStatus(status, true, message))
     }
 }
 
@@ -169,6 +173,7 @@ export function mascotSplash(mascotStatus, seconds = 7) {
 const initialState = fromJS({
     mascotStatus: MASCOT_STATUS.IDLE,
     mascotStatusOverride: false,
+    mascotMessage: false,
     time: false,
     modalsList: List()
 })
@@ -195,7 +200,9 @@ export default function reducer(state = initialState, action) {
             })(state.get('modalsList').findIndex(modal => modal.id === action.payload))
 
         case SET_MASCOT:
-            return state.set(action.meta.override ? 'mascotStatusOverride' : 'mascotStatus', action.payload)
+            return state.set(action.meta.override ? 'mascotStatusOverride' :
+                             'mascotStatus', action.payload.mascotStatus)
+                        .set('mascotMessage', action.payload.mascotMessage)
 
         default:
             return state

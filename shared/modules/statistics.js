@@ -1,11 +1,13 @@
-import { RESOLVED_NAME as SUCCESS, REJECTED_NAME as FAILURE } from '/utils/constants'
+import { REJECTED_NAME as FAILURE, RESOLVED_NAME as SUCCESS } from '/utils/constants'
 import * as Immutable from 'immutable'
 import * as _ from 'lodash/object'
 import moment from 'moment'
 import { SPECIAL_PROJECTS } from '../utils/constants'
 import { STATISTIC_TYPES } from '../utils/enums'
 import fetch from '../utils/fetcher'
-import { getMascotSplash, SPLASH_TYPES } from '../utils/helpers'
+import {
+    getMapFromList, getMascotSplash, getProjectFromTask, getProjectWeekProgress, SPLASH_TYPES
+} from '../utils/helpers'
 import * as backendActions from './backend'
 //import { ReminderModal } from '../components/misc/Modals/Modals'
 
@@ -101,11 +103,20 @@ export function recordBeginTask(task, { started, isOver = false }) {
 }
 
 
-export function recordCompleteTask(task, { rating }) {
+export function recordCompleteTask(task, { rating, isOver = false }) {
     const completeDelay = moment(task.completed).diff(moment(task.start).add(task.duration, 'minutes'), 'minutes')
     const weekDate = task.completed.clone().startOf('isoWeek')
 
     return (dispatch, getState) => {
+
+        const project = getProjectFromTask(task, getState().projects.get('projectList'))
+        const progress = getProjectWeekProgress(project, getState().tasks.get('taskList'), task)
+
+        let message = false
+        if(progress){
+            message = `You are ${progress.percentTimeDone}% done with the work for project ${project.get('title')} this week! (Task ${progress.count.done} of ${progress.count.total})`
+        }
+
         return Promise.all([
             dispatch(recordStatistic(
                 {
@@ -119,9 +130,11 @@ export function recordCompleteTask(task, { rating }) {
                                                                                                               'projectPeriods']))
                 }
             )),
-            dispatch(backendActions.mascotSplash(getMascotSplash(SPLASH_TYPES.COMPLETED, {
+            dispatch(backendActions.mascotSplash(getMascotSplash((!isOver) ? SPLASH_TYPES.COMPLETED : SPLASH_TYPES.OVER, {
                 completeDelay: completeDelay,
-                rating: rating
+                startDelay: task.startDelay,
+                rating: rating,
+                message: message
             })))
         ])
     }

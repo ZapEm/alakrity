@@ -75,13 +75,7 @@ export const DANGER_LEVELS = Object.freeze(
     }
 )
 
-export const DEFAULT_SETTINGS = Object.freeze(
-    {
-        isDefault: true,
-        locale: 'en',
-        token: false
-    }
-)
+
 
 export const LOCALE_STRINGS = Object.freeze(
     {

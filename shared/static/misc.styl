@@ -225,3 +225,49 @@
 
 .manual-row
   top 0 !important
+
+.speech-bubble-wrapper
+  position absolute
+  right 200px
+  top 40px
+  z-index 30
+
+.speech-bubble
+  position relative
+  min-width 200px
+  padding 15px
+  margin 1em 0 3em
+  margin-right 30px
+  border 3px solid $theme-border
+  color $theme-dark
+  font-weight 500
+  text-align center // maybe not?
+  background $theme-l7
+  -webkit-border-radius 15px
+  -moz-border-radius 15px
+  border-radius 15px
+  &:before
+    content ""
+    position absolute
+    display block
+    width 0
+    top 10px
+    bottom auto
+    left auto
+    right -30px
+    border-style solid
+    border-width 5px 0 25px 30px
+    border-color transparent $theme-border
+  &:after
+    content ""
+    position absolute
+    display block
+    width 0
+    top 13px
+    bottom auto
+    left auto
+    right -24px
+    border-style solid
+    border-width 4px 0 20px 25px
+    border-color transparent $theme-l7
+

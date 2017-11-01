@@ -121,42 +121,97 @@ export function getTaskStatus(task, startOfThisWeek = moment().startOf('isoWeek'
 
 export const SPLASH_TYPES = Object.freeze({
     COMPLETED: 'completed',
-    BEGIN: 'begin'
+    BEGIN: 'begin',
+    OVER: 'over'
 })
 
-export function getMascotSplash(type, { startDelay, completeDelay, rating }) {
+export function getMascotSplash(splashType, { startDelay, completeDelay, rating, message = false }) {
 
-    switch (type) {
-        case SPLASH_TYPES.COMPLETED:
-            if ( (rating && rating <= 2) || completeDelay > 35 ) {
-                return MASCOT_STATUS.DENIED
-            } else if ( (rating && rating <= 3) || completeDelay > 20 ) {
-                return MASCOT_STATUS.STRESS
-            } else {
-                return MASCOT_STATUS.GOODWORK
-            }
+    const mascot = ((type) => {
+        switch (type) {
+            case SPLASH_TYPES.COMPLETED:
+                if ( (rating && rating <= 2) || completeDelay > 35 ) {
+                    return {
+                        status: MASCOT_STATUS.DENIED,
+                        message: 'Can\'t win them all.'
+                    }
+                } else if ( (rating && rating <= 3) || completeDelay > 20 ) {
+                    return {
+                        status: MASCOT_STATUS.STRESS,
+                        message: 'It\'s done.'
+                    }
+                } else {
+                    return {
+                        status: MASCOT_STATUS.GOODWORK,
+                        message: 'Good work!'
+                    }
+                }
 
-        case SPLASH_TYPES.BEGIN:
-            if ( startDelay > 35 ) {
-                return MASCOT_STATUS.DENIED
-            } else if ( startDelay > 20 ) {
-                return MASCOT_STATUS.STRESS
-            } else {
-                return MASCOT_STATUS.GOODWORK
-            }
+            case SPLASH_TYPES.OVER:
+                if ( (rating && rating <= 2) || completeDelay > 35 || startDelay > 35 ) {
+                    return {
+                        status: MASCOT_STATUS.DENIED,
+                        message: 'I think you can do better than that.'
+                    }
+                } else if ( (rating && rating <= 3) || completeDelay > 20 || startDelay > 20 ) {
+                    return {
+                        status: MASCOT_STATUS.STRESS,
+                        message: 'Another task completed.'
+                    }
+                } else {
+                    return {
+                        status: MASCOT_STATUS.GOODWORK,
+                        message: 'That was nicely done!'
+                    }
+                }
 
-        default:
-            return false
+            case SPLASH_TYPES.BEGIN:
+                if ( startDelay > 35 ) {
+                    return {
+                        status: MASCOT_STATUS.DENIED,
+                        message: 'Better late than never.'
+                    }
+                } else if ( startDelay > 20 ) {
+                    return {
+                        status: MASCOT_STATUS.STRESS,
+                        message: 'Just a small delay. No problem.'
+                    }
+                } else {
+                    return {
+                        status: MASCOT_STATUS.GOODWORK,
+                        message: 'Let\'s do this!'
+                    }
+                }
+
+            default:
+                return {
+                    status: false,
+                    message: false
+                }
+        }
+    })(splashType)
+
+    if ( message ) {
+        mascot.message = message
     }
+
+    return mascot
 }
 
+
 export function getProjectFromTask(task, projectMapOrList) {
-    if ( Immutable.List.isList(projectMapOrList) ) {
-        projectMapOrList = getMapFromList(projectMapOrList, 'id')
+    if ( !Immutable.Map.isMap(task) ) {
+
+        task = Immutable.fromJS(task)
     }
+
+    if ( Immutable.List.isList(projectMapOrList) ) {
+        return projectMapOrList.find((project) => project.get('id') === task.get('projectID'))
+    }
+
     if ( Immutable.Map.isMap(projectMapOrList) ) {
-        return Immutable.Map.isMap(task) ? projectMapOrList.get(task.get('projectID')) :
-               false
+        return projectMapOrList.get(task.get('projectID'))
+
     }
     // invalid parameter
     console.warn('getProjectFromTask(task, projectMapOrList) needs Immutable.Map or .List of projects!')
@@ -164,12 +219,15 @@ export function getProjectFromTask(task, projectMapOrList) {
 }
 
 export function getProjectTypeFromTask(task, projectMap) {
+    if ( !task ) {
+        return false
+    }
     const project = getProjectFromTask(task, projectMap)
     return project ? project.get('type') : false
 }
 
 export function getMapFromList(List, keyProp) {
-    if(typeof keyProp === 'undefined'){
+    if ( typeof keyProp === 'undefined' ) {
         return List.toMap()
     }
     return Immutable.Map(List.map(item => [item.get(keyProp), item]))
@@ -189,4 +247,54 @@ export function getMascotStatusFromProjectType(projectType) {
         [PROJECT_TYPES.HOLIDAY.key]: MASCOT_STATUS.HAPPY
     }[projectType]
     return status ? status : MASCOT_STATUS.IDLE
+}
+
+export function getProjectWeekProgress(project, taskList, task, week = moment().startOf('isoWeek')) {
+    if ( !Immutable.Map.isMap(task) ) {
+        task = Immutable.Map(task)
+    }
+
+    // task is from a different/irrelevant week or project.
+    if ( !moment(task.get('start')).isSame(week, 'isoWeek') || task.get('projectID') !== project.get('id') ) {
+        return false
+    }
+
+    const thisWeeksProjectTasks = taskList.filter(taskItem => (
+        taskItem.get('projectID') === project.get('id') &&
+        (taskItem.get('repeating') || moment(taskItem.get('start')).isSame(week, 'isoWeek')) &&
+        [
+            TASK_STATUS.DONE.key,
+            TASK_STATUS.ACTIVE.key,
+            TASK_STATUS.SCHEDULED.key,
+            TASK_STATUS.SNOOZED.key
+        ].indexOf(getTaskStatus(taskItem, week)) !== -1
+    ))
+
+    //     = taskList.filter(task => (
+    //     task.get('projectID') === project.get('id')
+    //     && task.get('start')
+    //     && moment(task.get('start')).isSame(week, 'week')
+    // ))
+
+    const count = {
+        total: thisWeeksProjectTasks.size,
+        done: 0,
+        totalDuration: 0,
+        doneDuration: 0
+    }
+    thisWeeksProjectTasks.forEach(projectTask => {
+        // count the currently completed task as done.
+        if ( getTaskStatus(projectTask, week) === TASK_STATUS.DONE.key || projectTask.get('id') === task.get('id') ) {
+            count.done++
+            count.doneDuration += projectTask.get('duration')
+        }
+        count.totalDuration += projectTask.get('duration')
+    })
+
+
+    return {
+        count: count,
+        percentTimeDone: Math.floor((count.doneDuration / count.totalDuration) * 100),
+        percentDone: Math.floor((count.done / count.total) * 100)
+    }
 }

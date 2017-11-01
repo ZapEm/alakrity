@@ -1,10 +1,11 @@
 import * as Immutable from 'immutable'
 import { isEmpty } from 'lodash/lang'
 import {
-    DEFAULT_SETTINGS, LOCALE_STRINGS, REJECTED_NAME as FAILURE, RESOLVED_NAME as SUCCESS
+    LOCALE_STRINGS, REJECTED_NAME as FAILURE, RESOLVED_NAME as SUCCESS
 } from '../utils/constants'
 import fetch from '../utils/fetcher'
 import { LOGIN, LOGOUT } from './auth'
+import { DEFAULT_SETTINGS } from '../utils/defaultValues'
 
 
 /**

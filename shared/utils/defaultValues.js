@@ -59,3 +59,11 @@ export const DEFAULT_TIMETABLE = Object.freeze(
         }
     }
 )
+
+export const DEFAULT_SETTINGS = Object.freeze(
+    {
+        isDefault: true,
+        locale: 'en',
+        token: false
+    }
+)
