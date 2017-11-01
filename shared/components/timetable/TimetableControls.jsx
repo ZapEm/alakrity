@@ -114,7 +114,7 @@ export default class TimetableControls extends React.Component {
                         <div className="tt-controls-edit-mode-done">
                             <LabeledIconButton
                                 iconName={'done'}
-                                tooltip="Back to"
+                                tooltip="Confirm Basic Timetable changes"
                                 onClick={::TimetableControls.handleSubmit}
                                 label="Done"
                             />

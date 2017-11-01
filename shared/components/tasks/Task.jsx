@@ -15,6 +15,7 @@ import { DndTypes, TASK_STATUS } from '../../utils/enums'
 import { getTaskStatus } from '../../utils/helpers'
 import IconButton from '../misc/IconButton'
 import TaskEdit from './TaskEdit'
+import { DEFAULT_PROJECT } from '../../utils/defaultValues'
 
 const dragSource = {
     canDrag(props) {
@@ -188,14 +189,14 @@ export default class Task extends React.Component {
 
         const taskStatus = displayMoment ? getTaskStatus(task, displayMoment.clone().startOf('isoWeek')) :
                            task.get('status')
-        const status = (editable || taskStatus !== TASK_STATUS.SCHEDULED.key) ?
-                       TASK_STATUS[taskStatus] : false
-
+        // const status = (editable || taskStatus !== TASK_STATUS.SCHEDULED.key) ?
+        //                TASK_STATUS[taskStatus] : false
 
         const durationCutoff = task.get('duration') >= 90
 
 
         const colors = (projectColorMap.get(task.get('projectID')) || Immutable.fromJS({
+            project: DEFAULT_PROJECT,
             normal: 'magenta',
             dark: 'darkred',
             light: 'lightred',
@@ -205,6 +206,8 @@ export default class Task extends React.Component {
                 light: 'lightblue'
             }
         })).toJSON()
+
+        const status = colors.project && colors.project.tracked && TASK_STATUS[taskStatus] ? TASK_STATUS[taskStatus] : false
 
         const itemColors = !task.get('special') ?
                            _.omit(colors, ['special']) :

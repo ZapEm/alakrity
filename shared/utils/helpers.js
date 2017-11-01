@@ -129,18 +129,18 @@ export function getMascotSplash(type, { startDelay, completeDelay, rating }) {
     switch (type) {
         case SPLASH_TYPES.COMPLETED:
             if ( (rating && rating <= 2) || completeDelay > 35 ) {
-                return MASCOT_STATUS.STRESS
+                return MASCOT_STATUS.DENIED
             } else if ( (rating && rating <= 3) || completeDelay > 20 ) {
-                return MASCOT_STATUS.WORK
+                return MASCOT_STATUS.STRESS
             } else {
                 return MASCOT_STATUS.GOODWORK
             }
 
         case SPLASH_TYPES.BEGIN:
             if ( startDelay > 35 ) {
-                return MASCOT_STATUS.STRESS
+                return MASCOT_STATUS.DENIED
             } else if ( startDelay > 20 ) {
-                return MASCOT_STATUS.WORK
+                return MASCOT_STATUS.STRESS
             } else {
                 return MASCOT_STATUS.GOODWORK
             }

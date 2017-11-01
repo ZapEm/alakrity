@@ -42,7 +42,7 @@ export const PROJECT_TYPES = Object.freeze(
 export const TASK_STATUS = Object.freeze(
     {
         DEFAULT: { key: 'DEFAULT', name: 'Standard', icon: '' },
-        SCHEDULED: { key: 'SCHEDULED', name: 'Scheduled', icon: 'grid_on' },
+        SCHEDULED: { key: 'SCHEDULED', name: 'Scheduled', icon: 'alarm' },
         ACTIVE: { key: 'ACTIVE', name: 'Active', icon: 'pets' },
         DONE: { key: 'DONE', name: 'Done', icon: 'done' },
         //WAITING: { key: 'WAITING', name: 'Waiting', icon: 'notifications_active' },

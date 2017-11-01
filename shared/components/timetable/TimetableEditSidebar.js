@@ -206,7 +206,7 @@ export default class TimetableEditSidebar extends React.Component {
                             title="First hour of the timetable (in 24h format)"
                         >Start</label>
                         <input
-                            className="tt-form-input w3-input"
+                            className="tt-form-input start-end w3-input"
                             id="tt_start"
                             title="First hour of the timetable (in 24h format)"
                             style={
@@ -231,7 +231,7 @@ export default class TimetableEditSidebar extends React.Component {
                             title="Last hour of the timetable (in 24h format)"
                         >End</label>
                         <input
-                            className="tt-form-input w3-input"
+                            className="tt-form-input start-end w3-input"
                             id="tt_end"
                             title="Last hour of the timetable (in 24h format)"
                             style={

@@ -52,6 +52,7 @@ export function editProject(projectInput) {
 
     projectInput.title = xss(projectInput.title)
     projectInput.editing = false
+    if ( projectInput.tracked === 'initial' ) { projectInput.tracked = true }
     projectInput = _.merge({}, projectInput, { lastEdited: moment() })
 
 

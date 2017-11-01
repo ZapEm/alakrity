@@ -88,7 +88,7 @@ export default class StatisticsViewContainer extends React.Component {
                 appStats={appStats}
             />
 
-            <h4 className="w3-center">Project Time Coverage
+            <h4 className="w3-center">Project Time Coverage (in %)
                 <div className="w3-center w3-small">Actual and *targeted values (from total task durations)</div>
             </h4>
 

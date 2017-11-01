@@ -89,10 +89,14 @@ export function login(username = '', password = '') {
     }
 }
 
-export function logout() {
+export function logout(errorMessage = false) {
     return (dispatch) =>{
 
-        dispatch(mascotSplash(MASCOT_STATUS.BYE, 20))
+        if(errorMessage){
+            dispatch(mascotSplash(MASCOT_STATUS.DENIED, 10))
+        } else {
+            dispatch(mascotSplash(MASCOT_STATUS.BYE, 10))
+        }
 
         return dispatch({
             type: LOGOUT

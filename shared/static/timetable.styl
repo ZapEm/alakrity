@@ -213,7 +213,10 @@
 
 .tt-form-input
   padding 4px
-  flex 1
+  display inline-block
+  //flex 1
+  &.start-end
+    width 40px
 
 .tt-form-time-sign
   pointer-events none
@@ -224,21 +227,18 @@
   flex 0 0 32px
 
 .tt-project-picker
-  //max-height 200px
-  min-height 140px
-  display flex
-  flex-direction column
-  flex-wrap nowrap
+  height 170px
 
 .tt-project-picker-label
   flex 0
 
 .tt-project-picker-content
   padding 0 4px
+  height 140px
   border solid 1px $theme
   border-radius 4px
   display flex
-  flex 1
+  //flex 1
 
 .tt-project-picker-option
   display flex

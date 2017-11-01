@@ -6,7 +6,7 @@ import xss from 'xss'
 import { REJECTED_NAME as FAILURE, RESOLVED_NAME as SUCCESS } from '../utils/constants'
 import { TASK_STATUS } from '../utils/enums'
 import fetch from '../utils/fetcher'
-import { dayTasksFilter, getTaskDayFilter, taskDayFilters } from '../utils/helpers'
+import { dayTasksFilter } from '../utils/helpers'
 import newId from '../utils/newId'
 import { LOGIN, LOGOUT } from './auth'
 import { REMOVE as REMOVE_PROJECT } from './projects'
@@ -278,7 +278,7 @@ export function confirmOverTask(task, { rating, completed, started }) {
     })
 
 
-    return (dispatch, getState) => {
+    return (dispatch) => {
         return dispatch(editTask(task)).then(Promise.all([
             dispatch(backendActions.updateModals()),
             dispatch(statistics.recordBeginTask(task, { started: started, isOver: true }))
@@ -301,7 +301,7 @@ export function completeTask(task, options = { rating: false }) {
         task = task.toJS()
     }
 
-    return (dispatch, getState) => {
+    return (dispatch) => {
 
         task = _merge({}, task, {
             completed: moment(),

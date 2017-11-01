@@ -68,7 +68,7 @@ export function getWeeklyLineData(compiledStats, appStats, maxWeeks = 10) {
     }
 }
 
-export function getWeeklyProjectLineData(compiledStats, appStats, projectList, maxWeeks = 10) {
+export function getWeeklyProjectLineData(compiledStats, appStats, projectList, maxWeeks = 6) {
 
     const allWeeks = compiledStats.getIn(['tasks', 'byWeek'])
                                   .take(maxWeeks)
@@ -76,8 +76,8 @@ export function getWeeklyProjectLineData(compiledStats, appStats, projectList, m
                                   .map(weekStats => mapToProjects(weekStats, projectList, appStats))
 
     let datasets = []
-    let i = 0
-    allWeeks.last().forEach((projectStats, projectID) => {
+
+    allWeeks.flatten(true).forEach((projectStats, projectID) => {
         datasets.push({
             label: projectStats.get('title'),
             yAxisID: 'y-percent-plus',
@@ -98,13 +98,12 @@ export function getWeeklyProjectLineData(compiledStats, appStats, projectList, m
                 borderWidth: 0,
                 pointRadius: 1,
                 pointHoverRadius: 1,
-                fill: i.toString(),
+                fill: '-1',
                 lineTension: 0,
                 ...getLineColorsTarget(projectStats.get('color')),
                 data: allWeeks.map(week => week.hasIn([projectID, 'targetCoverage']) ? week.getIn([projectID, 'targetCoverage']) : 0).toArray()
             })
         }
-        i += 2
     })
 
     return {
@@ -141,14 +140,16 @@ function mapToProjects(weekStats, projectList, appStats) {
         const project = projectList.find(project => project.get('id') === projectID)
         const plannedTime = appStats.getIn(['projectWorkPlanned', projectID])
 
-        projectsStats[projectID] = {
-            title: project.get('title'),
-            actualCoverage: (plannedTime > 0)
-                ? Math.round((actualTime / plannedTime) * 10000) / 100 : 0,
-            targetCoverage: (plannedTime > 0)
-                ? Math.round((weekStats.getIn(['projectWorkTimeTarget', projectID]) / plannedTime) * 10000) / 100 : 0,
-            color: project.get('color'),
-            active: true
+        if(project.get('tracked')){
+            projectsStats[projectID] = {
+                title: project.get('title'),
+                actualCoverage: (plannedTime > 0)
+                    ? Math.round((actualTime / plannedTime) * 10000) / 100 : 0,
+                targetCoverage: (plannedTime > 0)
+                    ? Math.round((weekStats.getIn(['projectWorkTimeTarget', projectID]) / plannedTime) * 10000) / 100 : 0,
+                color: project.get('color'),
+                active: true
+            }
         }
     })
 
