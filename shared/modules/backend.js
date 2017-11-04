@@ -2,7 +2,8 @@ import { fromJS, List } from 'immutable'
 import moment from 'moment'
 import { getTaskModal } from '../components/misc/modals/Modals'
 import { MASCOT_STATUS, TASK_STATUS } from '../utils/enums'
-import { getMapFromList, getMascotStatusFromProjectType, getProjectTypeFromTask, getTaskStatus } from '../utils/helpers'
+import { getMapFromList, getProjectTypeFromTask, getTaskStatus } from '../utils/helpers'
+import { getMascotStatusFromProjectType } from '../components/misc/mascot/mascotFunctions'
 
 
 /**
@@ -14,7 +15,8 @@ const ADD_MODAL = 'alakrity/backend/ADD_MODAL'
 const REMOVE_MODAL = 'alakrity/backend/REMOVE_MODAL'
 export const UPDATE_UPCOMING_TASKS = 'alakrity/backend/UPDATE_UPCOMING_TASKS'
 const SET_MASCOT = 'alakrity/backend/SET_MASCOT'
-const SEND_NOTIFICATION = 'alakrity/backend/SEND_NOTIFICATION'
+//const SAVE_LAST_SHOWN_PROGRESS = 'alakrity/backend/SAVE_LAST_SHOWN_PROGRESS'
+
 
 /**
  * Action Creators:

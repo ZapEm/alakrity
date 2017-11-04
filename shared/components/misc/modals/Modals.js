@@ -56,12 +56,17 @@ export class OverModal extends Modal {
 }
 
 export function getTaskModal(task, thisWeek, checkTime) {
+    const time = moment(checkTime)
 
     switch (getTaskStatus(task, thisWeek)) {
         case TASK_STATUS.SCHEDULED.key:
-            if ( moment(task.get('start')).add(task.get('duration'), 'minutes').isBefore(checkTime) ) {
+            if ( task.get('repeating') ?
+                 moment(task.get('start')).isoWeek(time.isoWeek()).add(task.get('duration'), 'minutes').isBefore(time)
+                    :
+                 moment(task.get('start')).add(task.get('duration'), 'minutes').isBefore(time) ) {
                 return new OverModal(task)
-            } else {
+            }
+            else {
                 return new ReminderModal(task)
             }
 

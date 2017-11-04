@@ -69,13 +69,14 @@ export default class ModalFooter extends React.Component {
     }
 
     getFooter(type) {
+        const isRepeating = this.props.modal.task.get('repeating')
         const footers = {
             [MODAL_TYPES.REMINDER]: () => [
                 <LabeledIconButton
                     key={2}
                     iconName="timer_off" //"event_busy" //"cancel" //"remove_circle_outline" //"skip_next"
-                    label="Reschedule"
-                    tooltip={'Removes this task from the schedule.\nYou can reschedule it later.'}
+                    label={isRepeating ? 'Ignore' : 'Reschedule'}
+                    tooltip={isRepeating ? 'Ignore this repeating task for the current week.\nYou will be reminded again next Week.' : 'Removes this task from the schedule.\nYou can reschedule it later.'}
                     dangerLevel={DANGER_LEVELS.DANGER.hover}
                     onClick={::this.handleReschedule}
                 />,
@@ -86,7 +87,7 @@ export default class ModalFooter extends React.Component {
                     dangerLevel={DANGER_LEVELS.WARN.hover}
                     onClick={::this.handleSnooze}
                     tooltip={'Remind again in 15 minutes'}
-                    disabled={this.props.modal.task.get('repeating') ? 'Not yet implemented for repeating tasks' : false}
+                    disabled={isRepeating ? 'Not yet implemented for repeating tasks' : false}
                 />,
                 <LabeledIconButton
                     key={0}
@@ -102,9 +103,9 @@ export default class ModalFooter extends React.Component {
                     key={2}
                     iconName="cancel" //"event_busy" //"cancel" //"remove_circle_outline" //"skip_next"
                     label="Abort"
+                    tooltip={isRepeating ? 'Abort the repeating task and ignore it this week.' : 'Abort the task and move it back to unscheduled tasks.'}
                     dangerLevel={DANGER_LEVELS.DANGER.hover}
                     onClick={::this.handleAbort}
-                    tooltip={'Abort task and move it back to unscheduled tasks'}
                 />,
                 <LabeledIconButton
                     key={1}
@@ -113,7 +114,7 @@ export default class ModalFooter extends React.Component {
                     dangerLevel={DANGER_LEVELS.WARN.hover}
                     onClick={::this.handleExtend}
                     tooltip={'Remind me again in 15 minutes'}
-                    disabled={this.props.modal.task.get('repeating') ? 'Not yet implemented for repeating tasks' : false}
+                    disabled={isRepeating ? 'Not yet implemented for repeating tasks' : false}
                 />,
                 <LabeledIconButton
                     key={0}
@@ -135,7 +136,8 @@ export default class ModalFooter extends React.Component {
                 <LabeledIconButton
                     key={1}
                     iconName="clear"
-                    label="Reschedule"
+                    label={isRepeating ? 'Ignore' : 'Reschedule'}
+                    tooltip={isRepeating ? 'Ignore this repeating task for the current week.\nYou will be reminded again next Week.' : 'Removes this task from the schedule.\nYou can reschedule it later.'}
                     dangerLevel={DANGER_LEVELS.WARN.hover}
                     onClick={::this.handleReschedule}
                 />,

@@ -174,15 +174,15 @@ export function editTaskStart(newTask) {
     }
 }
 
-export function rescheduleTask(task, started = false) {
+export function rescheduleTask(task, started = false, isFromDrag = false) {
     if ( Immutable.Map.isMap(task) ) {
         task = task.toJS()
     }
     return (dispatch) => {
         const updatedTask = _.merge({}, task, {
-            start: null,
+            ...(!task.repeating || isFromDrag) && { start: null },
             status: task.repeating
-                ? { [moment().startOf('isoWeek')]: TASK_STATUS.DEFAULT.key }
+                ? !isFromDrag ? { [moment().startOf('isoWeek')]: TASK_STATUS.IGNORED.key } : {}
                 : TASK_STATUS.DEFAULT.key,
             started: false,
             completed: false,

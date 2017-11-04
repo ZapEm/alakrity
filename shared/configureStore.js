@@ -35,7 +35,6 @@ export default function configureStore(baseHistory, initialState, isServer = fal
 
             enhancer = compose(
                 applyMiddleware(
-                    loggerMiddleware,
                     routerMiddleware(baseHistory),
                     thunkMiddleware,
                     optimistPromiseMiddleware(
@@ -45,6 +44,7 @@ export default function configureStore(baseHistory, initialState, isServer = fal
                             throwOnReject: false
                         }
                     ),
+                    loggerMiddleware,
                     myMiddlewares.authErrorLogout()),
                 DevTools.instrument()
             )

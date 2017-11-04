@@ -31,29 +31,67 @@ export default class MascotContainer extends React.Component {
         message: false
     }
 
-    shouldComponentUpdate(nextProps) {
+    constructor(props) {
+        super(props)
+        this.state = {
+            image: getMascotImage(this.getStatus()),
+            oldImage: null
+        }
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
         return (
-            this.props.status !== nextProps.status
+            this.state.image !== nextState.image
+            || this.props.status !== nextProps.status
             || this.props.statusOverride !== nextProps.statusOverride
             || this.props.message !== nextProps.message
             || (this.props.periodicUpdates && this.props.time !== nextProps.time)
         )
     }
 
-    render() {
-        const { status, replaceStatus, statusOverride, message } = this.props
+    getStatus(props = this.props) {
+        return props.statusOverride
+            ? props.statusOverride
+            : props.replaceStatus
+                   ? props.replaceStatus
+                   : props.status
+    }
 
-        console.log('mascotMessage:', message)
+    componentWillUpdate(){
+        // hacky animation refresh, but nothing better really possible...
+        const oldImg = this.oldImgRef
+        if(oldImg){
+            oldImg.classList.remove('mascot-blend-out')
+            void oldImg.offsetWidth
+            oldImg.classList.add('mascot-blend-out')
+        }
+        const img = document.getElementById('mascot-image')
+        if(img){
+            img.classList.remove('mascot-blend-in')
+            void img.offsetWidth
+            img.classList.add('mascot-blend-in')
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState(({ image }) => ({
+                oldImage: image ? <img ref={(ref) => this.oldImgRef = ref} id="old-mascot-image" className="mascot-image-old mascot-blend-out" src={image.props.src} alt={'oldImage'}/> :
+                          null,
+                image: getMascotImage(this.getStatus(nextProps))
+            })
+        )
+    }
+
+
+    render() {
+        const { message } = this.props
+        const { image, oldImage } = this.state
+
 
         return <div className="mascot-container w3-margin-bottom">
             <SpeechBubble message={message}/>
-            {getMascotImage(
-                statusOverride
-                    ? statusOverride
-                    : replaceStatus
-                    ? replaceStatus
-                    : status
-            )}
+            {image}
+            {oldImage}
         </div>
     }
 }

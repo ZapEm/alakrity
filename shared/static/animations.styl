@@ -47,6 +47,12 @@
   to
     opacity 1
 
+@keyframes blend-out
+  from
+    opacity 1
+  to
+    opacity 0
+
 
 //@keyframes pop-out
 //  to
@@ -68,3 +74,15 @@
 
 .animate-blend-in
   animation blend-in normal forwards 2s// ease-out
+
+.animate-fade-in
+  animation controls-fade-in normal forwards 1s ease
+
+.animate-fade-out
+  animation controls-fade-out normal forwards 1s ease
+
+.mascot-blend-in
+  animation controls-fade-in normal forwards 0.7s ease
+
+.mascot-blend-out
+  animation controls-fade-out normal forwards 0.7s ease

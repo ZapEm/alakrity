@@ -39,7 +39,8 @@ export const DEFAULT_PROJECT = Object.freeze(
         color: '#FFFFFF',
         type: PROJECT_TYPES.DEFAULT.key,
 
-        tracked: 'initial'
+        tracked: 'initial',
+        lastShownProgress: false
     }
 )
 

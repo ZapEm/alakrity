@@ -6,9 +6,11 @@ import { SPECIAL_PROJECTS } from '../utils/constants'
 import { STATISTIC_TYPES } from '../utils/enums'
 import fetch from '../utils/fetcher'
 import {
-    getMapFromList, getMascotSplash, getProjectFromTask, getProjectWeekProgress, SPLASH_TYPES
-} from '../utils/helpers'
+    getMapFromList, getProjectFromTask, getProjectWeekProgress} from '../utils/helpers'
 import * as backendActions from './backend'
+import { getMascotMessageFromProgress, getMascotSplash, SPLASH_TYPES } from '../components/misc/mascot/mascotFunctions'
+import { editProject } from './projects'
+import { bindActionCreators } from 'redux'
 //import { ReminderModal } from '../components/misc/Modals/Modals'
 
 
@@ -111,11 +113,7 @@ export function recordCompleteTask(task, { rating, isOver = false }) {
 
         const project = getProjectFromTask(task, getState().projects.get('projectList'))
         const progress = getProjectWeekProgress(project, getState().tasks.get('taskList'), task)
-
-        let message = false
-        if(progress){
-            message = `You are ${progress.percentTimeDone}% done with the work for project ${project.get('title')} this week! (Task ${progress.count.done} of ${progress.count.total})`
-        }
+        const message = getMascotMessageFromProgress(progress, project, bindActionCreators(editProject, dispatch))
 
         return Promise.all([
             dispatch(recordStatistic(

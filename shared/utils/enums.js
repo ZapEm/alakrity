@@ -45,8 +45,8 @@ export const TASK_STATUS = Object.freeze(
         SCHEDULED: { key: 'SCHEDULED', name: 'Scheduled', icon: 'alarm' },
         ACTIVE: { key: 'ACTIVE', name: 'Active', icon: 'pets' },
         DONE: { key: 'DONE', name: 'Done', icon: 'done' },
-        //WAITING: { key: 'WAITING', name: 'Waiting', icon: 'notifications_active' },
-        SNOOZED: { key: 'SNOOZED', name: 'Snoozed', icon: 'snooze' }
+        SNOOZED: { key: 'SNOOZED', name: 'Snoozed', icon: 'snooze' },
+        IGNORED: { key: 'IGNORED', name: 'Ignored', icon: 'alarm_off' },
     }
 )
 

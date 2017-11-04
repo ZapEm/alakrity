@@ -1,5 +1,5 @@
 import { MASCOT_STATUS } from '/utils/enums'
-import { getRandomItem } from '/utils/helpers'
+import { getRandomItem } from '/components/misc/mascot/mascotFunctions'
 import moment from 'moment'
 import React from 'react'
 
@@ -7,7 +7,7 @@ import React from 'react'
 export function getMascotImage(status) {
 
     if ( typeof window === 'undefined' ) {
-        return <div className="mascot-image"/>
+        return <div id="mascot-image" className="mascot-image"/>
     }
 
     const urlMap = {
@@ -43,7 +43,7 @@ export function getMascotImage(status) {
         [MASCOT_STATUS.MEET]: require('img/idea.png')
     }
 
-    return <img className="mascot-image" src={urlMap[status]} alt={status}/>
+    return <img id="mascot-image" className="mascot-image mascot-blend-in" src={urlMap[status]} alt={status}/>
 }
 
 function getIdleImg(time = moment()) {

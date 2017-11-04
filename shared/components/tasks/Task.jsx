@@ -56,7 +56,7 @@ const dragSource = {
             //     })
             // )
 
-            props.taskActions.rescheduleTask(task, !!task.started)
+            props.taskActions.rescheduleTask(task, !!task.started, true)
 
             return
         }
@@ -241,7 +241,8 @@ export default class Task extends React.Component {
                             .fromNow() + '.',
                     [TASK_STATUS.DONE.key]: () => status.name,
                     [TASK_STATUS.DEFAULT.key]: () => status.name,
-                    [TASK_STATUS.SCHEDULED.key]: () => status.name
+                    [TASK_STATUS.SCHEDULED.key]: () => status.name,
+                    [TASK_STATUS.IGNORED.key]: () => 'Task is being ignored for the current week.\nYou will be reminded again next week.'
                 }[status.key](task)
             } catch (error) {
                 iconTooltip = status ? status.name : ''
