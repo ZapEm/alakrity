@@ -26,8 +26,7 @@ export default class Projects extends React.Component {
                         <StatisticsViewContainer/>
                     </div>
                     <div id="sidebar" className="col sidebar">
-                        <StatisticsSidebar
-                        />
+                        <StatisticsSidebar/>
                     </div>
                 </div>
             </div>

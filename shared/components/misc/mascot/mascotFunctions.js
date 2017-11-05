@@ -28,8 +28,8 @@ export function getMascotSplash(splashType, { startDelay, completeDelay, rating,
                     }
                 } else {
                     return {
-                        status: MASCOT_STATUS.GOODWORK,
-                        message: 'Good work!'
+                        status: MASCOT_STATUS.AWESOME,
+                        message: 'That was awesome!'
                     }
                 }
 
@@ -47,7 +47,7 @@ export function getMascotSplash(splashType, { startDelay, completeDelay, rating,
                 } else {
                     return {
                         status: MASCOT_STATUS.GOODWORK,
-                        message: 'That was nicely done!'
+                        message: 'Good work!'
                     }
                 }
 
@@ -93,8 +93,8 @@ export function getMascotStatusFromProjectType(projectType) {
         [PROJECT_TYPES.STUDIES.key]: MASCOT_STATUS.WORK,
         [PROJECT_TYPES.SPORT.key]: MASCOT_STATUS.SPORT,
         [PROJECT_TYPES.CHORES.key]: MASCOT_STATUS.CHORES,
-        [PROJECT_TYPES.APPOINTMENTS.key]: MASCOT_STATUS.MEET,
-        [PROJECT_TYPES.DATE.key]: MASCOT_STATUS.MEET,
+        [PROJECT_TYPES.APPOINTMENTS.key]: MASCOT_STATUS.HI,
+        [PROJECT_TYPES.DATE.key]: MASCOT_STATUS.HI,
         [PROJECT_TYPES.FUN.key]: MASCOT_STATUS.HAPPY,
         [PROJECT_TYPES.HOLIDAY.key]: MASCOT_STATUS.HAPPY
     }[projectType]

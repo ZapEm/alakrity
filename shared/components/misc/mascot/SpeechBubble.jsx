@@ -28,7 +28,9 @@ export default class SpeechBubble extends React.Component {
                     message: this.props.message,
                     animation: 'fade'
                 })
-                setTimeout(() => this.setState({ message: nextProps.message }), 1000)
+
+                clearTimeout(this.timeout)
+                this.timeout = setTimeout(() => this.setState({ message: nextProps.message }), 1000)
             }
             else if ( !this.props.message && nextProps.message ) {
                 this.setState({
@@ -38,6 +40,8 @@ export default class SpeechBubble extends React.Component {
             }
             else if ( this.props.message && nextProps.message ) {
                 this.setState({ animation: 'fade' })
+
+                clearTimeout(this.timeout)
                 setTimeout(() => this.setState({
                     message: nextProps.message,
                     animation: 'appear'

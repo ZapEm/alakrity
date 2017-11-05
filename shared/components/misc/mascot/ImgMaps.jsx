@@ -40,7 +40,9 @@ export function getMascotImage(status) {
                 require('img/groceries.png')
             ]
         ),
-        [MASCOT_STATUS.MEET]: require('img/idea.png')
+        [MASCOT_STATUS.MEET]: require('img/idea.png'),
+        [MASCOT_STATUS.QUESTION]: require('img/question.png'),
+        [MASCOT_STATUS.AWESOME]: require('img/awesome.png')
     }
 
     return <img id="mascot-image" className="mascot-image mascot-blend-in" src={urlMap[status]} alt={status}/>

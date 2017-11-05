@@ -75,7 +75,9 @@ export const MASCOT_STATUS = Object.freeze(
         BYE: 'BYE',
         DENIED: 'DENIED',
         MEET: 'MEET',
-        HAPPY: 'HAPPY'
+        HAPPY: 'HAPPY',
+        AWESOME: 'AWESOME',
+        QUESTION: 'QUESTION'
     }
 )
 

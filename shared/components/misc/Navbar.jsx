@@ -78,7 +78,8 @@ export default class Navbar extends React.Component {
                             to={'/manual'}
                             onClick={(e) => {
                                 e.preventDefault()
-                                window.open('/manual', 'Alakrity Manual', 'toolbar=no,status=no,menubar=no,left=0,top=100,width=1200,height=800')
+                                const manualPath = '/manual' + ((currentPath !== '/login') ? (currentPath === '/') ? '#manual-chapter-timetable' : currentPath.replace('/', '#manual-chapter-') : '')
+                                window.open(manualPath, 'Alakrity Manual', 'toolbar=no,status=no,menubar=no,left=0,top=100,width=1234,height=800')
                             }}
                             className="material-icons w3-hover-theme navbar-button no-underline w3-right navbar-help-icon"
                         >help_outline</Link>

@@ -6,6 +6,7 @@ import AuthForm from '../components/auth/AuthForm'
 import MascotContainer from '../components/misc/mascot/MascotContainer'
 import * as authActions from '../modules/auth'
 import { MASCOT_STATUS } from '../utils/enums'
+import NotificationPermissionRequester from '../components/misc/NotificationPermissionRequester'
 
 
 @connect()
@@ -41,11 +42,12 @@ export default class Login extends React.Component {
                                 understanding.
                             </p>
                             <p>
-                                A manual with a more detailed description can be found <a href="javascript:window.open('/manual', 'Alakrity Manual', 'toolbar=no,status=no,menubar=no,left=0,top=100,width=1200,height=800')">here</a> or by
+                                A manual with a more detailed description can be found by
                                 clicking the <a href="javascript:window.open('/manual', 'Alakrity Manual', 'toolbar=no,status=no,menubar=no,left=0,top=100,width=1200,height=800')"
                                                 className="material-icons w3-text-theme no-underline"
                                                 style={{ transform: 'translateY(5px)' }}>help_outline</a> icon at the top.
                             </p>
+                            <NotificationPermissionRequester/>
                         </div>
                         <p className="w3-tiny w3-display-bottommiddle">This website uses cookies for
                             authentication purposes only.</p>

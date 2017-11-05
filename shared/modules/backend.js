@@ -159,10 +159,13 @@ export function updateModals(time = false, initial = false) {
     }
 }
 
+let MascotSplashTimeout
 export function mascotSplash({ status, message = false }, seconds = 7) {
     return (dispatch) => {
 
-        setTimeout(() => dispatch(setMascotStatus(false, true, false)), seconds * 1000)
+        // make sure there is only one timeout running
+        clearTimeout(MascotSplashTimeout)
+        MascotSplashTimeout = setTimeout(() => dispatch(setMascotStatus(false, true, false)), seconds * 1000)
 
         return dispatch(setMascotStatus(status, true, message))
     }
