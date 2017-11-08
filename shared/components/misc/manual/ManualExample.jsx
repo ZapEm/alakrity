@@ -55,7 +55,7 @@ export default class ManualExample extends React.Component {
                 </li>
                 <li>
                     <p className="manual-p">
-                        Only after all the other steps comes finally the definition of the <em> timetable</em>. basic schedule??
+                        Only after all the other steps comes finally the definition of the <em> timetable</em>.  basic schedule??
                     </p>
                 </li>
             </ul>
