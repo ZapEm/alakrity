@@ -22,14 +22,12 @@ export default class ManualExample extends React.Component {
                         for all his <i> Appointments </i>, so he can make them show up in the timetable.
                     </p>
                     <p className="manual-p">
-                        Steve does not need any encouragement to work on these tasks, so he sets the projects up as
+                        Steve does not need any encouragement to work on these projects, so he sets the projects up as
                         un-tracked by removing the <em> <q>tracked</q> check mark </em>.
                     </p>
-                </li>
-                <li>
                     <p className="manual-p">
                         For the work of his <i> Bachelors Thesis </i> Steve creates a <em> tracked </em> project, since
-                        he was struggling to find the time and motivation to do it. He adds another <em> tracked </em>
+                        he was struggling to find the time and motivation to do it. He adds another tracked
                         project for his <i> Exams Preparations </i> so he wont forget to study for the tests.
                     </p>
                 </li>
@@ -47,15 +45,16 @@ export default class ManualExample extends React.Component {
                 <li>
                     <p className="manual-p">
                         The next thing Steve has to do, is create <em> tasks </em> for his various projects. He sets the
-                        <em> <q>repeating</q> </em> flag for tasks that have to be done on a weekly basis. Now his <i>
-                        Running </i> task and <i> Classes </i> etc. will show up every week. When estimating the
-                        duration of the tasks he is very generous (x1.5) to leave himself some time for unexpected
-                        delays and short breaks between the tasks.
+                        <em> <q>repeating</q> </em> flag for tasks that have to be done on a weekly basis. Now, for
+                        example, his <i> Running </i> task will show up every week. When estimating the duration of the
+                        tasks he is very generous (x1.5) to leave himself some time for small delays and short breaks
+                        between the tasks.
                     </p>
                 </li>
                 <li>
                     <p className="manual-p">
-                        Only after all the other steps comes finally the definition of the <em> timetable</em>.  basic schedule??
+                        Only after all the other steps comes finally the definition of the <em> timetable</em>. basic
+                        schedule??
                     </p>
                 </li>
             </ul>
