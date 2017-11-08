@@ -93,7 +93,7 @@ export default class ModalContent extends React.Component {
     render() {
         const { modal, projectColorMap, settings, rating, started, completed, projectList } = this.props
 
-        const task = modal.task// ? modal.task : false
+        const task = modal.task
         const locale = settings.get('locale')
 
         const startMoment = moment(task.get('start')).startOf('minute')
@@ -168,8 +168,9 @@ export default class ModalContent extends React.Component {
                 <div className="modal-middle-left w3-padding">
                     <TaskPreview
                         projectColorMap={projectColorMap}
-                        task={task.toJSON()}
+                        task={task.toJS()}
                         locale={locale}
+                        notDragging={true}
                     />
                     {(modal.type === MODAL_TYPES.COMPLETION || modal.type === MODAL_TYPES.OVER) &&
                     <RatingPicker

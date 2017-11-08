@@ -32,12 +32,33 @@ export default class TaskItemDragPreview extends React.Component {
                 dark: 'darkblue',
                 light: 'lightblue'
             }
-        })).toJSON()
+        })).toJS()
 
         this.state = {
             colors: !this.props.task.special ?
                     _.omit(colors, ['special']) :
                     colors.special
+        }
+    }
+
+    componentWillReceiveProps(nextProps){
+        if(nextProps.notDragging) {
+            const colors = (nextProps.projectColorMap.get(nextProps.task.projectID) || Immutable.fromJS({
+                normal: 'magenta',
+                dark: 'darkred',
+                light: 'lightred',
+                special: {
+                    normal: 'cyan',
+                    dark: 'darkblue',
+                    light: 'lightblue'
+                }
+            })).toJS()
+
+            this.setState({
+                colors: !nextProps.task.special ?
+                        _.omit(colors, ['special']) :
+                        colors.special
+            })
         }
     }
 

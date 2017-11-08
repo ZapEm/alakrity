@@ -42,7 +42,7 @@ export default class NotificationPermissionRequester extends React.Component {
         } else if ( permission === 'granted' ) {
             status = {
                 element: <i className="material-icons w3-text-green w3-xxlarge w3-display-middle">check</i>,
-                message: 'Permission granted!'
+                message: 'Permission granted. Thanks!'
             }
         } else if ( permission === 'denied' ) {
             status = {
@@ -58,7 +58,7 @@ export default class NotificationPermissionRequester extends React.Component {
         }
 
         return <div className="notification-permission-requester-wrapper">
-            <h5 className="w3-text-theme w3-center">Please allow notifications so Alakrity can send reminders.</h5>
+            <h5 className="w3-text-theme w3-center">Please allow notifications so Alakrity can show reminders even when the tab is in the background.</h5>
             <div
                 className="w3-display-container notification-permission-requester w3-card w3-round w3-border w3-border-theme">
                 <div className="notification-permission-requester-icon w3-display-container">

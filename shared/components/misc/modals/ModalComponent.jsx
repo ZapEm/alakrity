@@ -101,6 +101,7 @@ export default class ModalComponent extends React.Component {
         this.setState(({ modalIndex }) => ({
             modalIndex: (modalIndex + 1 >= this.props.modalsList.size) ? 0 : modalIndex + 1
         }))
+        //this.forceUpdate()
     }
 
     handleBack(e) {
@@ -108,6 +109,7 @@ export default class ModalComponent extends React.Component {
         this.setState(({ modalIndex }) => ({
             modalIndex: (modalIndex - 1 < 0) ? this.props.modalsList.size - 1 : modalIndex - 1
         }))
+        //this.forceUpdate()
     }
 
     handleSetState(newState) {
@@ -153,7 +155,7 @@ export default class ModalComponent extends React.Component {
                         rating={this.state.rating}
                         started={this.state.started}
                         completed={this.state.completed}
-                        modalsList={this.props.modalsList}
+                        modalsList={modalsList}
                         projectList={this.props.projectList}
                     />
                     <ModalFooter
