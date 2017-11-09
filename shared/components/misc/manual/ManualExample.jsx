@@ -5,7 +5,7 @@ export default class ManualExample extends React.Component {
     render() {
         return <div id="manual-chapter-example" className="manual-chapter">
             <h3 className="w3-text-theme">Example Use Case</h3>
-            <p>
+            <p className="manual-p">
                 Steve is a computer science student in the last semester of his bachelor studies. To finish his degree,
                 he still has to attend two lectures, pass the exams, and write his bachelor thesis. He works 9 hours a
                 week as a tutor to earn some pocket money. He also likes to stay active, so goes running every
@@ -53,8 +53,12 @@ export default class ManualExample extends React.Component {
                 </li>
                 <li>
                     <p className="manual-p">
-                        Only after all the other steps comes finally the definition of the <em> timetable</em>. basic
-                        schedule??
+                        Finally, Steve has to decide at what days and times he wants to work on his projects. He clicks
+                        <em> Change Weekly Schedule </em> to setup the basic <em> timetable</em>. He paints in the <em>
+                        work periods </em>, <em> break </em> times and <em> buffer </em> periods. The buffer helps him
+                        in case he has to reschedule a task on a full schedule, or if he can&apos;t quite fit in a task
+                        otherwise. Here, he tries to mark his tracked projects as detailed as possible, as their
+                        performance analysis depends on how well he followed his schedule.
                     </p>
                 </li>
             </ul>

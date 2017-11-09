@@ -98,9 +98,9 @@ export default class TimetableControls extends React.Component {
                     <div className="tt-controls-right">
                         <LabeledIconButton
                             iconName={'edit'}
-                            tooltip="Edit or change timetable"
+                            tooltip="Change timetable settings, work periods, and repeating tasks."
                             onClick={::this.handleEditClick}
-                            label="Basic Schedule"
+                            label="Change Weekly Schedule"
                         />
                     </div>
                 </div>
