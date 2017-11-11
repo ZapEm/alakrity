@@ -8,6 +8,7 @@ import React from 'react'
 import * as ImmutablePropTypes from 'react-immutable-proptypes'
 import * as MomentPropTypes from 'react-moment-proptypes'
 import { PROJECT_TYPES } from '../../../utils/enums'
+import { momentSetSameWeek } from '../../../utils/helpers'
 import TaskPreview from '../../dnd/TaskItemDragPreview'
 import IconButton from '../IconButton'
 import { Modal } from './Modals'
@@ -42,65 +43,77 @@ export default class ModalContent extends React.Component {
         return arr
     }
 
-    componentWillMount() {
-        const started = this.props.modal.task.get('started') ? moment(this.props.modal.task.get('started')) : false
-        const completed = this.props.modal.task.get('completed') ? moment(this.props.modal.task.get('completed')) :
-                          false
+    // componentWillMount() {
+    //     const started = this.props.modal.task.get('started') ? moment(this.props.modal.task.get('started')) : false
+    //     const completed = this.props.modal.task.get('completed') ? moment(this.props.modal.task.get('completed')) :
+    //                       false
+    //
+    //     this.props.changeModalState({
+    //         started: started,
+    //         completed: completed,
+    //         rating: false
+    //     })
+    // }
 
-        this.props.changeModalState({
-            started: started,
-            completed: completed,
-            rating: false
-        })
-    }
-
-    componentWillUpdate(nextProps) {
-        const started = nextProps.modal.task.get('started') ? moment(nextProps.modal.task.get('started')) : false
-        const completed = nextProps.modal.task.get('completed') ? moment(nextProps.modal.task.get('completed')) : false
-
-        if ( nextProps.modal && this.props.modal.id !== nextProps.modal.id ) {
-            this.props.changeModalState({
-                started: started,
-                completed: completed,
-                rating: false
-            }, nextProps.modalsList.keySeq())
-        }
-    }
+    // componentWillUpdate(nextProps) {
+    //     if ( nextProps.modal && this.props.modal.id !== nextProps.modal.id ) {
+    //         const started = nextProps.modal.task.get('started')
+    //             ? moment(nextProps.modal.task.get('started'))
+    //             : false
+    //         const completed = nextProps.modal.task.get('completed')
+    //             ? moment(nextProps.modal.task.get('completed'))
+    //             : false
+    //
+    //         this.props.changeModalState({
+    //             started: started,
+    //             completed: completed,
+    //             rating: false
+    //         }, nextProps.modalsList.keySeq())
+    //     }
+    // }
 
     handleSetRating(rating) {
         this.props.changeModalState({ rating: rating })
     }
 
     handleSetStarted(value) {
-        this.props.changeModalState({ started: value })
+        this.props.changeModalState({
+            started: value,
+            startedPicked: true
+        })
     }
 
     handleSetCompleted(value) {
-        this.props.changeModalState({ completed: value })
+        this.props.changeModalState({
+            completed: value,
+            completedPicked: true
+        })
     }
 
     handleResetTimes(e) {
         e.preventDefault()
-        const started = this.props.modal.task.get('started') ? moment(this.props.modal.task.get('started')) : false
-        const completed = this.props.modal.task.get('completed') ? moment(this.props.modal.task.get('completed')) :
-                          false
         this.props.changeModalState({
-            started: started,
-            completed: completed
+            started: this.props.modal.task.get('started') ? moment(this.props.modal.task.get('started')) : false,
+            completed: this.props.modal.task.get('completed') ? moment(this.props.modal.task.get('completed')) : false
         })
     }
 
     render() {
-        const { modal, projectColorMap, settings, rating, started, completed, projectList } = this.props
+        const { modal, projectColorMap, settings, rating, projectList } = this.props
+        let { started, completed } = this.props
 
         const task = modal.task
         const locale = settings.get('locale')
 
-        const startMoment = moment(task.get('start')).startOf('minute')
-        const snoozeStartMoment = startMoment.clone().add(task.get('snooze') ? task.get('snooze') : 0, 'minutes')
+        const startMoment = task.get('repeating') ? momentSetSameWeek(moment(task.get('start')).startOf('minute')) :
+                            moment(task.get('start')).startOf('minute')
+        //const snoozeStartMoment = startMoment.clone().add(task.get('snooze') ? task.get('snooze') : 0, 'minutes')
 
-        const endMoment = moment(task.get('start')).add(task.get('duration'), 'minutes').startOf('minute')
-        const extendEndMoment = endMoment.clone().add(task.get('extend') ? task.get('extend') : 0, 'minutes')
+        const endMoment = task.get('repeating') ?
+                          momentSetSameWeek(moment(task.get('start')).add(task.get('duration'), 'minutes').startOf('minute')) :
+                          moment(task.get('start')).add(task.get('duration'), 'minutes').startOf('minute')
+
+        //const extendEndMoment = endMoment.clone().add(task.get('extend') ? task.get('extend') : 0, 'minutes')
 
         const project = getProjectFromTask(task, projectList)
 
@@ -116,7 +129,7 @@ export default class ModalContent extends React.Component {
                             className="modal-content-over-date"
                             title={'The date is currently not adjustable here. If necessary, \nuse "Reschedule" and move it manually into the past.'}
                         >
-                            {moment(task.get('start')).format('ll')}
+                            {task.get('repeating') ? 'Every ' + moment(task.get('start')).format('dddd') : moment(task.get('start')).format('ll')}
                         </div>
                     </div>
                     <div className="modal-content-over-label">
@@ -124,7 +137,7 @@ export default class ModalContent extends React.Component {
                         <TimePicker
                             className="modal-content-over-timepicker"
                             popupClassName={locale !== 'en' ? 'modal-content-over-popup w3-card' : ' w3-card'}
-                            value={started ? started : startMoment}
+                            value={started}
                             showSecond={false}
                             use12Hours={locale === 'en'}
                             disabledMinutes={() => hiddenMinutes}
@@ -138,7 +151,7 @@ export default class ModalContent extends React.Component {
                         <TimePicker
                             className="modal-content-over-timepicker"
                             popupClassName={locale !== 'en' ? 'modal-content-over-popup' : ''}
-                            value={completed ? completed : endMoment}
+                            value={completed}
                             showSecond={false}
                             use12Hours={locale === 'en'}
                             disabledMinutes={() => hiddenMinutes}
@@ -215,7 +228,7 @@ export default class ModalContent extends React.Component {
                             <TimePicker
                                 className="modal-content-over-timepicker"
                                 popupClassName={locale !== 'en' ? 'modal-content-over-popup w3-card' : ' w3-card'}
-                                value={started ? started : snoozeStartMoment}
+                                value={started}
                                 showSecond={false}
                                 use12Hours={locale === 'en'}
                                 disabledMinutes={() => hiddenMinutes}
@@ -276,7 +289,7 @@ export default class ModalContent extends React.Component {
                             <TimePicker
                                 className="modal-content-over-timepicker"
                                 popupClassName={locale !== 'en' ? 'modal-content-over-popup' : ''}
-                                value={completed ? completed : extendEndMoment}
+                                value={completed}
                                 showSecond={false}
                                 use12Hours={locale === 'en'}
                                 disabledMinutes={() => hiddenMinutes}

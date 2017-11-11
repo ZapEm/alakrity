@@ -2,15 +2,14 @@ import { REJECTED_NAME as FAILURE, RESOLVED_NAME as SUCCESS } from '/utils/const
 import * as Immutable from 'immutable'
 import * as _ from 'lodash/object'
 import moment from 'moment'
+import { bindActionCreators } from 'redux'
+import { getMascotMessageFromProgress, getMascotSplash, SPLASH_TYPES } from '../components/misc/mascot/mascotFunctions'
 import { SPECIAL_PROJECTS } from '../utils/constants'
 import { STATISTIC_TYPES } from '../utils/enums'
 import fetch from '../utils/fetcher'
-import {
-    getMapFromList, getProjectFromTask, getProjectWeekProgress} from '../utils/helpers'
+import { getProjectFromTask, getProjectWeekProgress, momentSetSameWeek } from '../utils/helpers'
 import * as backendActions from './backend'
-import { getMascotMessageFromProgress, getMascotSplash, SPLASH_TYPES } from '../components/misc/mascot/mascotFunctions'
 import { editProject } from './projects'
-import { bindActionCreators } from 'redux'
 //import { ReminderModal } from '../components/misc/Modals/Modals'
 
 
@@ -22,7 +21,6 @@ const LOAD = 'alakrity/statistics/LOAD'
 const RECORD = 'alakrity/statistics/RECORD'
 const REMOVE = 'alakrity/statistics/REMOVE'
 const LOAD_GLOBAL = 'alakrity/statistics/LOAD_GLOBAL'
-const BEGIN_TASK = 'alakrity/statistics/BEGIN_TASK'
 
 /**
  * Action Creators:
@@ -81,7 +79,9 @@ export function recordBeginTask(task, { started, isOver = false }) {
         started = moment.isMoment(started) ? started : moment(started)
 
         const weekDate = started.clone().startOf('isoWeek')
-        const startDelay = started.diff(moment(task.start), 'minutes')
+        const startDelay = started.diff(task.repeating
+            ? momentSetSameWeek(moment(task.start))
+            : moment(task.start), 'minutes')
 
         return Promise.all([
             dispatch(recordStatistic(
@@ -106,7 +106,9 @@ export function recordBeginTask(task, { started, isOver = false }) {
 
 
 export function recordCompleteTask(task, { rating, isOver = false }) {
-    const completeDelay = moment(task.completed).diff(moment(task.start).add(task.duration, 'minutes'), 'minutes')
+    const completeDelay = moment(task.completed).diff(task.repeating
+        ? momentSetSameWeek(moment(task.start).add(task.duration, 'minutes'))
+        : moment(task.start).add(task.duration, 'minutes'), 'minutes')
     const weekDate = task.completed.clone().startOf('isoWeek')
 
     return (dispatch, getState) => {
@@ -128,7 +130,8 @@ export function recordCompleteTask(task, { rating, isOver = false }) {
                                                                                                               'projectPeriods']))
                 }
             )),
-            dispatch(backendActions.mascotSplash(getMascotSplash((!isOver) ? SPLASH_TYPES.COMPLETED : SPLASH_TYPES.OVER, {
+            dispatch(backendActions.mascotSplash(getMascotSplash((!isOver) ? SPLASH_TYPES.COMPLETED :
+                                                                 SPLASH_TYPES.OVER, {
                 completeDelay: completeDelay,
                 startDelay: task.startDelay,
                 rating: rating,

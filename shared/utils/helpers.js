@@ -2,7 +2,7 @@ import * as Immutable from 'immutable'
 import moment from 'moment'
 import tinycolor from 'tinycolor2'
 import { SPECIAL_PROJECTS } from './constants'
-import { MASCOT_STATUS, PROJECT_TYPES, TASK_STATUS, TaskListFilters } from './enums'
+import { TASK_STATUS, TaskListFilters } from './enums'
 
 /**
  * Extract and adjust the project colors then return as immutable map
@@ -79,10 +79,6 @@ export function dayTasksFilter(task, date) {
     }
 }
 
-// export function getRandomItem(array) {
-//     return array[Math.floor(Math.random() * array.length)]
-// }
-
 export function getMilestoneMap(projectList) {
     let milestones = {}
     projectList.forEach(project => {
@@ -119,84 +115,34 @@ export function getTaskStatus(task, startOfThisWeek = moment().startOf('isoWeek'
 }
 
 
-// export const SPLASH_TYPES = Object.freeze({
-//     COMPLETED: 'completed',
-//     BEGIN: 'begin',
-//     OVER: 'over'
-// })
-//
-// export function getMascotSplash(splashType, { startDelay, completeDelay, rating, message = false }) {
-//
-//     const mascot = ((type) => {
-//         switch (type) {
-//             case SPLASH_TYPES.COMPLETED:
-//                 if ( (rating && rating <= 2) || completeDelay > 35 ) {
-//                     return {
-//                         status: MASCOT_STATUS.DENIED,
-//                         message: 'Can\'t win them all.'
-//                     }
-//                 } else if ( (rating && rating <= 3) || completeDelay > 20 ) {
-//                     return {
-//                         status: MASCOT_STATUS.STRESS,
-//                         message: 'It\'s done.'
-//                     }
-//                 } else {
-//                     return {
-//                         status: MASCOT_STATUS.GOODWORK,
-//                         message: 'Good work!'
-//                     }
-//                 }
-//
-//             case SPLASH_TYPES.OVER:
-//                 if ( (rating && rating <= 2) || completeDelay > 35 || startDelay > 35 ) {
-//                     return {
-//                         status: MASCOT_STATUS.DENIED,
-//                         message: 'I think you can do better than that.'
-//                     }
-//                 } else if ( (rating && rating <= 3) || completeDelay > 20 || startDelay > 20 ) {
-//                     return {
-//                         status: MASCOT_STATUS.STRESS,
-//                         message: 'Another task completed.'
-//                     }
-//                 } else {
-//                     return {
-//                         status: MASCOT_STATUS.GOODWORK,
-//                         message: 'That was nicely done!'
-//                     }
-//                 }
-//
-//             case SPLASH_TYPES.BEGIN:
-//                 if ( startDelay > 35 ) {
-//                     return {
-//                         status: MASCOT_STATUS.DENIED,
-//                         message: 'Better late than never.'
-//                     }
-//                 } else if ( startDelay > 20 ) {
-//                     return {
-//                         status: MASCOT_STATUS.STRESS,
-//                         message: 'Just a small delay. No problem.'
-//                     }
-//                 } else {
-//                     return {
-//                         status: MASCOT_STATUS.GOODWORK,
-//                         message: 'Off to a good start! Let\'s do this!'
-//                     }
-//                 }
-//
-//             default:
-//                 return {
-//                     status: false,
-//                     message: false
-//                 }
-//         }
-//     })(splashType)
-//
-//     if ( message ) {
-//         mascot.message = message
-//     }
-//
-//     return mascot
-// }
+
+export function momentSetSameWeek(momentOrDate, weekMoment = moment()) {
+    return moment(momentOrDate).isoWeek(weekMoment.isoWeek())
+}
+
+export function getTaskStartMoment(task, weekMoment = moment()) {
+    if ( !Immutable.Map.isMap(task) ) {
+        task = Immutable.Map(task)
+    }
+
+    if ( !task.get('repeating') ) {
+        return moment(task.get('start'))
+    } else {
+        return moment(task.get('start')).isoWeek(weekMoment.isoWeek())
+    }
+}
+
+export function getTaskEndMoment(task, weekMoment = moment()) {
+    if ( !Immutable.Map.isMap(task) ) {
+        task = Immutable.Map(task)
+    }
+
+    if ( !task.get('repeating') ) {
+        return moment(task.get('start')).add(task.get('duration'), 'minutes')
+    } else {
+        return moment(task.get('start')).isoWeek(weekMoment.isoWeek()).add(task.get('duration'), 'minutes')
+    }
+}
 
 
 export function getProjectFromTask(task, projectMapOrList) {
@@ -233,22 +179,6 @@ export function getMapFromList(List, keyProp) {
     return Immutable.Map(List.map(item => [item.get(keyProp), item]))
 }
 
-// export function getMascotStatusFromProjectType(projectType) {
-//
-//     const status = {
-//         [PROJECT_TYPES.DEFAULT.key]: MASCOT_STATUS.WORK,
-//         [PROJECT_TYPES.OFFICE.key]: MASCOT_STATUS.WORK,
-//         [PROJECT_TYPES.STUDIES.key]: MASCOT_STATUS.WORK,
-//         [PROJECT_TYPES.SPORT.key]: MASCOT_STATUS.SPORT,
-//         [PROJECT_TYPES.CHORES.key]: MASCOT_STATUS.CHORES,
-//         [PROJECT_TYPES.APPOINTMENTS.key]: MASCOT_STATUS.MEET,
-//         [PROJECT_TYPES.DATE.key]: MASCOT_STATUS.MEET,
-//         [PROJECT_TYPES.FUN.key]: MASCOT_STATUS.HAPPY,
-//         [PROJECT_TYPES.HOLIDAY.key]: MASCOT_STATUS.HAPPY
-//     }[projectType]
-//     return status ? status : MASCOT_STATUS.IDLE
-// }
-
 export function getProjectWeekProgress(project, taskList, task, week = moment().startOf('isoWeek')) {
     if ( !Immutable.Map.isMap(task) ) {
         task = Immutable.Map(task)
@@ -269,12 +199,6 @@ export function getProjectWeekProgress(project, taskList, task, week = moment().
             TASK_STATUS.SNOOZED.key
         ].indexOf(getTaskStatus(taskItem, week)) !== -1
     ))
-
-    //     = taskList.filter(task => (
-    //     task.get('projectID') === project.get('id')
-    //     && task.get('start')
-    //     && moment(task.get('start')).isSame(week, 'week')
-    // ))
 
     const count = {
         total: thisWeeksProjectTasks.size,

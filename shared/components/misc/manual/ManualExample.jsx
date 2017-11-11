@@ -54,7 +54,7 @@ export default class ManualExample extends React.Component {
                 <li>
                     <p>
                         Finally, Steve has to decide at what days and times he wants to work on his projects. He clicks
-                        <em> Change Weekly Schedule </em> in the <em> Timetable tab </em> to setup the basic <em>
+                        <em> Change Weekly Schedule </em> in the <em> Timetable </em> tab to setup the basic <em>
                         timetable</em>. He paints in the <em> work periods </em> of his projects, <em> Break </em> times
                         and <em> Buffer </em> periods. The buffer helps him in case he has to reschedule a task on a
                         full schedule, or if he can&apos;t quite fit in a task otherwise. In this step the tracked
@@ -69,20 +69,34 @@ export default class ManualExample extends React.Component {
                         to do this in time for the next week.
                     </p>
                 </li>
+                <li>
+                    <p>
+                        To see how he has been performing lately, Steve looks at the <em> Statistics </em> tab. There he
+                        can find statistics about how much he delayed his tasks, how happy he himself was with his work,
+                        and how well he kept to his weekly schedule.
+                    </p>
+                </li>
             </ul>
 
             <div className="manual-info-block">
                 <div><i className="material-icons">info_outline</i></div>
                 <div>
                     <div>
-                        You can log in as Steve to have a look at how he set up his timetable. <br/> But please be considerate
-                        of others and don&apos;t mess up his schedule, as I currently don&apos;t have a way to reset his
-                        profile.
+                        You can log in as Steve to have a look at how he set up his timetable and his statistics.
+                        <br/> Just be considerate
+                        of others and don&apos;t mess up his schedule, please, as I currently don&apos;t have a way to
+                        reset his profile.
                     </div>
-                    <ul>
-                        <li><em>User:</em> steve</li>
-                        <li><em>Password:</em> example</li>
-                    </ul>
+                    <table>
+                        <tr>
+                            <td className="w3-right"><em>User:</em></td>
+                            <td>steve</td>
+                        </tr>
+                        <tr>
+                            <td className="w3-right"><em>Password:</em></td>
+                            <td>example</td>
+                        </tr>
+                    </table>
                 </div>
             </div>
 

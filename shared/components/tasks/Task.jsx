@@ -12,7 +12,7 @@ import ImmutablePropTypes from 'react-immutable-proptypes'
 import MomentPropTypes from 'react-moment-proptypes'
 import { DANGER_LEVELS, LOCALE_STRINGS } from '../../utils/constants'
 import { DndTypes, TASK_STATUS } from '../../utils/enums'
-import { getTaskStatus } from '../../utils/helpers'
+import { getTaskEndMoment, getTaskStartMoment, getTaskStatus } from '../../utils/helpers'
 import IconButton from '../misc/IconButton'
 import TaskEdit from './TaskEdit'
 import { DEFAULT_PROJECT } from '../../utils/defaultValues'
@@ -20,7 +20,7 @@ import { DEFAULT_PROJECT } from '../../utils/defaultValues'
 const dragSource = {
     canDrag(props) {
         if ( props.draggable && !props.editMode && props.task.get('repeating') ) {
-            if ( alert('Repeating tasks can only be moved while in the "Basic Schedule" view.\n\n' +
+            if ( alert('Repeating tasks can only be moved while in the "Change Weekly Schedule" view.\n\n' +
                     'In the future, there could be a way to create one-time exceptions here.') ) {
                 //TODO: exceptions for repeating tasks
             }
@@ -35,10 +35,11 @@ const dragSource = {
     },
 
     endDrag(props, monitor) {
+        // When dropped on a compatible target, do something.
+        // Read the original dragged item from getItem():
+        const task = monitor.getItem()
+
         if ( !monitor.didDrop() ) {
-            // You can check whether the drop was successful
-            // or if the drag ended but nobody handled the drop
-            const task = monitor.getItem()
             const thisWeek = moment().startOf('isoWeek')
 
             if ( getTaskStatus(task, thisWeek) === TASK_STATUS.DONE.key ) {
@@ -61,9 +62,6 @@ const dragSource = {
             return
         }
 
-        // When dropped on a compatible target, do something.
-        // Read the original dragged item from getItem():
-        const task = monitor.getItem()
 
         // You may also read the drop result from the drop target
         // that handled the drop, if it returned an object from
@@ -232,12 +230,12 @@ export default class Task extends React.Component {
             try {
                 iconTooltip = !status ? '' : {
                     [TASK_STATUS.SNOOZED.key]: (task) => 'Snoozed.\nReminder '
-                        + moment(task.get('start'))
+                        + getTaskStartMoment(task)
                             .add(task.get('snooze'), 'minutes')
                             .fromNow() + '.',
-                    [TASK_STATUS.ACTIVE.key]: (task) => 'Active.\n Planned end '
-                        + moment(task.get('start'))
-                            .add(task.get('duration') + task.get('extend'), 'minutes')
+                    [TASK_STATUS.ACTIVE.key]: (task) => 'Active.\nPlanned end '
+                        + getTaskEndMoment(task)
+                            .add(task.get('extend'), 'minutes')
                             .fromNow() + '.',
                     [TASK_STATUS.DONE.key]: () => status.name,
                     [TASK_STATUS.DEFAULT.key]: () => status.name,

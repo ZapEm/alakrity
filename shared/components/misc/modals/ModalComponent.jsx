@@ -8,7 +8,7 @@ import * as ImmutablePropTypes from 'react-immutable-proptypes'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { MODAL_TYPES } from '../../../utils/enums'
-import { getProjectColorMap } from '../../../utils/helpers'
+import { getProjectColorMap, momentSetSameWeek } from '../../../utils/helpers'
 import notifyUser from '../../../utils/notifications'
 import ModalContent from './ModalContent'
 import ModalFooter from './ModalFooter'
@@ -34,9 +34,17 @@ export default class ModalComponent extends React.Component {
 
     constructor(props) {
         super(props)
+        const modalIndex = this.props.modalsList.size > 0 ? 0 : false
+        const initialTask = modalIndex ? this.props.modalsList.get(modalIndex).task : false
+
+
         this.state = {
             projectColorMap: getProjectColorMap(this.props.projectList),
-            modalIndex: this.props.modalsList.size > 0 ? 0 : false,
+            modalIndex: modalIndex,
+            started: (initialTask && initialTask.get('started')) ? moment(initialTask.get('started')) : false,
+            startedPicked: false,
+            completed: (initialTask && initialTask.get('completed')) ? moment(initialTask.get('completed')) : false,
+            completedPicked: false,
             rating: false
         }
     }
@@ -98,18 +106,34 @@ export default class ModalComponent extends React.Component {
 
     handleNext(e) {
         e.preventDefault()
-        this.setState(({ modalIndex }) => ({
-            modalIndex: (modalIndex + 1 >= this.props.modalsList.size) ? 0 : modalIndex + 1
-        }))
-        //this.forceUpdate()
+        this.setState(({ modalIndex }) => {
+            const newIndex = (modalIndex + 1 >= this.props.modalsList.size) ? 0 : modalIndex + 1
+            const newTask = newIndex ? this.props.modalsList.get(newIndex).task : false
+            return {
+                modalIndex: newIndex,
+                started: (newTask && newTask.get('started')) ? moment(newTask.get('started')) : false,
+                completed: (newTask && newTask.get('completed')) ? moment(newTask.get('completed')) : false,
+                startedPicked: false,
+                completedPicked: false,
+                rating: false
+            }
+        })
     }
 
     handleBack(e) {
         e.preventDefault()
-        this.setState(({ modalIndex }) => ({
-            modalIndex: (modalIndex - 1 < 0) ? this.props.modalsList.size - 1 : modalIndex - 1
-        }))
-        //this.forceUpdate()
+        this.setState(({ modalIndex }) => {
+            const newIndex = (modalIndex - 1 < 0) ? this.props.modalsList.size - 1 : modalIndex - 1
+            const newTask = newIndex ? this.props.modalsList.get(newIndex).task : false
+            return {
+                modalIndex: newIndex,
+                started: (newTask && newTask.get('started')) ? moment(newTask.get('started')) : false,
+                completed: (newTask && newTask.get('completed')) ? moment(newTask.get('completed')) : false,
+                startedPicked: false,
+                completedPicked: false,
+                rating: false
+            }
+        })
     }
 
     handleSetState(newState) {
@@ -129,6 +153,31 @@ export default class ModalComponent extends React.Component {
 
         if ( typeof window !== 'undefined' && document.hidden ) {
             ModalComponent.handleNotification(currentModal)
+        }
+
+        let started = this.state.started
+            ? this.state.started
+            : currentModal.task.get('repeating')
+                          ? momentSetSameWeek(moment(currentModal.task.get('start')))
+                          : moment(currentModal.task.get('start'))
+
+        let completed = this.state.completed
+            ? this.state.completed
+            : currentModal.task.get('repeating')
+                            ?
+              momentSetSameWeek(moment(currentModal.task.get('start'))).add(currentModal.task.get('duration'), 'minutes')
+                            : moment(currentModal.task.get('start')).add(currentModal.task.get('duration'), 'minutes')
+
+
+        // update started or completed times every minute if appropriate.
+        if (currentModal.type === MODAL_TYPES.REMINDER) {
+            if ( !this.state.startedPicked ) {
+                started = moment().startOf('minute')
+            }
+        } else if ( currentModal.type === MODAL_TYPES.COMPLETION ) {
+            if ( !this.state.completedPicked ) {
+                completed = moment().startOf('minute')
+            }
         }
 
         return (
@@ -153,8 +202,8 @@ export default class ModalComponent extends React.Component {
                         settings={settings}
                         changeModalState={::this.handleSetState}
                         rating={this.state.rating}
-                        started={this.state.started}
-                        completed={this.state.completed}
+                        started={started}
+                        completed={completed}
                         modalsList={modalsList}
                         projectList={this.props.projectList}
                     />
@@ -163,9 +212,8 @@ export default class ModalComponent extends React.Component {
                         taskActions={bindActionCreators(TaskActions, dispatch)}
                         backendActions={bindActionCreators(BackendActions, dispatch)}
                         rating={this.state.rating}
-                        started={this.state.started ? this.state.started : moment(currentModal.task.get('start'))}
-                        completed={this.state.completed ? this.state.completed :
-                                   moment(currentModal.task.get('start')).add(currentModal.task.get('duration'), 'minutes')}
+                        started={started}
+                        completed={completed}
                     />
                 </div>
             </div>

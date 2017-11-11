@@ -6,13 +6,13 @@ import xss from 'xss'
 import { REJECTED_NAME as FAILURE, RESOLVED_NAME as SUCCESS } from '../utils/constants'
 import { TASK_STATUS } from '../utils/enums'
 import fetch from '../utils/fetcher'
-import { dayTasksFilter } from '../utils/helpers'
+import { dayTasksFilter, momentSetSameWeek } from '../utils/helpers'
 import newId from '../utils/newId'
 import { LOGIN, LOGOUT } from './auth'
-import { REMOVE as REMOVE_PROJECT } from './projects'
 
 import * as backendActions from './backend'
 import { updateModals } from './backend'
+import { REMOVE as REMOVE_PROJECT } from './projects'
 import * as statistics from './statistics'
 import { removeRecordedTask } from './statistics'
 
@@ -141,12 +141,13 @@ export function editTaskStart(newTask) {
         const newEnd = newStart.clone().add(newTask.duration, 'm')
 
         if ( !newTask.repeating ) {
-            newTask.status = computeTaskStatus(newTask, newStart)
+            newTask.status = computeTaskStatus(newTask)
         } else {
-            if ( typeof newTask.status === 'string' ) {
+            if ( !newTask.status || typeof newTask.status === 'string' ) {
                 newTask.status = {}
             }
-            newTask.status[moment().startOf('isoWeek')] = computeTaskStatus(newTask, newStart)
+            const thisWeek = moment().startOf('isoWeek')
+            newTask.status[thisWeek] = computeTaskStatus(newTask, thisWeek)
         }
 
         const sameDayTasks = (getState().timetables.get('editMode')) ?
@@ -181,14 +182,19 @@ export function rescheduleTask(task, started = false, isFromDrag = false) {
     return (dispatch) => {
         const updatedTask = _.merge({}, task, {
             ...(!task.repeating || isFromDrag) && { start: null },
-            status: task.repeating
-                ? !isFromDrag ? { [moment().startOf('isoWeek')]: TASK_STATUS.IGNORED.key } : {}
+            status: (task.repeating && !isFromDrag)
+                ? { [moment().startOf('isoWeek')]: TASK_STATUS.IGNORED.key }
                 : TASK_STATUS.DEFAULT.key,
             started: false,
             completed: false,
             snooze: false,
             extend: false
         })
+
+        // reset here, because merge doesn't work with objects
+        if ( task.repeating && isFromDrag ){
+            updatedTask.status = {}
+        }
 
         return started
             ? Promise.all([
@@ -202,10 +208,18 @@ export function rescheduleTask(task, started = false, isFromDrag = false) {
 
 }
 
-export function beginTask(task) {
+export function beginTask(task, { started }) {
 
     if ( Immutable.Map.isMap(task) ) {
         task = task.toJS()
+    }
+
+    if ( task.repeating ) {
+        started = momentSetSameWeek(started, moment())
+    } else {
+        if ( !moment.isMoment(started) ) {
+            started = moment(started)
+        }
     }
 
     return (dispatch) => {
@@ -214,7 +228,7 @@ export function beginTask(task) {
             status: task.repeating
                 ? { [moment().startOf('isoWeek')]: TASK_STATUS.ACTIVE.key }
                 : TASK_STATUS.ACTIVE.key,
-            started: moment()
+            started: started
         })
 
         return dispatch(editTask(task))
@@ -269,6 +283,18 @@ export function confirmOverTask(task, { rating, completed, started }) {
         task = task.toJS()
     }
 
+    if ( task.repeating ) {
+        completed = momentSetSameWeek(completed, moment())
+        started = momentSetSameWeek(started, moment())
+    } else {
+        if ( !moment.isMoment(completed) ) {
+            completed = moment(completed)
+        }
+        if ( !moment.isMoment(completed) ) {
+            started = moment(started)
+        }
+    }
+
     task = _merge({}, task, {
         started: started,
         completed: completed,
@@ -295,16 +321,24 @@ export function removeOverTask(task) {
 
 }
 
-export function completeTask(task, options = { rating: false }) {
+export function completeTask(task, { rating, completed }) {
 
     if ( Immutable.Map.isMap(task) ) {
         task = task.toJS()
     }
 
+    if ( task.repeating ) {
+        completed = momentSetSameWeek(completed, moment())
+    } else {
+        if ( !moment.isMoment(completed) ) {
+            completed = moment(completed)
+        }
+    }
+
     return (dispatch) => {
 
         task = _merge({}, task, {
-            completed: moment(),
+            completed: completed,
             status: task.repeating
                 ? { [moment().startOf('isoWeek')]: TASK_STATUS.DONE.key }
                 : TASK_STATUS.DONE.key
@@ -313,7 +347,7 @@ export function completeTask(task, options = { rating: false }) {
         return dispatch(editTask(task))
             .then(Promise.all([
                     dispatch(backendActions.updateModals()),
-                    dispatch(statistics.recordCompleteTask(task, options))
+                    dispatch(statistics.recordCompleteTask(task, { rating: rating ? rating : false }))
                 ])
             )
     }
@@ -386,39 +420,24 @@ export default function reducer(state = initialState, action) {
     }
 }
 
-function computeTaskStatus(newTask, newStart) {
-
-    const thisWeek = moment().startOf('isoWeek')
+function computeTaskStatus(newTask, thisWeek) {
 
     if ( !newTask.repeating ) {
         //Schedule task if appropriate
-        if ( (!newTask.status || newTask.status === TASK_STATUS.DEFAULT.key) ) {
-            // if ( newStart.isAfter() ) {
-            return TASK_STATUS.SCHEDULED.key
-            // } else {
-            //     return (confirm('You are trying to schedule a task in the past. ' +
-            //         'This will cause you to miss its start time. \n\n' +
-            //         'Do you want to mark the task as done to avoid this?')) ?
-            //            TASK_STATUS.DONE.key :
-            //            TASK_STATUS.SCHEDULED.key
-            // }
+        if ( (newTask.status && newTask.status !== TASK_STATUS.DEFAULT.key) ) {
+            return newTask.status
         }
     } else {
         //Schedule repeating task if appropriate
-        if ( (!newTask.status || !newTask.status[thisWeek] !== TASK_STATUS.DEFAULT.key) ) {
-            // if ( newStart.isAfter() ) {
-            return TASK_STATUS.SCHEDULED.key
-            // } else {
-            //     return (confirm('You are trying to schedule a task in the past. ' +
-            //         'This will cause you to miss its start time. \n\n' +
-            //         'Do you want to mark the task as done to avoid this?')) ?
-            //            TASK_STATUS.DONE.key :
-            //            TASK_STATUS.SCHEDULED.key
-            // }
+        if (!thisWeek) {
+            thisWeek = moment().startOf('isoWeek')
+        }
+        if ( (newTask.status && typeof newTask.status[thisWeek] === 'string' && newTask.status[thisWeek] !== TASK_STATUS.DEFAULT.key) ) {
+            return newTask.status[thisWeek]
         }
     }
 
 
 //default
-    return newTask.status && typeof newTask.status === 'string' ? newTask.status : TASK_STATUS.DEFAULT.key
+    return TASK_STATUS.SCHEDULED.key
 }
