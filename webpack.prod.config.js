@@ -74,6 +74,11 @@ module.exports = {
         fs: 'empty'
     },
     plugins: [
+        new webpack.DefinePlugin({
+            'process.env': {
+                NODE_ENV: '"production"'
+            }
+        }),
         new ExtractTextPlugin({ filename: 'style.css' }),
         new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /de|en/),
         // new LodashModuleReplacementPlugin({ // OptIn, see https://www.npmjs.com/package/lodash-webpack-plugin
@@ -81,13 +86,8 @@ module.exports = {
         //     'guards': true,
         //     'collections': true
         // }),
-        new webpack.DefinePlugin({
-            'process.env': {
-                NODE_ENV: '"production"'
-            }
-        }),
         new UglifyJSPlugin({
-            ecma: 8
+            ecma: 6
         })
     ]
 }
