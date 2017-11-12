@@ -4,6 +4,7 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin')
 var clientConfig = require('config').get('client')
 var fs = require('fs')
 var LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
+var UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 
 
 fs.writeFileSync(path.resolve(__dirname, 'config/client.json'), JSON.stringify(clientConfig))
@@ -85,6 +86,6 @@ module.exports = {
                 NODE_ENV: '"production"'
             }
         }),
-        new webpack.optimize.UglifyJsPlugin()
+        new UglifyJsPlugin()
     ]
 }

@@ -92,6 +92,7 @@
     "tinycolor2": "^1.4.1",
     "transit-immutable-js": "^0.7.0",
     "transit-js": "^0.8.846",
+    "uglifyjs-webpack-plugin": "^1.0.1",
     "warning": "^3.0.0",
     "webpack": "^3.5.5",
     "webpack-assets-manifest": "^1.0.0",
