@@ -3,7 +3,7 @@ var webpack = require('webpack')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
 var clientConfig = require('config').get('client')
 var fs = require('fs')
-var LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
+// var LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
 var UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 
 
@@ -86,6 +86,8 @@ module.exports = {
                 NODE_ENV: '"production"'
             }
         }),
-        new UglifyJsPlugin()
+        new UglifyJSPlugin({
+            ecma: 8
+        })
     ]
 }
