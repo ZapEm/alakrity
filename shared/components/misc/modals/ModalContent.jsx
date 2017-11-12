@@ -1,7 +1,6 @@
 import { MODAL_TYPES } from '/utils/enums'
 import { getProjectFromTask } from '/utils/helpers'
 import moment from 'moment'
-import 'moment-precise-range-plugin'
 import PropTypes from 'prop-types'
 import TimePicker from 'rc-time-picker'
 import React from 'react'

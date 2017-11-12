@@ -11,7 +11,6 @@ fs.writeFileSync(path.resolve(__dirname, 'config/client.json'), JSON.stringify(c
 var BABEL_QUERY = {
     presets: [
         'nodejs6',
-        'es2015',
         'stage-0',
         'react'
     ],
