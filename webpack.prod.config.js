@@ -12,6 +12,7 @@ fs.writeFileSync(path.resolve(__dirname, 'config/client.json'), JSON.stringify(c
 var BABEL_QUERY = {
     presets: [
         'nodejs6',
+        'es2015',
         'stage-0',
         'react'
     ],
@@ -74,11 +75,7 @@ module.exports = {
         fs: 'empty'
     },
     plugins: [
-        new webpack.DefinePlugin({
-            'process.env': {
-                NODE_ENV: '"production"'
-            }
-        }),
+        new UglifyJSPlugin(),
         new ExtractTextPlugin({ filename: 'style.css' }),
         new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /de|en/),
         // new LodashModuleReplacementPlugin({ // OptIn, see https://www.npmjs.com/package/lodash-webpack-plugin
@@ -86,8 +83,10 @@ module.exports = {
         //     'guards': true,
         //     'collections': true
         // }),
-        new UglifyJSPlugin({
-            ecma: 6
+        new webpack.DefinePlugin({
+            'process.env': {
+                NODE_ENV: '"production"'
+            }
         })
     ]
 }
