@@ -160,7 +160,7 @@ export function updateModals(time = false, initial = false) {
 }
 
 let MascotSplashTimeout
-export function mascotSplash({ status, message = false }, seconds = 7) {
+export function mascotSplash({ status, message = false }, seconds = 10) {
     return (dispatch) => {
 
         // make sure there is only one timeout running

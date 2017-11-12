@@ -149,19 +149,19 @@ export function getMascotMessageFromProgress(progress, project, editProject) {
     switch (true) {
         case (project.get('lastShownProgress') === false):
             saveLastShownProgress()
-            return `You completed your first task of ${project.get('title')}. Keep it up!`
+            return `You completed your first task of project "${project.get('title')}". Keep it up!`
 
         case (progress.count.total - progress.count.done === 1):
             saveLastShownProgress()
-            return `Just one more task for ${project.get('title')} this week.`
+            return `Just one more task for project "${project.get('title')}" this week.`
 
         case (progress.count.total === progress.count.done && progress.count.total >= 1):
             saveLastShownProgress()
-            return `You are done with ${project.get('title')} for this week. Nice!`
+            return `You are done with project "${project.get('title')}" for this week. Nice!`
 
         case (progress.week !== lastProgress.week || progress.percentTimeDone - lastProgress.percentTimeDone >= 25):
             saveLastShownProgress()
-            return `You are ${progress.percentTimeDone}% done with this weeks work for project ${project.get('title')}!`
+            return `You are ${progress.percentTimeDone}% done with this weeks work for project "${project.get('title')}"!`
 
         default:
             return false

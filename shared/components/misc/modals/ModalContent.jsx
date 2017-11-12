@@ -43,35 +43,6 @@ export default class ModalContent extends React.Component {
         return arr
     }
 
-    // componentWillMount() {
-    //     const started = this.props.modal.task.get('started') ? moment(this.props.modal.task.get('started')) : false
-    //     const completed = this.props.modal.task.get('completed') ? moment(this.props.modal.task.get('completed')) :
-    //                       false
-    //
-    //     this.props.changeModalState({
-    //         started: started,
-    //         completed: completed,
-    //         rating: false
-    //     })
-    // }
-
-    // componentWillUpdate(nextProps) {
-    //     if ( nextProps.modal && this.props.modal.id !== nextProps.modal.id ) {
-    //         const started = nextProps.modal.task.get('started')
-    //             ? moment(nextProps.modal.task.get('started'))
-    //             : false
-    //         const completed = nextProps.modal.task.get('completed')
-    //             ? moment(nextProps.modal.task.get('completed'))
-    //             : false
-    //
-    //         this.props.changeModalState({
-    //             started: started,
-    //             completed: completed,
-    //             rating: false
-    //         }, nextProps.modalsList.keySeq())
-    //     }
-    // }
-
     handleSetRating(rating) {
         this.props.changeModalState({ rating: rating })
     }
@@ -93,8 +64,8 @@ export default class ModalContent extends React.Component {
     handleResetTimes(e) {
         e.preventDefault()
         this.props.changeModalState({
-            started: this.props.modal.task.get('started') ? moment(this.props.modal.task.get('started')) : false,
-            completed: this.props.modal.task.get('completed') ? moment(this.props.modal.task.get('completed')) : false
+            started: false,
+            completed: false
         })
     }
 
@@ -107,13 +78,10 @@ export default class ModalContent extends React.Component {
 
         const startMoment = task.get('repeating') ? momentSetSameWeek(moment(task.get('start')).startOf('minute')) :
                             moment(task.get('start')).startOf('minute')
-        //const snoozeStartMoment = startMoment.clone().add(task.get('snooze') ? task.get('snooze') : 0, 'minutes')
 
         const endMoment = task.get('repeating') ?
                           momentSetSameWeek(moment(task.get('start')).add(task.get('duration'), 'minutes').startOf('minute')) :
                           moment(task.get('start')).add(task.get('duration'), 'minutes').startOf('minute')
-
-        //const extendEndMoment = endMoment.clone().add(task.get('extend') ? task.get('extend') : 0, 'minutes')
 
         const project = getProjectFromTask(task, projectList)
 
