@@ -217,6 +217,7 @@ export function getProjectWeekProgress(project, taskList, task, week = moment().
 
 
     return {
+        week: week.year() + '_' + week.isoWeek(),
         count: count,
         percentTimeDone: Math.floor((count.doneDuration / count.totalDuration) * 100),
         percentDone: Math.floor((count.done / count.total) * 100)

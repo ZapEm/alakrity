@@ -93,13 +93,22 @@ export default class ModalComponent extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if ( this.state.modalIndex !== false && this.state.modalIndex >= nextProps.modalsList.size ) {
-            this.setState(({ modalIndex }) => ({
-                modalIndex: modalIndex > 0 ? modalIndex - 1 : false
-            }))
+            this.setState(({ modalIndex }) => {
+                const newIndex = modalIndex > 0 ? modalIndex - 1 : false
+                const newTask = newIndex ? nextProps.modalsList.get(newIndex).task : false
+                return{
+                    modalIndex: modalIndex > 0 ? modalIndex - 1 : false,
+                    started: (newTask && newTask.get('started')) ? moment(newTask.get('started')) : false,
+                    completed: (newTask && newTask.get('completed')) ? moment(newTask.get('completed')) : false,
+                }
+            })
         }
         if ( this.state.modalIndex === false && nextProps.modalsList.size > 0 ) {
+            const newTask = nextProps.modalsList.get(0).task
             this.setState({
-                modalIndex: 0
+                modalIndex: 0,
+                started: (newTask && newTask.get('started')) ? moment(newTask.get('started')) : false,
+                completed: (newTask && newTask.get('completed')) ? moment(newTask.get('completed')) : false,
             })
         }
     }

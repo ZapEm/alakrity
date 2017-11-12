@@ -88,6 +88,7 @@ export default class ManualExample extends React.Component {
                         reset his profile.
                     </div>
                     <table>
+                        <tbody>
                         <tr>
                             <td className="w3-right"><em>User:</em></td>
                             <td>steve</td>
@@ -96,6 +97,7 @@ export default class ManualExample extends React.Component {
                             <td className="w3-right"><em>Password:</em></td>
                             <td>example</td>
                         </tr>
+                        </tbody>
                     </table>
                 </div>
             </div>

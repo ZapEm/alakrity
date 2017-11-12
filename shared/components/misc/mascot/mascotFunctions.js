@@ -1,5 +1,4 @@
 import { MASCOT_STATUS, PROJECT_TYPES } from '../../../utils/enums'
-import { getProjectWeekProgress } from '../../../utils/helpers'
 
 export function getRandomItem(array) {
     return array[Math.floor(Math.random() * array.length)]
@@ -19,17 +18,27 @@ export function getMascotSplash(splashType, { startDelay, completeDelay, rating,
                 if ( (rating && rating <= 2) || completeDelay > 35 ) {
                     return {
                         status: MASCOT_STATUS.DENIED,
-                        message: 'Can\'t win them all.'
+                        message: getRandomItem(['Can\'t win them all.',
+                                                'Put some more effort in it!',
+                                                'Not your best performance.',
+                                                'There is still room for improvement.'])
                     }
                 } else if ( (rating && rating <= 3) || completeDelay > 20 ) {
                     return {
                         status: MASCOT_STATUS.STRESS,
-                        message: 'It\'s done.'
+                        message: getRandomItem(['It\'s done.',
+                                                'Ok.',
+                                                'Not bad.',
+                                                'Hmm.'])
                     }
                 } else {
                     return {
                         status: MASCOT_STATUS.AWESOME,
-                        message: 'That was awesome!'
+                        message: getRandomItem(['That was awesome!',
+                                                'Great work!',
+                                                'Nicely done!',
+                                                'Cool!',
+                                                'You rock!'])
                     }
                 }
 
@@ -37,17 +46,25 @@ export function getMascotSplash(splashType, { startDelay, completeDelay, rating,
                 if ( (rating && rating <= 2) || completeDelay > 35 || startDelay > 35 ) {
                     return {
                         status: MASCOT_STATUS.DENIED,
-                        message: 'I think you can do better than that.'
+                        message: getRandomItem(['I think you can do better than that.',
+                                                'There is probably a good reason for this.',
+                                                'You get the best results if you stick to the schedule.',
+                                                'There will always be some bad days. Don\'t worry about it and focus on the next tasks!'])
                     }
                 } else if ( (rating && rating <= 3) || completeDelay > 20 || startDelay > 20 ) {
                     return {
                         status: MASCOT_STATUS.STRESS,
-                        message: 'Another task completed.'
+                        message: getRandomItem(['Another task completed.',
+                                                'Done. Next!',
+                                                'Yep, did that one too.'])
                     }
                 } else {
                     return {
                         status: MASCOT_STATUS.GOODWORK,
-                        message: 'Good work!'
+                        message: getRandomItem(['Good work on that one!',
+                                                'That one was nicely done.',
+                                                'Nice!',
+                                                'Oh, I remember that one! Good work!'])
                     }
                 }
 
@@ -55,17 +72,23 @@ export function getMascotSplash(splashType, { startDelay, completeDelay, rating,
                 if ( startDelay > 35 ) {
                     return {
                         status: MASCOT_STATUS.DENIED,
-                        message: 'Better late than never.'
+                        message: getRandomItem(['Better late than never.',
+                                                'Better hurry now.',
+                                                'You know, it\'s easier if you start on time.'])
                     }
                 } else if ( startDelay > 20 ) {
                     return {
                         status: MASCOT_STATUS.STRESS,
-                        message: 'Just a small delay. No problem.'
+                        message: getRandomItem(['Just a small delay. No problem.',
+                                                'You can still make it!',
+                                                'Try not to use the academic quarter too much.'])
                     }
                 } else {
                     return {
                         status: MASCOT_STATUS.GOODWORK,
-                        message: 'Off to a good start! Let\'s do this!'
+                        message: getRandomItem(['Off to a good start! Let\'s do this!',
+                                                '3, 2, 1 - Go!',
+                                                'The early cat catches the bird!'])
                     }
                 }
 
@@ -126,7 +149,7 @@ export function getMascotMessageFromProgress(progress, project, editProject) {
     switch (true) {
         case (project.get('lastShownProgress') === false):
             saveLastShownProgress()
-            return `You completed your first task of ${project.get('title')}!`
+            return `You completed your first task of ${project.get('title')}. Keep it up!`
 
         case (progress.count.total - progress.count.done === 1):
             saveLastShownProgress()
@@ -136,7 +159,7 @@ export function getMascotMessageFromProgress(progress, project, editProject) {
             saveLastShownProgress()
             return `You are done with ${project.get('title')} for this week. Nice!`
 
-        case (progress.percentTimeDone - lastProgress.percentTimeDone >= 25):
+        case (progress.week !== lastProgress.week || progress.percentTimeDone - lastProgress.percentTimeDone >= 25):
             saveLastShownProgress()
             return `You are ${progress.percentTimeDone}% done with this weeks work for project ${project.get('title')}!`
 
