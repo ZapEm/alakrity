@@ -1,5 +1,5 @@
 import Immutable from 'immutable'
-import * as _ from 'lodash/object'
+import * as _ from 'lodash'
 import { merge as _merge } from 'lodash/object'
 import moment from 'moment'
 import xss from 'xss'
@@ -231,7 +231,7 @@ export function beginTask(task, { started }) {
             started: started
         })
 
-        return dispatch(editTask(task))
+        return dispatch(editTask(resetTaskStats(task, ['completed', 'rating'])))
             .then(Promise.all([
                     dispatch(backendActions.updateModals()),
                     dispatch(statistics.recordBeginTask(task, { started: task.started }))
@@ -305,7 +305,7 @@ export function confirmOverTask(task, { rating, completed, started }) {
 
 
     return (dispatch) => {
-        return dispatch(editTask(task)).then(Promise.all([
+        return dispatch(editTask(resetTaskStats(task, ['started', 'completed', 'rating']))).then(Promise.all([
             dispatch(backendActions.updateModals()),
             dispatch(statistics.recordBeginTask(task, { started: started, isOver: true }))
                 .then(dispatch(statistics.recordCompleteTask(task, { rating: rating })))
@@ -344,7 +344,7 @@ export function completeTask(task, { rating, completed }) {
                 : TASK_STATUS.DONE.key
         })
 
-        return dispatch(editTask(task))
+        return dispatch(editTask(resetTaskStats(task, ['started', 'completed', 'rating'])))
             .then(Promise.all([
                     dispatch(backendActions.updateModals()),
                     dispatch(statistics.recordCompleteTask(task, { rating: rating ? rating : false }))
@@ -440,4 +440,16 @@ function computeTaskStatus(newTask, thisWeek) {
 
 //default
     return TASK_STATUS.SCHEDULED.key
+}
+
+function resetTaskStats(task, statsArray) {
+    if (task.repeating) {
+        const newTask = _.cloneDeep(task)
+        statsArray.forEach(stat => { newTask[stat] = false })
+
+        return newTask
+
+    } else {
+        return task
+    }
 }

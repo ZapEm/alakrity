@@ -10,11 +10,20 @@ export default class DummyButton extends React.Component {
 
     render() {
         const { icon, label } = this.props
+
+        if(label){
+            return <button
+                className="labeled-icon-button w3-border w3-border-theme w3-text-theme w3-round dummy-button"
+            >
+                <i className="material-icons labeled-icon-button-icon">{icon}</i>
+                <span className="labeled-icon-button-label">{label}</span>
+            </button>
+        }
+
         return <button
-            className="labeled-icon-button w3-border w3-border-theme w3-text-theme w3-round dummy-button"
+            className="material-icons icon-button w3-round w3-border w3-border-theme w3-text-theme dummy-button"
         >
-            <i className="material-icons labeled-icon-button-icon">{icon}</i>
-            <span className="labeled-icon-button-label">{label}</span>
+            {icon}
         </button>
     }
 }

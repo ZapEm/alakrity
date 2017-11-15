@@ -94,22 +94,42 @@ export default class ModalComponent extends React.Component {
     componentWillReceiveProps(nextProps) {
         if ( this.state.modalIndex !== false && this.state.modalIndex >= nextProps.modalsList.size ) {
             this.setState(({ modalIndex }) => {
-                const newIndex = modalIndex > 0 ? modalIndex - 1 : false
+                const newIndex = modalIndex > 0 ? nextProps.modalsList.size - 1 : false
                 const newTask = newIndex ? nextProps.modalsList.get(newIndex).task : false
-                return{
+                return {
                     modalIndex: modalIndex > 0 ? modalIndex - 1 : false,
                     started: (newTask && newTask.get('started')) ? moment(newTask.get('started')) : false,
                     completed: (newTask && newTask.get('completed')) ? moment(newTask.get('completed')) : false,
+                    startedPicked: false,
+                    completedPicked: false,
+                    rating: false
                 }
             })
-        }
-        if ( this.state.modalIndex === false && nextProps.modalsList.size > 0 ) {
+        } else if ( this.state.modalIndex === false && nextProps.modalsList.size > 0 ) {
             const newTask = nextProps.modalsList.get(0).task
             this.setState({
                 modalIndex: 0,
                 started: (newTask && newTask.get('started')) ? moment(newTask.get('started')) : false,
                 completed: (newTask && newTask.get('completed')) ? moment(newTask.get('completed')) : false,
+                startedPicked: false,
+                completedPicked: false,
+                rating: false
             })
+        } else if ( this.state.modalIndex !== false && this.state.modalIndex < nextProps.modalsList.size ) {
+            // if task has changed, but index may be the same.
+            if ( this.props.modalsList.get(this.state.modalIndex).id !== nextProps.modalsList.get(this.state.modalIndex).id ) {
+                this.setState(({ modalIndex }) => {
+                    const newTask = nextProps.modalsList.get(modalIndex)
+                    return {
+                        modalIndex: modalIndex,
+                        started: (newTask && newTask.get('started')) ? moment(newTask.get('started')) : false,
+                        completed: (newTask && newTask.get('completed')) ? moment(newTask.get('completed')) : false,
+                        startedPicked: false,
+                        completedPicked: false,
+                        rating: false
+                    }
+                })
+            }
         }
     }
 
@@ -179,7 +199,7 @@ export default class ModalComponent extends React.Component {
 
 
         // update started or completed times every minute if appropriate.
-        if (currentModal.type === MODAL_TYPES.REMINDER) {
+        if ( currentModal.type === MODAL_TYPES.REMINDER ) {
             if ( !this.state.startedPicked ) {
                 started = moment().startOf('minute')
             }
