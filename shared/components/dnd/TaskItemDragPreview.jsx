@@ -24,13 +24,13 @@ export default class TaskItemDragPreview extends React.Component {
         super(props)
 
         const colors = (this.props.projectColorMap.get(this.props.task.projectID) || Immutable.fromJS({
-            normal: 'magenta',
-            dark: 'darkred',
-            light: 'lightred',
+            normal: 'gray',
+            dark: 'dimgray',
+            light: 'lightgray',
             special: {
-                normal: 'cyan',
-                dark: 'darkblue',
-                light: 'lightblue'
+                normal: 'darkgray',
+                dark: 'darkslategray',
+                light: 'silver'
             }
         })).toJS()
 

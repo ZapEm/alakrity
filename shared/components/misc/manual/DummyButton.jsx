@@ -13,7 +13,7 @@ export default class DummyButton extends React.Component {
 
         if(label){
             return <button
-                className="labeled-icon-button w3-border w3-border-theme w3-text-theme w3-round dummy-button"
+                className="labeled-icon-button w3-border w3-border-theme w3-text-theme w3-round dummy-label-button"
             >
                 <i className="material-icons labeled-icon-button-icon">{icon}</i>
                 <span className="labeled-icon-button-label">{label}</span>

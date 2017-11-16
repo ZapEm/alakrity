@@ -10,6 +10,7 @@ export default class DurationPicker extends React.Component {
         min: PropTypes.number,
         max: PropTypes.number,
         defaultValue: PropTypes.number,
+        value: PropTypes.number,
         step: PropTypes.number,
         group: PropTypes.number,
         onChange: PropTypes.func.isRequired,
@@ -23,27 +24,39 @@ export default class DurationPicker extends React.Component {
         max: 10,
         step: 1,
         group: 1,
+        value: 5,
         onChange: (value) => value,
         mapper: (value) => value
     }
 
-    constructor(props) {
-        super(props)
-        this.state = {
-            currentValue: this.props.hasOwnProperty('defaultValue') ? this.props.defaultValue : this.props.min
+
+    handleElementClick(value) {
+        if ( value !== this.props.value ) {
+            this.props.onChange(value)
+            //this.setState({ currentValue: value })
         }
     }
 
-    handleElementClick(value) {
-        if(value !== this.state.currentValue){
-            this.props.onChange(value)
-            this.setState({ currentValue: value })
+    handleKeyDown(e) {
+        // ArrowUp
+        if ( e.keyCode === 40 || e.keyCode === 39 ) {
+            e.preventDefault()
+            if ( this.props.value + this.props.step <= this.props.max ) {
+                this.props.onChange(this.props.value + this.props.step)
+            }
+
+        }
+        // ArrowDown
+        if ( e.keyCode === 38 || e.keyCode === 37 ) {
+            e.preventDefault()
+            if ( this.props.value - this.props.step >= this.props.min ) {
+                this.props.onChange(this.props.value - this.props.step)
+            }
         }
     }
 
     render() {
-        const { className, classNameElements, min, max, step, group, mapper } = this.props
-        const { currentValue } = this.state
+        const { className, classNameElements, min, max, step, group, mapper, value: currentValue } = this.props
 
         let elements = []
         for ( let value = min; value <= max; value += step ) {
@@ -64,7 +77,7 @@ export default class DurationPicker extends React.Component {
         }
 
 
-        return <div className={'duration-picker ' + className}>
+        return <div className={'duration-picker ' + className} tabIndex={0} onKeyDownCapture={::this.handleKeyDown}>
             {elements}
         </div>
     }

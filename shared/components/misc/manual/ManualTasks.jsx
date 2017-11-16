@@ -5,16 +5,32 @@ export default class ManualTasks extends React.Component {
     render() {
         return <div id="manual-chapter-tasks" className="manual-chapter">
             <h3 className="w3-text-theme">Tasks</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ut augue a risus faucibus sagittis.
-                Curabitur id tempus dolor. Vestibulum ac quam ex. Fusce molestie est sed libero dictum, non mattis arcu
-                pellentesque. Nullam pharetra nibh eu quam egestas interdum. Vestibulum rhoncus lorem nibh, non sodales
-                diam ornare ut. Sed luctus tincidunt elementum. Pellentesque felis turpis, accumsan et est at, egestas
-                lacinia elit. Fusce pretium aliquet suscipit. Mauris dignissim et erat nec sollicitudin. Proin blandit
-                in lacus quis lacinia.</p>
-            <p>Donec eget rhoncus nunc. Ut vitae nisi ex. Mauris nunc libero, fringilla imperdiet nunc eu, ornare
-                vehicula erat. Aliquam erat volutpat. Interdum et malesuada fames ac ante ipsum primis in faucibus. Cras
-                turpis mi, facilisis malesuada mi sit amet, laoreet tempus ipsum. Suspendisse potenti. Ut blandit est
-                nec neque lacinia, at auctor nulla imperdiet. Vivamus et placerat velit, non facilisis mauris.</p>
+            <p>Everything you want to do for your projects can be a task in Alakrity. Think of a task as a To-Do for
+                which you already gave an estimate on the time required to complete it. It can have a deadline, to help
+                scheduling it at the right time.</p>
+            <p>Repeating tasks will show up every week, starting from the time you scheduled them first.
+            </p>
+            <p>There are several ways to add tasks to your projects. It is recommended to use the creation form in the
+                sidebar of the <em>Tasks</em> tab, as it gives you the most options. The
+                <em> Quick Add (Repeating) Task </em> buttons are good for when you just need a simple one off or
+                repeating task without milestones later on.
+            </p>
+            <p>In the <em> Create a new task </em> form you can setup your tasks how you need them. Decide if the task
+                should be repeating and estimate its duration (be generous!). Don&apos;t forget to choose the right
+                project and milestone.
+                You can even highlight the task, by checking <em> Special</em>. The task name and its duration can be
+                easily changed later on, by
+                clicking the pen symbol on an unscheduled task (changing other fields has not been implemented yet).
+            </p>
+            <div className="manual-info-block">
+                <div><i className="material-icons">info_outline</i></div>
+                <div>
+                    <div>
+                        When editing a task, try pressing the <em> Up/Down-Arrow </em> keys on your keyboard. They will
+                        let you quickly change the tasks duration. Pressing <em> Enter </em> will save the changes.
+                    </div>
+                </div>
+            </div>
         </div>
     }
 }

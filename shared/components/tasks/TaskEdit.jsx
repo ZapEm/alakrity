@@ -121,7 +121,6 @@ export default class TaskEdit extends React.Component {
     }
 
     handleKeyDown(e) {
-
         // ArrowUp
         if ( e.keyCode === 40 && (this.state.duration + 30 <= TASK_MAX_DURATION) ) {
             e.preventDefault()

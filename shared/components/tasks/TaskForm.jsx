@@ -3,7 +3,7 @@ import moment from 'moment'
 import PropTypes from 'prop-types'
 import * as React from 'react'
 import ImmutablePropTypes from 'react-immutable-proptypes'
-import { DEFAULT_TASK } from '../../utils/defaultValues'
+import { DEFAULT_TASK, TASK_MAX_DURATION } from '../../utils/defaultValues'
 import LabeledIconButton from '../misc/LabeledIconButton'
 import DurationPicker from './DurationPicker'
 
@@ -30,8 +30,8 @@ export default class TaskForm extends React.Component {
 
     handleSubmit(e) {
         e.preventDefault()
-        if(this.state.task.get('repeating')){
-            this.props.onSubmit(this.state.task.set('status', {}))
+        if ( this.state.task.get('repeating') ) {
+            this.props.onSubmit(this.state.task.set('status', {}).delete('milestone'))
         } else {
             this.props.onSubmit(this.state.task)
         }
@@ -54,9 +54,34 @@ export default class TaskForm extends React.Component {
         this.handleTaskChange(this.props.projectList.getIn([+e.target.value, 'id']), 'projectID')
     }
 
+    handleKeyDown(e) {
+        // ArrowUp
+        if ( e.keyCode === 40 ) {
+            e.preventDefault()
+            this.setState(({ task }) => {
+                if ( task.get('duration') + 30 <= TASK_MAX_DURATION ) {
+                    return {
+                        task: task.set('duration', task.get('duration') + 30)
+                    }
+                }
+            })
+        }
+        // ArrowDown
+        if ( e.keyCode === 38 ) {
+            e.preventDefault()
+            this.setState(({ task }) => {
+                if ( task.get('duration') - 30 >= 30 ) {
+                    return {
+                        task: task.set('duration', task.get('duration') - 30)
+                    }
+                }
+            })
+        }
+    }
+
 
     render() {
-        const {textLabel, projectList } = this.props
+        const { textLabel, projectList } = this.props
         const task = this.state.task
 
         const disabled = (projectList.size === 0) ? 'A project needs to be created first.' : false
@@ -128,7 +153,9 @@ export default class TaskForm extends React.Component {
                             placeholder={textLabel}
                             value={task.get('title')}
                             onChange={(e) => this.handleTaskChange(e.target.value, 'title')}
+                            onKeyDownCapture={::this.handleKeyDown}
                             disabled={disabled}
+                            autoFocus
                             required
                         />
                     </label>
@@ -172,7 +199,7 @@ export default class TaskForm extends React.Component {
                     </label>
 
                     {(milestoneSelectOptions) &&
-                    <label htmlFor="task-milestone-select" className="task-form-label"> Milestone
+                    <label htmlFor="task-milestone-select" className="task-form-label">{'Milestone'}
 
                         <select
                             id="task-milestone-select"
@@ -180,7 +207,7 @@ export default class TaskForm extends React.Component {
                             className={'task-form-input w3-border w3-border-theme w3-round'
                             + (disabled ? ' w3-text-gray' : '')}
                             name="option"
-                            disabled={(disabled || (milestoneSelectOptions === []))}
+                            disabled={(disabled || (milestoneSelectOptions === []) || this.state.task.get('repeating'))}
                         >
                             {milestoneSelectOptions}
                         </select></label>
@@ -189,6 +216,7 @@ export default class TaskForm extends React.Component {
                 <label>
                     Duration (in hours)
                     <DurationPicker
+                        value={task.get('duration')}
                         step={30}
                         min={30}
                         max={300}

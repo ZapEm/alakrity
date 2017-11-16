@@ -34,7 +34,7 @@ export default class ManualProjects extends React.Component {
                 </li>
                 <li>Select a color you like.</li>
                 <li>Select a type that fits the project. Currently the project types have only cosmetic effects (Icon & Mascot). </li>
-                <li>If you want you can add a description, but it is not required.</li>
+                <li>You can add a description if you want, but it is not required.</li>
                 <li>Press <DummyButton icon={'check'} label={'Save'}/> when you are finished.</li>
             </ol>
 
