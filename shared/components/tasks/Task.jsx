@@ -11,11 +11,11 @@ import { getEmptyImage } from 'react-dnd-html5-backend'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import MomentPropTypes from 'react-moment-proptypes'
 import { DANGER_LEVELS, LOCALE_STRINGS } from '../../utils/constants'
+import { DEFAULT_PROJECT } from '../../utils/defaultValues'
 import { DndTypes, TASK_STATUS } from '../../utils/enums'
 import { getTaskEndMoment, getTaskStartMoment, getTaskStatus } from '../../utils/helpers'
 import IconButton from '../misc/IconButton'
 import TaskEdit from './TaskEdit'
-import { DEFAULT_PROJECT } from '../../utils/defaultValues'
 
 const dragSource = {
     canDrag(props) {
@@ -72,12 +72,12 @@ const dragSource = {
         if ( dropResult ) {
             const milestones = props.projectColorMap.getIn([task.projectID, 'project', 'milestones'])
             let milestone = false
-            if (task.milestone && milestones) {
+            if ( task.milestone && milestones ) {
                 milestone = milestones.find(milestone => milestone.get('id') === task.milestone)
             }
-            if (milestone && moment(milestone.get('deadline')).isBefore(moment(dropResult.droppedAt), 'day')) {
+            if ( milestone && moment(milestone.get('deadline')).isBefore(moment(dropResult.droppedAt), 'day') ) {
                 // if milestone deadline would be before the scheduled time, ask for confirmation.
-                if(confirm('You are trying to schedule a task after its deadline (milestone).\n\nAre you sure you want to do this?')){
+                if ( confirm('You are trying to schedule a task after its deadline (milestone).\n\nAre you sure you want to do this?') ) {
                     props.taskActions.editTaskStart(_merge(task, { start: dropResult.droppedAt }))
                 }
             } else {
@@ -129,6 +129,16 @@ export default class Task extends React.Component {
         }
     }
 
+    static getMilestoneTooltip(milestone, deadline) {
+        if ( milestone && deadline ) {
+            return 'Milestone: \nTitle:\t'
+                + milestone.get('title') + '\nDate:\t'
+                + deadline.format('LL') + '\n\t('
+                + deadline.fromNow() + ')'
+        }
+        return 'No Milestone'
+    }
+
     componentWillMount() {
         this.setState({ editing: this.props.task.get('editing') || false })
     }
@@ -145,14 +155,12 @@ export default class Task extends React.Component {
         }
     }
 
-
     handleEditClick() {
         if ( this.props.editable ) {
             this.setState({ editing: true })
             this.props.setEditingTask(this.props.task.get('id'), true)
         }
     }
-
 
     handleSave(task) {
         if ( !task.title || task.title.length === 0 ) {
@@ -169,28 +177,17 @@ export default class Task extends React.Component {
         this.props.setEditingTask(this.props.task.get('id'), false)
     }
 
-    getMilestoneAndDeadline() {
+    getMilestoneDetails() {
         const milestones = this.props.projectColorMap.getIn([this.props.task.get('projectID'), 'project', 'milestones'])
-        if ( milestones && this.props.task.get('milestone')) {
+        if ( milestones && this.props.task.get('milestone') ) {
             const milestone = milestones.find(milestone => milestone.get('id') === this.props.task.get('milestone'))
-            if (milestone) {
+            if ( milestone ) {
                 const deadline = moment(milestone.get('deadline'))
-                return { milestone, deadline }
+                return { milestones, milestone, deadline }
             }
         }
-        return false
+        return { milestones, milestone: false, deadline: false }
     }
-
-    static getMilestoneTooltip(milestone, deadline) {
-        if (milestone && deadline) {
-                return 'Milestone: \nTitle:\t'
-                    + milestone.get('title') + '\nDate:\t'
-                    + deadline.format('LL') + '\n\t('
-                    + deadline.fromNow() + ')'
-        }
-        return 'No Milestone'
-    }
-
 
     render() {
         const {
@@ -223,7 +220,9 @@ export default class Task extends React.Component {
             }
         })).toJSON()
 
-        const status = colors.project && colors.project.tracked && TASK_STATUS[taskStatus] ? TASK_STATUS[taskStatus] : false
+        const status = colors.project && colors.project.tracked && TASK_STATUS[taskStatus] ? TASK_STATUS[taskStatus] :
+                       false
+        const milestoneDetails = this.getMilestoneDetails()
 
         const itemColors = !task.get('special') ?
                            _.omit(colors, ['special']) :
@@ -242,9 +241,10 @@ export default class Task extends React.Component {
                 locale={locale}
                 onSubmit={(task) => this.handleSave(task)}
                 onCancel={::this.handleCancel}
+                milestones={milestoneDetails.milestones}
             />
         } else {
-            const milestoneAndDeadline = this.getMilestoneAndDeadline()
+
             let iconTooltip = ''
             try {
                 iconTooltip = !status ? '' : {
@@ -266,8 +266,8 @@ export default class Task extends React.Component {
             }
             // urgent task
             let isUrgent = false
-            if (milestoneAndDeadline && status && status.key === TASK_STATUS.DEFAULT.key
-                && moment().add(3, 'days').isAfter(milestoneAndDeadline.deadline, 'day')) {
+            if ( milestoneDetails.deadline && status && status.key === TASK_STATUS.DEFAULT.key
+                && moment().add(3, 'days').isAfter(milestoneDetails.deadline, 'day') ) {
                 isUrgent = true
             }
 
@@ -289,7 +289,8 @@ export default class Task extends React.Component {
                             }, dragStyle
                         )
                     }
-                    title={milestoneAndDeadline ? Task.getMilestoneTooltip(milestoneAndDeadline.milestone, milestoneAndDeadline.deadline) : ''}
+                    title={milestoneDetails.milestone ?
+                           Task.getMilestoneTooltip(milestoneDetails.milestone, milestoneDetails.deadline) : ''}
                     // data-start={task.get('start')}
                     // data-duration={task.get('duration')}
                 >
@@ -298,9 +299,9 @@ export default class Task extends React.Component {
                         className={'material-icons w3-display-topleft task-status-icon' + (task.get('duration') < 60 ?
                                                                                            ' small' : '')}
                         title={isUrgent ? 'Deadline is coming up!' : iconTooltip}
-                        style={{...isUrgent && {color: 'rgba(100,0,0,0.4)'}}}
+                        style={{ ...isUrgent && { color: 'rgba(100,0,0,0.4)' } }}
                     >
-                        {isUrgent ? 'notifications_active' : status.icon }
+                        {isUrgent ? 'notifications_active' : status.icon}
                     </div>}
                     <div className="task-item-info">
                         <p className="title">{task.get('title')}</p>

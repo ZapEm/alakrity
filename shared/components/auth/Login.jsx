@@ -43,7 +43,7 @@ export default class Login extends React.Component {
                             marginLeft: 'auto',
                             marginRight: 0
                         }}
-                        label="Login"
+                        label="Log in"
                         iconName="lock_open"
                         //onClick={::this.handleSubmit}
                     />

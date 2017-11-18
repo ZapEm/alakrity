@@ -147,7 +147,7 @@ export default function reducer(state = initialState, action) {
                 action.payload.projectID)
 
         case EDIT_MODE:
-            return state.set('editMode', !state.get('editMode')) //TODO: remove toggling!
+            return state.set('editMode', !state.get('editMode'))
 
         case SET_CURRENT_PROJECT:
             return state.set('currentProjectID', action.payload)

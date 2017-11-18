@@ -1,11 +1,12 @@
 import * as _ from 'lodash/object'
+import moment from 'moment'
 import PropTypes from 'prop-types'
 import React from 'react'
 
 import { DragLayer, DragSource } from 'react-dnd'
 import { getEmptyImage } from 'react-dnd-html5-backend'
 import ImmutablePropTypes from 'react-immutable-proptypes'
-import { LOCALE_STRINGS, TASK_TYPES } from '../../utils/constants'
+import { LOCALE_STRINGS } from '../../utils/constants'
 import { TASK_MAX_DURATION } from '../../utils/defaultValues'
 import { DndTypes } from '../../utils/enums'
 import newId from '../../utils/newId'
@@ -48,7 +49,8 @@ export default class TaskEdit extends React.Component {
         item: PropTypes.object,
         itemType: PropTypes.string,
         colors: PropTypes.object,
-        locale: PropTypes.string.isRequired
+        locale: PropTypes.string.isRequired,
+        milestones: ImmutablePropTypes.list
     }
 
     // static defaultProps = {
@@ -103,7 +105,7 @@ export default class TaskEdit extends React.Component {
 
     handleSubmit(e) {
         e.preventDefault()
-        this.props.onSubmit(_.merge({}, this.state, { id: this.props.task.get('id') }))
+        this.props.onSubmit(_.merge({}, _.omit(this.state, ['showMilestoneList']), { id: this.props.task.get('id') }))
     }
 
     handleCancel(e) {
@@ -111,9 +113,18 @@ export default class TaskEdit extends React.Component {
         this.props.onCancel()
     }
 
-    handleDetails(e) {
+    handleAssignMilestone(milestoneID) {
+        console.log(milestoneID)
+        this.setState({
+            milestone: milestoneID,
+            showMilestoneList: false
+        })
+    }
+
+    handleShowMilestoneList(e) {
         e.preventDefault()
-        console.log('OPEN DETAILS')
+        this.setState({ showMilestoneList: true })
+
     }
 
     handleTitleChange(e) {
@@ -134,7 +145,7 @@ export default class TaskEdit extends React.Component {
     }
 
     render() {
-        const { connectDragSource, isDragging, colors, locale } = this.props
+        const { connectDragSource, isDragging, colors, locale, milestones } = this.props
 
         const colorStyle = {
             backgroundColor: colors.normal,
@@ -143,6 +154,21 @@ export default class TaskEdit extends React.Component {
         const formID = newId('FORM_')
 
         const durationCutoff = this.state.duration >= 90
+
+        const milestoneTableRows = milestones.map(milestone => (
+                <li
+                    className="ti-edit-milestone-list-item w3-center"
+                    style={{
+                        ...(milestone.get('id') === this.state.milestone) && { fontWeight: 'bold' },
+                        ...(moment(milestone.get('deadline')).isBefore()) && { textDecoration: 'line-through' }
+                    }}
+                    key={milestone.get('id')}
+                    onClick={() => this.handleAssignMilestone(milestone.get('id'))}>
+                    <div className="click-through">{milestone.get('title')}</div>
+                    <div className="click-through">{moment(milestone.get('deadline')).format('ll')}</div>
+                </li>
+            )
+        )
 
         return <div className="task-list-item" style={{
             zIndex: 3,
@@ -210,9 +236,10 @@ export default class TaskEdit extends React.Component {
                         onClick={::this.handleCancel}
                     />
                     <IconButton
-                        iconName={'content_paste'}
-                        tooltip="Details"
-                        onClick={::this.handleDetails}
+                        iconName={milestones.size <= 0 ? 'alarm_off' : 'alarm'}
+                        tooltip="Assign or change milestone"
+                        onClick={::this.handleShowMilestoneList}
+                        disabled={milestones.size <= 0 ? 'The project of this task has no milestones' : false}
                     />
                     <IconButton
                         formID={formID}
@@ -221,6 +248,23 @@ export default class TaskEdit extends React.Component {
                         //onClick={::this.handleSubmit}
                     />
                 </div>
+
+            </div>
+            <div className="ti-edit-milestone-list-wrapper w3-round w3-card-4"
+                 style={{ display: this.state.showMilestoneList ? 'block' : 'none' }}>
+                <ul
+                    style={{
+                        backgroundColor: colors.normal,
+                        borderColor: colors.dark
+                    }}
+                    className="ti-edit-milestone-list w3-ul w3-small w3-round">
+                    <li
+                        onClick={() => this.handleAssignMilestone('')}
+                        className="w3-center ti-edit-milestone-list-item">
+                        <div style={{...!this.state.milestone && { fontWeight: 'bold'}}} className="click-through">{'< No Milestone >'}</div>
+                    </li>
+                    {milestoneTableRows}
+                </ul>
             </div>
         </div>
     }

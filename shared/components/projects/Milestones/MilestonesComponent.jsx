@@ -75,8 +75,7 @@ export default class MilestonesComponent extends React.Component {
 
     handleSaveMilestones(e) {
         e.preventDefault()
-        this.props.onSave(this.state.milestones)
-
+        this.props.onSave(this.state.milestones.sortBy(milestone => moment(milestone.get('deadline'))))
     }
 
     changeMilestone(index, milestone) {

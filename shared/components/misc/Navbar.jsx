@@ -69,11 +69,6 @@ export default class Navbar extends React.Component {
                         }
 
 
-                        {isAuthenticated &&
-                        <div className="w3-right">
-                            <LogoutButton onLogoutClick={logout}/>
-                        </div>}
-
                         <Link
                             to={'/manual'}
                             onClick={(e) => {
@@ -84,11 +79,16 @@ export default class Navbar extends React.Component {
                             className="material-icons w3-hover-theme navbar-button no-underline w3-right navbar-help-icon"
                         >help_outline</Link>
 
+                        {isAuthenticated &&
+                        <div className="w3-right">
+                            <LogoutButton onLogoutClick={logout}/>
+                        </div>}
+
                         {userID &&
                         <div
-                            className="navbar-user-id w3-right w3-margin-right"
+                            className="material-icons navbar-user-icon w3-right"
                             title={'Logged in as "' + userID + '"'}
-                        >{'( ' + userID + ' )'}</div>
+                        >face</div>
                         }
 
                         {isAuthenticated &&

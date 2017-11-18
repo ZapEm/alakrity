@@ -19,7 +19,7 @@ export default class Logout extends React.Component {
                 href=""
                 onClick={::this.handleLogout}
             >
-                Logout
+                Log out
             </a>
         )
     }
