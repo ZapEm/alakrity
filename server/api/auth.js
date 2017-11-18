@@ -25,13 +25,12 @@ export function login(req, res) {
         res.status(400)
         res.json({ message: 'Username or password is missing.' })
 
-    }
-    else {
+    } else {
         rethink.find('users', req.body.userID)
                .then((user) => {
                    if ( !user ) {
                        res.status(401)
-                       res.json({ message: 'Wrong username or password.' })
+                       res.json({ message: 'Wrong username or password.', error: 'Invalid credentials. Login.' })
                    }
                    else {
                        bcrypt.compare(req.body.password, user.password, (err, isSame) => {
@@ -65,7 +64,7 @@ export function login(req, res) {
                            }
                            else {
                                res.status(401)
-                               res.json({ message: 'Wrong username or password.' })
+                               res.json({ message: 'Wrong username or password.', error: 'Invalid credentials. Login.' })
                            }
                        })
                    }

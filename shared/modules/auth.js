@@ -161,6 +161,15 @@ export default function reducer(state = initialState, action) {
             )
 
 
+        case CREATE_USER + FAILURE:
+            return state.withMutations(state => {
+                    state.set('message', 'User creation failed: ' + action.payload.message || 'An Error occurred.')
+                         .set('isAuthenticated', false)
+                         .set('user', false)
+                         .set('isWorking', false)
+                }
+            )
+
         case LOGIN + FAILURE:
             return state.withMutations(state => {
                     state.set('message', 'Login failed: ' + action.payload.message || 'An Error occurred.')

@@ -41,7 +41,7 @@ export function authMiddleware(req, res, next) {
                 next()
             } else {
                 res.status(401)
-                res.json({ error: err })
+                res.json({ error: err, message: 'Action was not authorized because your security token has expired. Please log in and try again.' })
             }
         }
     )

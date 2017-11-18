@@ -12,11 +12,11 @@ export default class CreateAccount extends React.Component {
 
     handleSubmit(e) {
         e.preventDefault()
+
         this.props.createUser({
-            userID: this.userRef.value.trim(),
-            password: this.pwRef.value.trim()
-        })
-        this.props.toggle()
+                userID: this.userRef.value.trim(),
+                password: this.pwRef.value.trim()
+            })
     }
 
     render() {
@@ -32,6 +32,7 @@ export default class CreateAccount extends React.Component {
                     type="text"
                     ref={userRef => this.userRef = userRef}
                     placeholder="Username"
+                    autoFocus
                     required
                 />
                 <input
