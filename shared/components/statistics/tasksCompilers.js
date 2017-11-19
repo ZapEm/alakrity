@@ -14,6 +14,7 @@ export function counter(taskStats, { numberOfWeeks = 1, trackedProjectsMap = {} 
         total: 0,
         started: 0,
         completed: 0,
+        totalDuration: 0,
         delayedStarts: 0,
         totalStartDelay: 0,
         delayedCompletions: 0,
@@ -25,6 +26,7 @@ export function counter(taskStats, { numberOfWeeks = 1, trackedProjectsMap = {} 
         totalWorkTimeBuffer: 0,
         projectWorkTimeTarget: {},
         projectWorkTimeActual: {}
+        // punctuality: 0,
         // averageRating: 0,
         // ratedRatio: 0
     }
@@ -43,7 +45,10 @@ export function counter(taskStats, { numberOfWeeks = 1, trackedProjectsMap = {} 
                         totalRating += taskStat.rating
                     }
 
-                    // Targeted worked time in Projects/Buffer (how tasks where placed)
+                    // Total planned duration of tasks
+                    count.totalDuration += taskStat.task.duration
+
+                    // Targeted worked time in Projects/Buffer (total worked duration of tasks)
                     if ( !count.projectWorkTimeTarget[taskStat.task.projectID] ) { count.projectWorkTimeTarget[taskStat.task.projectID] = 0 }
                     if ( taskStat.started ) {
                         const workDuration = moment(taskStat.completed).diff(taskStat.started, 'minutes')
@@ -59,18 +64,22 @@ export function counter(taskStats, { numberOfWeeks = 1, trackedProjectsMap = {} 
                         count.totalWorkTimeActual += taskStat.timeInProject
                         count.projectWorkTimeActual[taskStat.task.projectID] += taskStat.timeInProject
                     }
+
                     if ( taskStat.timeInBuffer ) {
                         count.totalWorkTimeBuffer += taskStat.timeInBuffer
                     }
+
+                    if ( taskStat.startDelay && taskStat.startDelay > 0 ) {
+                        count.delayedStarts++
+                        count.totalStartDelay += taskStat.startDelay
+                    }
+                    if ( taskStat.completeDelay && taskStat.completeDelay > 0 ) {
+                        count.delayedCompletions++
+                        count.totalCompletionDelay += taskStat.completeDelay
+                    }
                 }
-                if ( taskStat.startDelay ) {
-                    count.delayedStarts++
-                    count.totalStartDelay += taskStat.startDelay
-                }
-                if ( taskStat.completeDelay ) {
-                    count.delayedCompletions++
-                    count.totalCompletionDelay += taskStat.completeDelay
-                }
+
+
                 if ( taskStat.snooze ) { count.totalSnooze += taskStat.snooze }
                 if ( taskStat.extended ) { count.totalExtended += taskStat.extended }
             }
@@ -79,6 +88,15 @@ export function counter(taskStats, { numberOfWeeks = 1, trackedProjectsMap = {} 
 
     count.averageRating = totalRated !== 0 ? Math.round(totalRating / totalRated * 100) / 100 : 0
     count.ratedRatio = count.completed !== 0 ? Math.round(totalRated / count.completed * 100) / 100 : 0
+
+    // fancy punctuality calculation:
+    // complete delay is half as bad as start delay. 50% of it is counted against actual task durations, etc/
+    let delayRatio = (count.totalDuration > 1 && count.totalStartDelay + count.totalCompletionDelay > 0)
+        ? (count.totalStartDelay + (count.totalCompletionDelay/2)) / ((count.totalDuration + (count.total * 120)) / 2)
+        : 1
+    delayRatio = ((-0.3) * Math.log(1.5 * delayRatio))
+    delayRatio = delayRatio <= 0 ? 0 : delayRatio >= 1 ? 1 : delayRatio // cut off
+    count.punctuality = delayRatio
 
     count.numberOfWeeks = numberOfWeeks
 

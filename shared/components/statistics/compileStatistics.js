@@ -1,6 +1,6 @@
 import * as Immutable from 'immutable'
 import moment from 'moment'
-import { SPECIAL_PROJECTS } from '../utils/constants'
+import { SPECIAL_PROJECTS } from '../../utils/constants'
 import * as tasksCompilers from './tasksCompilers'
 
 /**
@@ -78,19 +78,20 @@ export function compileTimetableStats(timetable) {
         projectWorkPlanned: {}
     }
 
-    selections.forEach(day => day.forEach(projectID => {
-        if ( projectID ) {
-            if ( !timetableStats.projectWorkPlanned[projectID] ) {
-                timetableStats.projectWorkPlanned[projectID] = slotMinutes
-            } else {
-                timetableStats.projectWorkPlanned[projectID] += slotMinutes
+    if(selections) {
+        selections.forEach(day => day.forEach(projectID => {
+            if ( projectID ) {
+                if ( !timetableStats.projectWorkPlanned[projectID] ) {
+                    timetableStats.projectWorkPlanned[projectID] = slotMinutes
+                } else {
+                    timetableStats.projectWorkPlanned[projectID] += slotMinutes
+                }
+                if ( !(projectID in SPECIAL_PROJECTS) ) {
+                    timetableStats.totalWorkPlanned += slotMinutes
+                }
             }
-            if ( !(projectID in SPECIAL_PROJECTS) ) {
-                timetableStats.totalWorkPlanned += slotMinutes
-            }
-        }
-    }))
-
+        }))
+    }
 
     return Immutable.fromJS(timetableStats)
 }

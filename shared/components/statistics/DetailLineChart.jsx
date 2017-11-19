@@ -30,7 +30,7 @@ export default class DetailLineChart extends React.Component {
                                     gridLines: {
                                         drawOnChartArea: false
                                     },
-                                    ticks:{
+                                    ticks: {
                                         suggestedMax: 20,
                                         min: 0
                                     }
@@ -55,8 +55,21 @@ export default class DetailLineChart extends React.Component {
                                     gridLines: {
                                         drawOnChartArea: false
                                     },
-                                    ticks:{
+                                    ticks: {
                                         suggestedMax: 120,
+                                        min: 0
+                                    }
+                                },
+                                {
+                                    type: 'linear',
+                                    display: false,
+                                    position: 'right',
+                                    id: 'y-punctuality',
+                                    gridLines: {
+                                        drawOnChartArea: false
+                                    },
+                                    ticks: {
+                                        max: 1,
                                         min: 0
                                     }
                                 },

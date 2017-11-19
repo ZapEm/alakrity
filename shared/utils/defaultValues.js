@@ -51,7 +51,7 @@ export const DEFAULT_TIMETABLE = Object.freeze(
         // created,
         // lastEdited,
 
-        title: 'New Timetable',
+        title: 'My Timetable',
         start: 7,
         end: 22,
         steps: 2,

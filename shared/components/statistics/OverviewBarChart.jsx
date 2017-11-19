@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Bar, defaults } from 'react-chartjs-2'
+import { Bar } from 'react-chartjs-2'
 import * as ImmutablePropTypes from 'react-immutable-proptypes'
 import * as dataGenerators from './chartDataGenerators'
 
@@ -57,6 +57,19 @@ export default class OverviewBarChart extends React.Component {
                                     },
                                     ticks:{
                                         suggestedMax: 120,
+                                        min: 0
+                                    }
+                                },
+                                {
+                                    type: 'linear',
+                                    display: false,
+                                    position: 'right',
+                                    id: 'y-punctuality',
+                                    gridLines: {
+                                        drawOnChartArea: false
+                                    },
+                                    ticks: {
+                                        max: 1,
                                         min: 0
                                     }
                                 },

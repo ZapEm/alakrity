@@ -89,7 +89,8 @@ export function getWeeklyProjectLineData(compiledStats, appStats, projectList, m
                 hidden: true
             },
             ...getLineColors(projectStats.get('color')),
-            data: allWeeks.map(week => week.hasIn([projectID, 'actualCoverage']) ? week.getIn([projectID, 'actualCoverage']) : 0).toArray(),
+            data: allWeeks.map(week => week.hasIn([projectID, 'actualCoverage']) ?
+                                       week.getIn([projectID, 'actualCoverage']) : 0).toArray()
         })
         if ( projectID !== SPECIAL_PROJECTS._BUFFER.key ) {
             datasets.push({
@@ -101,7 +102,8 @@ export function getWeeklyProjectLineData(compiledStats, appStats, projectList, m
                 fill: '-1',
                 lineTension: 0,
                 ...getLineColorsTarget(projectStats.get('color')),
-                data: allWeeks.map(week => week.hasIn([projectID, 'targetCoverage']) ? week.getIn([projectID, 'targetCoverage']) : 0).toArray()
+                data: allWeeks.map(week => week.hasIn([projectID, 'targetCoverage']) ?
+                                           week.getIn([projectID, 'targetCoverage']) : 0).toArray()
             })
         }
     })
@@ -122,9 +124,22 @@ function mapToKeys(userStats, appStats) {
 
     return Immutable.fromJS({
         [keyMap.COMPLETED.key]: userStats.get('completed') / numberOfWeeks,
+
         [keyMap.AVG_RATING.key]: userStats.get('averageRating'),
-        [keyMap.START_DELAY.key]: userStats.get('totalStartDelay') / numberOfWeeks,
-        [keyMap.COMPLETION_DELAY.key]: userStats.get('totalCompletionDelay') / numberOfWeeks,
+
+        //[keyMap.START_DELAY.key]: userStats.get('totalStartDelay') / numberOfWeeks,
+        //[keyMap.COMPLETION_DELAY.key]: userStats.get('totalCompletionDelay') / numberOfWeeks,
+
+        // [keyMap.PUNCTUALITY.key]: (userStats.get('completed') > 0 && userStats.get('started') > 0)
+        //     ? (userStats.get('totalStartDelay') + userStats.get('totalCompletionDelay')) >= 1
+        //                               ?
+        //       Math.round(100 / Math.sqrt((userStats.get('totalStartDelay') / userStats.get('started')
+        //           + userStats.get('totalCompletionDelay') / userStats.get('completed')))) / 100
+        //                               : 1
+        //     : 0,
+
+        [keyMap.PUNCTUALITY.key]: Math.round(100 * userStats.get('punctuality')) / 100,
+
         [keyMap.COVERAGE.key]: (userStats.get('totalWorkTimeActual') > 0 && appStats.get('totalWorkPlanned') > 0)
             ? Math.round((userStats.get('totalWorkTimeActual') / appStats.get('totalWorkPlanned')) * 10000) / 100 : 0
     })
@@ -140,13 +155,14 @@ function mapToProjects(weekStats, projectList, appStats) {
         const project = projectList.find(project => project.get('id') === projectID)
         const plannedTime = appStats.getIn(['projectWorkPlanned', projectID])
 
-        if(project.get('tracked')){
+        if ( project.get('tracked') ) {
             projectsStats[projectID] = {
                 title: project.get('title'),
                 actualCoverage: (plannedTime > 0)
                     ? Math.round((actualTime / plannedTime) * 10000) / 100 : 0,
                 targetCoverage: (plannedTime > 0)
-                    ? Math.round((weekStats.getIn(['projectWorkTimeTarget', projectID]) / plannedTime) * 10000) / 100 : 0,
+                    ? Math.round((weekStats.getIn(['projectWorkTimeTarget', projectID]) / plannedTime) * 10000) / 100 :
+                                0,
                 color: project.get('color'),
                 active: true
             }
@@ -193,6 +209,12 @@ const keyMap = {
         label: 'Completion Delay',
         yAxisID: 'y-delay',
         color: PROJECT_COLORS[4]
+    },
+    PUNCTUALITY: {
+        key: 'PUNCTUALITY',
+        label: 'Punctuality (1/delay)',
+        yAxisID: 'y-punctuality',
+        color: PROJECT_COLORS[3]
     },
     COVERAGE: {
         key: 'COVERAGE',
