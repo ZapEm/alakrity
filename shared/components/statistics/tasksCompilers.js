@@ -90,7 +90,7 @@ export function counter(taskStats, { numberOfWeeks = 1, trackedProjectsMap = {} 
     count.ratedRatio = count.completed !== 0 ? Math.round(totalRated / count.completed * 100) / 100 : 0
 
     // fancy punctuality calculation:
-    // complete delay is half as bad as start delay. 50% of it is counted against actual task durations, etc/
+    // complete delay is half as bad as start delay. 50% of it is counted against actual task durations, etc.
     let delayRatio = (count.totalDuration > 1 && count.totalStartDelay + count.totalCompletionDelay > 0)
         ? (count.totalStartDelay + (count.totalCompletionDelay/2)) / ((count.totalDuration + (count.total * 120)) / 2)
         : 1
