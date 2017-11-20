@@ -27,6 +27,7 @@ export default class ModalFooter extends React.Component {
     handleBegin(e) {
         e.preventDefault()
         this.props.taskActions.beginTask(this.props.modal.task, { started: this.props.started })
+        this.props.backendActions.removeModal(this.props.modal.id)
     }
 
     handleComplete(e) {
@@ -35,6 +36,7 @@ export default class ModalFooter extends React.Component {
             rating: this.props.rating,
             completed: this.props.completed
         })
+        this.props.backendActions.removeModal(this.props.modal.id)
     }
 
     handleConfirmOver(e) {
@@ -44,6 +46,7 @@ export default class ModalFooter extends React.Component {
             started: this.props.started,
             completed: this.props.completed
         })
+        this.props.backendActions.removeModal(this.props.modal.id)
     }
 
     handleReschedule(e) {

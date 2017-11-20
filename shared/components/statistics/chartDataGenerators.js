@@ -212,7 +212,7 @@ const keyMap = {
     },
     PUNCTUALITY: {
         key: 'PUNCTUALITY',
-        label: 'Punctuality (1/delay)',
+        label: 'Punctuality',
         yAxisID: 'y-punctuality',
         color: PROJECT_COLORS[3]
     },

@@ -92,8 +92,8 @@ export default class ModalComponent extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if ( this.state.modalIndex !== false && this.state.modalIndex >= nextProps.modalsList.size ) {
-            this.setState(({ modalIndex }) => {
+        this.setState(({ modalIndex }) => {
+            if ( modalIndex !== false && modalIndex >= nextProps.modalsList.size ) {
                 const newIndex = modalIndex > 0 ? nextProps.modalsList.size - 1 : false
                 const newTask = newIndex ? nextProps.modalsList.get(newIndex).task : false
                 return {
@@ -104,33 +104,36 @@ export default class ModalComponent extends React.Component {
                     completedPicked: false,
                     rating: false
                 }
-            })
-        } else if ( this.state.modalIndex === false && nextProps.modalsList.size > 0 ) {
-            const newTask = nextProps.modalsList.get(0).task
-            this.setState({
-                modalIndex: 0,
-                started: (newTask && newTask.get('started')) ? moment(newTask.get('started')) : false,
-                completed: (newTask && newTask.get('completed')) ? moment(newTask.get('completed')) : false,
-                startedPicked: false,
-                completedPicked: false,
-                rating: false
-            })
-        } else if ( this.state.modalIndex !== false && this.state.modalIndex < nextProps.modalsList.size ) {
-            // if task has changed, but index may be the same.
-            if ( this.props.modalsList.get(this.state.modalIndex).id !== nextProps.modalsList.get(this.state.modalIndex).id ) {
-                this.setState(({ modalIndex }) => {
-                    const newTask = nextProps.modalsList.get(modalIndex)
-                    return {
-                        modalIndex: modalIndex,
-                        started: (newTask && newTask.get('started')) ? moment(newTask.get('started')) : false,
-                        completed: (newTask && newTask.get('completed')) ? moment(newTask.get('completed')) : false,
-                        startedPicked: false,
-                        completedPicked: false,
-                        rating: false
-                    }
-                })
             }
-        }
+            else if ( modalIndex === false && nextProps.modalsList.size > 0 ) {
+                const newTask = nextProps.modalsList.get(0).task
+                return {
+                    modalIndex: 0,
+                    started: (newTask && newTask.get('started')) ? moment(newTask.get('started')) : false,
+                    completed: (newTask && newTask.get('completed')) ? moment(newTask.get('completed')) : false,
+                    startedPicked: false,
+                    completedPicked: false,
+                    rating: false
+                }
+            }
+            // task has changed, but index may be the same.
+            else if ( modalIndex !== false && modalIndex < nextProps.modalsList.size && this.props.modalsList.get(modalIndex).id !== nextProps.modalsList.get(modalIndex).id ) {
+                const newTask = nextProps.modalsList.get(modalIndex).task
+                return {
+                    modalIndex: modalIndex,
+                    started: (newTask && newTask.get('started')) ? moment(newTask.get('started')) : false,
+                    completed: (newTask && newTask.get('completed')) ? moment(newTask.get('completed')) : false,
+                    startedPicked: false,
+                    completedPicked: false,
+                    rating: false
+                }
+            }
+            else {
+                return {
+                    // nothing changed
+                }
+            }
+        })
     }
 
     handleNext(e) {

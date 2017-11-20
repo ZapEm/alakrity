@@ -192,7 +192,7 @@ export function rescheduleTask(task, started = false, isFromDrag = false) {
         })
 
         // reset here, because merge doesn't work with objects
-        if ( task.repeating && isFromDrag ){
+        if ( task.repeating && isFromDrag ) {
             updatedTask.status = {}
         }
 
@@ -305,11 +305,12 @@ export function confirmOverTask(task, { rating, completed, started }) {
 
 
     return (dispatch) => {
-        return dispatch(editTask(resetTaskStats(task, ['started', 'completed', 'rating']))).then(Promise.all([
-            dispatch(backendActions.updateModals()),
-            dispatch(statistics.recordBeginTask(task, { started: started, isOver: true }))
-                .then(dispatch(statistics.recordCompleteTask(task, { rating: rating })))
-        ]))
+        return dispatch(editTask(resetTaskStats(task, ['started', 'completed', 'rating'])))
+            .then(Promise.all([
+                dispatch(backendActions.updateModals()),
+                dispatch(statistics.recordBeginTask(task, { started: started, isOver: true }))
+                    .then(dispatch(statistics.recordCompleteTask(task, { rating: rating })))
+            ]))
     }
 }
 
@@ -429,7 +430,7 @@ function computeTaskStatus(newTask, thisWeek) {
         }
     } else {
         //Schedule repeating task if appropriate
-        if (!thisWeek) {
+        if ( !thisWeek ) {
             thisWeek = moment().startOf('isoWeek')
         }
         if ( (newTask.status && typeof newTask.status[thisWeek] === 'string' && newTask.status[thisWeek] !== TASK_STATUS.DEFAULT.key) ) {
@@ -443,9 +444,11 @@ function computeTaskStatus(newTask, thisWeek) {
 }
 
 function resetTaskStats(task, statsArray) {
-    if (task.repeating) {
+    if ( task.repeating ) {
         const newTask = _.cloneDeep(task)
-        statsArray.forEach(stat => { newTask[stat] = false })
+        statsArray.forEach(stat => {
+            newTask[stat] = false
+        })
 
         return newTask
 
