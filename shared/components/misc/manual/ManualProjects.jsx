@@ -5,7 +5,7 @@ export default class ManualProjects extends React.Component {
 
     render() {
         return <div id="manual-chapter-projects" className="manual-chapter">
-            <h3 className="w3-text-theme">Projects</h3>
+            <h2 className="w3-text-theme">Projects</h2>
             <p>
                 Projects are a key functionality of the Alakrity application and their primary function is to divide the tasks into sensible groups.
                 A project can be used for anything from things like a university thesis or freelance work, to fitness and household chores, or even just a collection of unrelated appointments. Each project has a name, color

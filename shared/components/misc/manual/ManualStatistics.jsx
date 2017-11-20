@@ -4,7 +4,7 @@ export default class ManualStatistics extends React.Component {
 
     render() {
         return <div id="manual-chapter-statistics" className="manual-chapter">
-            <h3 className="w3-text-theme">Statistics</h3>
+            <h2 className="w3-text-theme">Statistics</h2>
             <p>Donec eget rhoncus nunc. Ut vitae nisi ex. Mauris nunc libero, fringilla imperdiet nunc eu, ornare
                 vehicula erat. Aliquam erat volutpat. Interdum et malesuada fames ac ante ipsum primis in faucibus. Cras
                 turpis mi, facilisis malesuada mi sit amet, laoreet tempus ipsum. Suspendisse potenti. Ut blandit est

@@ -6,6 +6,7 @@ import ManualTimetable from '../components/misc/manual/ManualTimetable'
 import Mascot from '../components/misc/mascot/StaticMascot'
 import ManualBasics from '../components/misc/manual/ManualBasics'
 import ManualExample from '../components/misc/manual/ManualExample'
+import ManualReminders from '../components/misc/manual/ManualReminders'
 
 export default class Login extends React.Component {
 
@@ -25,6 +26,7 @@ export default class Login extends React.Component {
                             <ManualProjects/>
                             <ManualTasks/>
                             <ManualTimetable/>
+                            <ManualReminders/>
                             <ManualStatistics/>
                         </div>
                     </div>
@@ -47,6 +49,9 @@ export default class Login extends React.Component {
                                 </li>
                                 <li className="w3-hover-theme w3-round link-list-item">
                                     <a href="#manual-chapter-timetable" className="link-div no-underline">Timetable</a>
+                                </li>
+                                <li className="w3-hover-theme w3-round link-list-item">
+                                    <a href="#manual-chapter-reminders" className="link-div no-underline">Reminders</a>
                                 </li>
                                 <li className="w3-hover-theme w3-round link-list-item">
                                     <a href="#manual-chapter-statistics" className="link-div no-underline">Statistics</a>

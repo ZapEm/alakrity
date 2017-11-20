@@ -4,7 +4,7 @@ export default class ManualExample extends React.Component {
 
     render() {
         return <div id="manual-chapter-example" className="manual-chapter">
-            <h3 className="w3-text-theme">Example Use Case</h3>
+            <h2 className="w3-text-theme">Example Use Case</h2>
             <p>
                 Steve is a computer science student in the last semester of his bachelor studies. To finish his degree,
                 he still has to attend two lectures, pass the exams, and write his bachelor thesis. He works 9 hours a
@@ -81,12 +81,12 @@ export default class ManualExample extends React.Component {
             <div className="manual-info-block">
                 <div><i className="material-icons">info_outline</i></div>
                 <div>
-                    <div>
+                    <p>
                         You can log in as Steve to have a look at how he set up his timetable and his statistics.
-                        <br/> Just be considerate
+                        Just be considerate
                         of others and don&apos;t mess up his schedule, please, as I currently don&apos;t have a way to
                         reset his profile.
-                    </div>
+                    </p>
                     <table>
                         <tbody>
                         <tr>

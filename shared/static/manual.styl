@@ -27,15 +27,20 @@
   vertical-align middle
 
 .manual-chapter
-  margin 32px
+  margin 4px 0
+  padding 24px
   border-bottom solid 1px $theme
-  &:last-child
-    border none
+  border-top solid 1px $theme
+  border-radius 16px
   & i
     color $theme
   & em
     font-style normal
     color $theme
+  & p
+    text-align justify
+  & h3, h2
+    text-align center
 
 .manual-list
   list-style disc
@@ -52,3 +57,7 @@
   & i
     margin-right 16px
     font-size 42px
+  & p
+    margin-top 0
+    margin-bottom 0
+    margin-right 16px

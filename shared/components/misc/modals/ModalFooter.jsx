@@ -77,7 +77,7 @@ export default class ModalFooter extends React.Component {
             [MODAL_TYPES.REMINDER]: () => [
                 <LabeledIconButton
                     key={2}
-                    iconName="timer_off" //"event_busy" //"cancel" //"remove_circle_outline" //"skip_next"
+                    iconName="alarm_off" //"event_busy" //"cancel" //"remove_circle_outline" //"skip_next"
                     label={isRepeating ? 'Ignore' : 'Reschedule'}
                     tooltip={isRepeating ?
                              'Ignore this repeating task for the current week.\nYou will be reminded again next Week.' :
@@ -138,6 +138,7 @@ export default class ModalFooter extends React.Component {
                     label="Delete"
                     dangerLevel={DANGER_LEVELS.DANGER.hover}
                     onClick={::this.handleRemoveTask}
+                    disabled={'Disabled in this version, reschedule first, then delete from the sidebar if wanted.'}
                 />,
                 <LabeledIconButton
                     key={1}

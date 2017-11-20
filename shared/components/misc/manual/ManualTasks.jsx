@@ -4,7 +4,7 @@ export default class ManualTasks extends React.Component {
 
     render() {
         return <div id="manual-chapter-tasks" className="manual-chapter">
-            <h3 className="w3-text-theme">Tasks</h3>
+            <h2 className="w3-text-theme">Tasks</h2>
             <p>Everything you want to do for your projects can be a task in Alakrity. Think of a task as a To-Do with
                 an estimate on the time required to complete it. It can have a deadline to help
                 scheduling it at the right time. You will only be reminded of tasks from tracked projects,
@@ -24,12 +24,10 @@ export default class ManualTasks extends React.Component {
             </p>
             <div className="manual-info-block">
                 <div><i className="material-icons">info_outline</i></div>
-                <div>
-                    <div>
-                        When editing a task, try pressing the <em> Up/Down-Arrow </em> keys on your keyboard. They will
-                        let you quickly change the tasks duration. Pressing <em> Enter </em> will save the changes.
-                    </div>
-                </div>
+                <p>
+                    When editing a task, try pressing the <em> Up/Down-Arrow </em> keys on your keyboard. They will
+                    let you quickly change the tasks duration. Pressing <em> Enter </em> will save the changes.
+                </p>
             </div>
         </div>
     }
