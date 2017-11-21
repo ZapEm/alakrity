@@ -190,13 +190,13 @@ const keyMap = {
         key: 'COMPLETED',
         label: 'Completed',
         yAxisID: 'y-absolute',
-        color: PROJECT_COLORS[1]
+        color: PROJECT_COLORS[0]
     },
     AVG_RATING: {
         key: 'AVG_RATING',
         label: 'Avg. Rating',
         yAxisID: 'y-stars',
-        color: PROJECT_COLORS[6]
+        color: PROJECT_COLORS[2]
     },
     START_DELAY: {
         key: 'START_DELAY',
@@ -220,7 +220,7 @@ const keyMap = {
         key: 'COVERAGE',
         label: 'Project Coverage %',
         yAxisID: 'y-percent',
-        color: PROJECT_COLORS[7]
+        color: PROJECT_COLORS[1]
     }
 }
 

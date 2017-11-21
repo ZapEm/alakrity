@@ -3,16 +3,16 @@ export const REJECTED_NAME = '_FAILURE'
 
 
 export const PROJECT_COLORS = [
-    '#75a3ff',
-    '#ff737c',
-    '#ffeb66',
-    '#67E588',
-    '#5DC1DD',
-    '#D85BCA',
-    '#FFA86F',
-    '#C5F66B',
-    '#8080ff',
-    '#A37CFF'
+    '#75a3ff',  // 0
+    '#ff737c',  // 1
+    '#ffe369',  // 2
+    '#67E588',  // 3
+    '#5DC1DD',  // 4
+    '#D85BCA',  // 5
+    '#FFA86F',  // 6
+    '#C5F66B',  // 7
+    '#8080ff',  // 8
+    '#A37CFF'   // 9
 ]
 
 export const SPECIAL_PROJECTS = Object.freeze(

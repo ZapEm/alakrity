@@ -3,19 +3,41 @@ import * as React from 'react'
 export default class ManualStatistics extends React.Component {
 
     render() {
+
+
         return <div id="manual-chapter-statistics" className="manual-chapter">
             <h2 className="w3-text-theme">Statistics</h2>
-            <p>Donec eget rhoncus nunc. Ut vitae nisi ex. Mauris nunc libero, fringilla imperdiet nunc eu, ornare
-                vehicula erat. Aliquam erat volutpat. Interdum et malesuada fames ac ante ipsum primis in faucibus. Cras
-                turpis mi, facilisis malesuada mi sit amet, laoreet tempus ipsum. Suspendisse potenti. Ut blandit est
-                nec neque lacinia, at auctor nulla imperdiet. Vivamus et placerat velit, non facilisis mauris.</p>
+            <p>Your work on your (tracked) projects is recorded and compiled into a few helpful graphs. You can find a
+                short description of the different stats that are shown in the sidebar, so this section will only
+                describe the general intent of the graphs.
+            </p>
 
-            <p> Integer vehicula fermentum ligula id tempus. In pulvinar lectus ut ultrices bibendum. Cras et ultricies
-                tortor, a rutrum elit. Ut mauris leo, ultrices eu bibendum sed, luctus ut libero. Pellentesque semper
-                vel nisi et sagittis. Vestibulum quam justo, iaculis et purus non, consequat commodo justo. Ut ligula
-                ligula, luctus eget viverra ut, rhoncus vitae lacus. Morbi non mauris porttitor, efficitur ligula et,
-                cursus ipsum. Fusce aliquam dui ex, id vulputate sapien euismod ac. Fusce ac nulla sit amet lacus
-                volutpat pretium.</p>
+            <h5 className="w3-text-theme">Overview</h5>
+            <p>This graph shows the current week compared to the average of the last (up to) 5 weeks. Use it to compare
+                your performance to your averages at the end of - or even during - the week.
+            </p>
+
+            <h5 className="w3-text-theme">Time Line</h5>
+            <p>This graph shows the trend over the last few weeks. Check if you are improving or if you need to increase
+                your efforts by recognizing trends.
+            </p>
+
+            <h5 className="w3-text-theme">Project Time Coverage</h5>
+            <p>This graph shows how much of the planned project periods time was spent actually working tasks for each
+                respective project in percent. It also shows (lighter color) the percentage of work you scheduled,
+                compared to each project. The difference of these values (light colored area) indicates how much you
+                deviated from your plan.
+            </p>
+            <p>A well planned schedule should show only a thin area near the 100% mark!</p>
+
+            <div className="manual-info-block">
+                <div><i className="material-icons">info_outline</i></div>
+                <p>
+                    Click on the labels (above each graph) to hide or show the different datasets. This can help if you
+                    want to have a better look at specific stats.
+                    <br/> Use this to have a look at your buffer usage; it is hidden by default.
+                </p>
+            </div>
         </div>
     }
 }
