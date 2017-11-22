@@ -76,7 +76,6 @@ export const DANGER_LEVELS = Object.freeze(
 )
 
 
-
 export const LOCALE_STRINGS = Object.freeze(
     {
         en: {
@@ -91,6 +90,18 @@ export const LOCALE_STRINGS = Object.freeze(
         }
     }
 )
+
+export const MASCOT_TIPS = [
+    'Take regular short breaks, but be aware of time sinks like "I\'ll just browse a bit on the internet" or "a few minutes of TV".',
+    'Taking a short walk is a good way to clear your head.',
+    'Regular sporting activity has shown to help with improving the ability to concentrate. Don\'t forget to plan for it in your schedule.',
+    'Remember to be generous when planning your tasks. Multiply your guess by 1.5 or even 2!',
+    'Update the next weeks schedule in advance. Create a repeating task for it, so you won\'t forget!',
+    'Some cats can sleep more than 27 hours in a single day. Harness this ancient power of the cats! Have plenty of sleep, take naps, catch a few mice!',
+    'You are free to use un-tracked projects as you see fit. But you should at least somehow mark the time you spend on these projects in your timetable. Even if you only paint in the time periods or just create a repeating task.',
+    'You don\'t have to create every task of a project at the beginning. It is best to update your tasks dynamically. You could even use "special tasks" to mark tasks that need to be split up further.',
+    'Be as precise as possible when naming tasks, so you won\'t have to think about what need to do and can start working immediately.'
+]
 
 function generateRepeatingLinearLines(r, g, b, a, deg, width1, width2 = width1) {
     return `repeating-linear-gradient(${deg}deg, transparent, transparent ${width1}px, rgba(${r},${g},${b},${a}) ${width1 + 1}px, rgba(${r},${g},${b},${a}) ${(width1 + width2 + 1)}px)`

@@ -271,6 +271,8 @@ export default class Task extends React.Component {
                 isUrgent = true
             }
 
+            const taskTitle = task.get('title')
+
             element =
                 <div
                     className={
@@ -304,7 +306,10 @@ export default class Task extends React.Component {
                         {isUrgent ? 'notifications_active' : status.icon}
                     </div>}
                     <div className="task-item-info">
-                        <p className="title">{task.get('title')}</p>
+                        <p className="title"
+                           style={{
+                               fontSize: taskTitle.length < 10 ? 'normal' : taskTitle.length < 20 ? 'small' : 'smaller'
+                           }}>{taskTitle}</p>
                         {durationCutoff &&
                         <p className="duration">{(task.get('duration') / 60) + LOCALE_STRINGS[locale].hours}</p>}
                     </div>
