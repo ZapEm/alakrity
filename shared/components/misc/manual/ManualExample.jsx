@@ -23,7 +23,7 @@ export default class ManualExample extends React.Component {
                     </p>
                     <p>
                         Steve does not need any encouragement to work on these projects, so he sets the projects up as
-                        un-tracked by removing the <em> <q>tracked</q> check mark </em>.
+                        not-tracked by removing the <em> <q>tracked</q> check mark </em>.
                     </p>
                     <p>
                         For the work of his <i> Bachelors Thesis </i> Steve creates a <em> tracked </em> project, since

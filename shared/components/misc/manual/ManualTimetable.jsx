@@ -55,7 +55,7 @@ export default class ManualTimetable extends React.Component {
                     <li><i className="material-icons manual-icon">pets</i>: In progress. You should be working in this
                         right now.
                     </li>
-                    <li>Tasks in the timetable that don&apos;t have a symbol are from un-tracked projects.</li>
+                    <li>Tasks in the timetable that don&apos;t have a symbol are from not-tracked projects.</li>
                 </ul>
             </ul>
 

@@ -13,11 +13,11 @@ export default class ManualProjects extends React.Component {
                 milestones to it.
             </p>
             <p>
-                Since every task needs to be assigned to a project, it is recommended to create a few (un-tracked)
+                Since every task needs to be assigned to a project, it is recommended to create a few (not-tracked)
                 projects for broader categories like <q>Appointments</q> or <q>Household Chores</q>.
             </p>
 
-            <h5 className="w3-text-theme">Tracked and un-tracked projects</h5>
+            <h5 className="w3-text-theme">Tracked and not-tracked projects</h5>
             <p>
                 Alakrity will remind you about tasks of tracked projects and record statistics for them. Un-tracked
                 projects are good for things you do anyways and don&apos;t want to be reminded off by the application,

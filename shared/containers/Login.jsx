@@ -4,9 +4,9 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import AuthForm from '../components/auth/AuthForm'
 import MascotContainer from '../components/misc/mascot/MascotContainer'
+import NotificationPermissionRequester from '../components/misc/NotificationPermissionRequester'
 import * as authActions from '../modules/auth'
 import { MASCOT_STATUS } from '../utils/enums'
-import NotificationPermissionRequester from '../components/misc/NotificationPermissionRequester'
 
 
 @connect()
@@ -33,19 +33,21 @@ export default class Login extends React.Component {
                                 It is intended as a tool to help you manage a demanding project with all your other
                                 responsibilities.
 
-                                Be aware that it is only intended as a prototype so, while it works,
-                                it is not very polished and may still have some bugs.
+                                Be aware that this is only a prototype/alpha version. This means that you will come
+                                across some parts that will not have been fully fleshed out yet and you might encounter
+                                some bugs. I&apos;m pretty sure I caught most of the bad ones though. Try a reload if
+                                something breaks.
                             </p>
                             <p>
-                                You are free to use and play around with it. But I can not promise that your data will
-                                be around for ever or that the service wont ever break down. Thank you for your
-                                understanding.
-                            </p>
+                                You are free to use and play around with this application. But, although I am hopeful, I
+                                can not promise that your data will be around for ever, or that the service won&apos;t
+                                ever break down. Thank you for your understanding. </p>
                             <p>
-                                A manual with a more detailed description can be found by
-                                clicking the <a href="javascript:window.open('/manual', 'Alakrity Manual', 'toolbar=no,status=no,menubar=no,left=0,top=100,width=1200,height=800')"
-                                                className="material-icons w3-text-theme no-underline"
-                                                style={{ transform: 'translateY(5px)' }}>help_outline</a> icon at the top.
+                                A manual with a detailed description Alakrity and its features can be found by
+                                clicking the <a
+                                href="javascript:window.open('/manual', 'Alakrity Manual', 'toolbar=no,status=no,menubar=no,left=0,top=100,width=1200,height=800')"
+                                className="material-icons w3-text-theme no-underline"
+                                style={{ transform: 'translateY(5px)' }}>help_outline</a> icon at the top right corner.
                             </p>
                             <NotificationPermissionRequester/>
                         </div>

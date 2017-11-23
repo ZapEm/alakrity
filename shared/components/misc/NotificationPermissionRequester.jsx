@@ -58,7 +58,10 @@ export default class NotificationPermissionRequester extends React.Component {
         }
 
         return <div className="notification-permission-requester-wrapper">
-            <h5 className="w3-text-theme w3-center">Please allow notifications so Alakrity can show reminders even when the tab is in the background.</h5>
+            <h5 className="w3-text-theme w3-center">
+                Please allow notifications so Alakrity can show
+                <br/>reminders even when the tab is in the background.
+            </h5>
             <div
                 className="w3-display-container notification-permission-requester w3-card w3-round w3-border w3-border-theme">
                 <div className="notification-permission-requester-icon w3-display-container">
