@@ -66,6 +66,7 @@ export default class TaskItemDragPreview extends React.Component {
     render() {
         const { task, locale, notDragging } = this.props
         const durationCutoff = task.duration >= 90
+        const taskTitle = task.title || ''
 
         return (
             <div
@@ -97,9 +98,9 @@ export default class TaskItemDragPreview extends React.Component {
                     <div className="task-item-info">
                         <p className="task-item-info title"
                            style={{
-                               fontSize: task.title.length < 10 ? 'normal' : task.title.length < 20 ? 'small' : 'smaller'
+                               fontSize: taskTitle.length < 10 ? 'normal' : taskTitle.length < 20 ? 'small' : 'smaller'
                            }}
-                        >{task.title}</p>
+                        >{taskTitle}</p>
                         {durationCutoff &&
                         <p className="task-item-info duration">{(task.duration / 60) + LOCALE_STRINGS[locale].hours}</p>}
                     </div>

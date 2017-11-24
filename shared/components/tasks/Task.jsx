@@ -271,7 +271,7 @@ export default class Task extends React.Component {
                 isUrgent = true
             }
 
-            const taskTitle = task.get('title')
+            const taskTitle = task.get('title') || ''
 
             element =
                 <div
