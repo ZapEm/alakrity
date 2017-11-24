@@ -54,9 +54,9 @@ export default class TaskEdit extends React.Component {
         milestones: ImmutablePropTypes.list
     }
 
-    // static defaultProps = {
-    //     locale: 'en'
-    // }
+    static defaultProps = {
+        milestones: List()
+    }
 
     static contextTypes = {
         dragDropManager: PropTypes.object
@@ -156,7 +156,7 @@ export default class TaskEdit extends React.Component {
 
         const durationCutoff = this.state.duration >= 90
 
-        const milestoneTableRows = List.isList(milestones) ? milestones.map(milestone => (
+        const milestoneTableRows = milestones.map(milestone => (
                 <li
                     className="ti-edit-milestone-list-item w3-center"
                     style={{
@@ -169,7 +169,7 @@ export default class TaskEdit extends React.Component {
                     <div className="click-through">{moment(milestone.get('deadline')).format('ll')}</div>
                 </li>
             )
-        ) : null
+        )
 
         return <div className="task-list-item" style={{
             zIndex: 3,
