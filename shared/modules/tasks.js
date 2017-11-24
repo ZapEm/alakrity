@@ -42,7 +42,6 @@ export function loadTasks() {
 export function createTask(taskInput) {
 
     if ( Immutable.Map.isMap(taskInput) ) {
-        console.log('was Map')
         taskInput = taskInput.toJS()
     }
 
@@ -63,7 +62,7 @@ export function quickAddTask(project, repeating = false) {
     if ( !Immutable.Map.isMap(project) ) {project = Immutable.Map(project)}
 
     const taskInput = {
-        text: '',
+        title: '',
         projectID: project.get('id'),
         repeating: repeating,
         special: false,
