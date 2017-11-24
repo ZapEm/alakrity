@@ -12,6 +12,7 @@ import { DndTypes } from '../../utils/enums'
 import newId from '../../utils/newId'
 import { getDurationDelta } from '../dnd/dndFunctions'
 import IconButton from '../misc/IconButton'
+import { List } from 'immutable'
 
 
 const dragSource = {
@@ -155,7 +156,7 @@ export default class TaskEdit extends React.Component {
 
         const durationCutoff = this.state.duration >= 90
 
-        const milestoneTableRows = milestones.map(milestone => (
+        const milestoneTableRows = List.isList(milestones) ? milestones.map(milestone => (
                 <li
                     className="ti-edit-milestone-list-item w3-center"
                     style={{
@@ -168,7 +169,7 @@ export default class TaskEdit extends React.Component {
                     <div className="click-through">{moment(milestone.get('deadline')).format('ll')}</div>
                 </li>
             )
-        )
+        ) : null
 
         return <div className="task-list-item" style={{
             zIndex: 3,
