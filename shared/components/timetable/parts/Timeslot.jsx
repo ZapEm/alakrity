@@ -47,7 +47,9 @@ export default class Timeslot extends React.Component {
                 backgroundColor: SPECIAL_PROJECTS[projectID].light,
                 ...SPECIAL_PROJECTS[projectID].backgroundPattern && {
                     backgroundImage: SPECIAL_PROJECTS[projectID].backgroundPattern,
-                    backgroundAttachment: 'fixed'
+                    backgroundRepeat: 'space',
+                    backgroundPosition: 'center',
+                    backgroundSize: '36px, 18px'
                 },
                 height: 3 / position.steps + 'rem'
             }

@@ -15,6 +15,12 @@ export const PROJECT_COLORS = [
     '#A37CFF'   // 9
 ]
 
+let breakImg = '', bufferImg = ''
+if ( typeof window !== 'undefined' ) {
+    breakImg = 'url("' + require('img/break_img_trans.png') + '")'
+    bufferImg = 'url("' + require('img/buffer_img_trans.png') + '")'
+}
+
 export const SPECIAL_PROJECTS = Object.freeze(
     {
         _CLEAR: {
@@ -27,18 +33,18 @@ export const SPECIAL_PROJECTS = Object.freeze(
         _BUFFER: {
             title: 'Buffer',
             key: '_BUFFER',
-            dark: '#5673a6',
-            normal: '#8eb9ff',
-            light: '#b5d1ff',
-            backgroundPattern: `${generateRepeatingLinearLines(255, 255, 255, 0.4, 0, 5)}, ${generateRepeatingLinearLines(255, 255, 255, 0.4, 90, 5)}`
+            dark: '#3d6099',
+            normal: '#a6c8ff',
+            light: '#bfd9ff',
+            backgroundPattern: bufferImg //`${generateRepeatingLinearLines(255, 255, 255, 0.4, 0, 5)}, ${generateRepeatingLinearLines(255, 255, 255, 0.4, 90, 5)}`
         },
         _BREAK: {
             title: 'Break',
             key: '_BREAK',
-            dark: '#48774c',
-            normal: '#7ccb81',
-            light: '#b9f4b7',
-            backgroundPattern: `${generateRepeatingLinearLines(255, 255, 255, 0.4, 45, 3, 6)}`
+            dark: '#3d9945',
+            normal: '#a6ffa9',
+            light: '#c5ffbf',
+            backgroundPattern: breakImg //`${generateRepeatingLinearLines(255, 255, 255, 0.4, 45, 3, 6)}`
         }
     }
 )

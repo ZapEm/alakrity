@@ -37,8 +37,10 @@ export default class ProjectPeriodPicker extends React.Component {
         const liStyle = this.props.currentProjectID === dataId ? {
             backgroundColor: specialProject.light,
             ...specialProject.backgroundPattern && {
-                backgroundImage: specialProject.backgroundPattern
-                //backgroundAttachment: 'local'
+                backgroundImage: specialProject.backgroundPattern,
+                backgroundRepeat: 'space',
+                backgroundPosition: 'center',
+                backgroundSize: '36px, 18px'
             },
             borderLeft: 'solid 2px ' + specialProject.dark,
             borderRight: 'solid 2px ' + specialProject.dark,
