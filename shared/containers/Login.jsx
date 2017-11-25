@@ -45,7 +45,7 @@ export default class Login extends React.Component {
                             <p>
                                 A manual with a detailed description Alakrity and its features can be found by
                                 clicking the <a
-                                href="javascript:window.open('/manual', 'Alakrity Manual', 'toolbar=no,status=no,menubar=no,left=0,top=100,width=1200,height=800')"
+                                href="javascript:window.open('/manual', 'Alakrity Manual', 'toolbar=no,scrollbars=yes,status=no,menubar=no,left=0,top=100,width=1200,height=800')"
                                 className="material-icons w3-text-theme no-underline"
                                 style={{ transform: 'translateY(5px)' }}>help_outline</a> icon at the top right corner.
                             </p>
