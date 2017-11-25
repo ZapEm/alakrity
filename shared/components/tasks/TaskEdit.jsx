@@ -115,7 +115,6 @@ export default class TaskEdit extends React.Component {
     }
 
     handleAssignMilestone(milestoneID) {
-        console.log(milestoneID)
         this.setState({
             milestone: milestoneID,
             showMilestoneList: false
