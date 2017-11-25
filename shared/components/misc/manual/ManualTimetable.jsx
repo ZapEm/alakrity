@@ -52,8 +52,8 @@ export default class ManualTimetable extends React.Component {
                     <li><i className="material-icons manual-icon">snooze</i>: Snoozed. Will soon remind you again to
                         start this task.
                     </li>
-                    <li><i className="material-icons manual-icon">pets</i>: In progress. You should be working in this
-                        right now.
+                    <li><i className="material-icons manual-icon">pets</i>: In progress. You should be working on this
+                        task right now.
                     </li>
                     <li>Tasks in the timetable that don&apos;t have a symbol are from not-tracked projects.</li>
                 </ul>

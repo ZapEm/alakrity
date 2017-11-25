@@ -15,47 +15,50 @@ export default class ManualBasics extends React.Component {
                 use it as described by the following method first.</p>
             <h4 className="w3-text-theme">Three Step Time Management</h4>
             This is just a short summary of the full method. Unfortunately, at the time of this writing, the method is
-            not officially published yet. I wil, however, try to give you all the relevant information you need to apply
+            not officially published yet. I will, however, try to give you all the relevant information you need to
+            apply
             the method with the help of Alakrity.
 
             <h5>Step 1</h5>
             <p>First create a list with all your regular events and obligations. If you are
                 thorough now, you will have an easier time later.
                 Such a list could look like this:
-                <div className="w3-margin">
-                    <table className="w3-table w3-bordered">
-                        <tbody>
-                        <tr>
-                            <td>Nordic walking meet</td>
-                            <td>Monday 7:30-9am</td>
-                        </tr>
-                        <tr>
-                            <td>University lectures (Math 1)</td>
-                            <td>Tue 9-11am, Thu 11am-1pm</td>
-                        </tr>
-                        <tr>
-                            <td> ~ (Chinese)</td>
-                            <td>Wed 2-4pm</td>
-                        </tr>
-                        <tr>
-                            <td> ~ (Psychology for Engineers 2)</td>
-                            <td>Thu 9am-11am</td>
-                        </tr>
-                        <tr>
-                            <td>Household chores (Groceries, Cleaning)</td>
-                            <td>1h, twice a week</td>
-                        </tr>
-                        <tr>
-                            <td>Part-time job</td>
-                            <td>Fri & Sat 5-11pm</td>
-                        </tr>
-                        <tr style={{ border: 'none' }}>
-                            <td> ...</td>
-                            <td> ...</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+            </p>
+            <div className="w3-margin">
+                <table className="w3-table w3-bordered">
+                    <tbody>
+                    <tr>
+                        <td>Nordic walking meet</td>
+                        <td>Monday 7:30-9am</td>
+                    </tr>
+                    <tr>
+                        <td>University lectures (Math 1)</td>
+                        <td>Tue 9-11am, Thu 11am-1pm</td>
+                    </tr>
+                    <tr>
+                        <td> ~ (Chinese)</td>
+                        <td>Wed 2-4pm</td>
+                    </tr>
+                    <tr>
+                        <td> ~ (Psychology for Engineers 2)</td>
+                        <td>Thu 9am-11am</td>
+                    </tr>
+                    <tr>
+                        <td>Household chores (Groceries, Cleaning)</td>
+                        <td>1h, twice a week</td>
+                    </tr>
+                    <tr>
+                        <td>Part-time job</td>
+                        <td>Fri & Sat 5-11pm</td>
+                    </tr>
+                    <tr style={{ border: 'none' }}>
+                        <td> ...</td>
+                        <td> ...</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>
                 In Alakrity, the items on this list will later show up as tasks or time periods of not-tracked
                 projects. You want to define them first, so you can schedule your other work around them. Don&apos;t
                 worry though, the schedule is still flexible enough to do some changes to this later.
