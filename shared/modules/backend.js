@@ -15,7 +15,6 @@ const ADD_MODAL = 'alakrity/backend/ADD_MODAL'
 const REMOVE_MODAL = 'alakrity/backend/REMOVE_MODAL'
 export const UPDATE_UPCOMING_TASKS = 'alakrity/backend/UPDATE_UPCOMING_TASKS'
 const SET_MASCOT = 'alakrity/backend/SET_MASCOT'
-//const SAVE_LAST_SHOWN_PROGRESS = 'alakrity/backend/SAVE_LAST_SHOWN_PROGRESS'
 
 
 /**
@@ -148,14 +147,7 @@ export function updateModals(time = false, initial = false) {
             : getState().backend.get('time') ? getState().backend.get('time')
                    : new Date()
 
-        //const mascotStatus = getState().backend.get('mascotStatus')
         return dispatch(getUpcomingTasks(taskList, time, 0, initial))
-        // return (initial)
-        //     ? Promise.all([
-        //         dispatch(getUpcomingTasks(taskList, time, 0, initial)),
-        //         dispatch(mascotSplash({ status: MASCOT_STATUS.HI, message: false }, 5))
-        //     ])
-        //     : dispatch(getUpcomingTasks(taskList, time, 0, initial))
     }
 }
 
@@ -189,9 +181,6 @@ export default function reducer(state = initialState, action) {
             return state.set('time', action.payload)
 
         case UPDATE_UPCOMING_TASKS:
-            // if ( action.meta && action.meta.initial ) {
-            //     return state.set('modalsList', action.payload.modals)
-            // }
             return state.set('modalsList', action.payload.modalsList)
 
         case ADD_MODAL:
@@ -213,14 +202,6 @@ export default function reducer(state = initialState, action) {
             return state
     }
 }
-
-// const taskGroups = {
-//     [TASK_STATUS.SCHEDULED]: 'remind',
-//     [TASK_STATUS.WAITING]: 'remind',
-//     [TASK_STATUS.ACTIVE]: 'active',
-//     [TASK_STATUS.DONE]: 'ignore',
-//     [TASK_STATUS.SNOOZED]: 'snoozed'
-// }
 
 /**
  * Returns the moment set to provided or current week, if the task is repeating. This is dirty a hack.

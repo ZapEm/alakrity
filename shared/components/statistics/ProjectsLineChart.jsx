@@ -18,7 +18,7 @@ export default class DetailLineChart extends React.Component {
         return <div className="stats-detail-chart-container">
             <Line
                 data={dataGenerators.getWeeklyProjectLineData(userStats, appStats, projectList, 10)}
-                height={150}
+                height={200}
                  options={
                     {
                         scales: {

@@ -17,7 +17,7 @@ export default class OverviewBarChart extends React.Component {
         return <div className="stats-overview-chart-container">
             <Bar
                 data={dataGenerators.getCurrentVsPreviousAvgData(userStats, appStats)}
-                height={100}
+                height={130}
                 options={
                     {
                         scales: {

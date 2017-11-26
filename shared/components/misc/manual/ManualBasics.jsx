@@ -12,12 +12,12 @@ export default class ManualBasics extends React.Component {
                 improve their time management, or are struggling to find the time to do certain important work.
             </p>
             <p>You are of course free to use the features of this application how you like, but I would recommend to try
-                use it as described by the following method first.</p>
+                to use it as described by the following method first.</p>
             <h4 className="w3-text-theme">Three Step Time Management</h4>
-            This is just a short summary of the full method. Unfortunately, at the time of this writing, the method is
-            not officially published yet. I will, however, try to give you all the relevant information you need to
-            apply
-            the method with the help of Alakrity.
+            <p>This is just a short summary of the full method. Unfortunately, at the time of this writing, the method
+                is not officially published yet. I will, however, try to give you all the relevant information you need
+                to apply the method with the help of Alakrity.
+            </p>
 
             <h5>Step 1</h5>
             <p>First create a list with all your regular events and obligations. If you are
@@ -36,7 +36,7 @@ export default class ManualBasics extends React.Component {
                         <td>Tue 9-11am, Thu 11am-1pm</td>
                     </tr>
                     <tr>
-                        <td> ~ (Chinese)</td>
+                        <td> ~ (Chinese I)</td>
                         <td>Wed 2-4pm</td>
                     </tr>
                     <tr>
