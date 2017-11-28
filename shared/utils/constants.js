@@ -100,7 +100,7 @@ export const LOCALE_STRINGS = Object.freeze(
 export const MASCOT_TIPS = [
     'Take regular short breaks, but be aware of time sinks like "I\'ll just browse a bit on the internet" or "a few minutes of TV".',
     'Taking a short walk is a good way to clear your head.',
-    'Regular sporting activity has shown to help with improving the ability to concentrate. Don\'t forget to plan for it in your schedule.',
+    'Regular sporting activity can improve your ability to concentrate. Don\'t forget to plan for it in your schedule.',
     'Remember to be generous when planning your tasks. Multiply your guess by 1.5 or even 2!',
     'Update the next weeks schedule in advance. Create a repeating task for it, so you won\'t forget!',
     'Some cats can sleep more than 27 hours in a single day. Harness this ancient power of the cats! Have plenty of sleep, take naps, catch a few mice!',

@@ -14,12 +14,11 @@ import cookie from 'react-cookie'
 import * as ReactDOMServer from 'react-dom/server'
 import { Provider } from 'react-redux'
 import { createMemoryHistory, match, RouterContext } from 'react-router'
-import { resetIdCounter } from 'react-tabs'
 import transit from 'transit-immutable-js'
 import configureStore from '../shared/configureStore'
 import DevTools from '../shared/containers/devTools'
 import routes from '../shared/routes'
-import { DEFAULT_SETTINGS } from '../shared/utils/constants'
+import { DEFAULT_SETTINGS } from '../shared/utils/defaultValues'
 import getRouters from './api/routes'
 import { serverGetInitial } from './api/utils/serverQueries'
 
@@ -144,9 +143,6 @@ app.use((req, res) => {
                                         return
                                     }
 
-
-                                    // reset id counter for react-tabs
-                                    resetIdCounter()
                                     // Render the component to a string
                                     let html = ReactDOMServer.renderToString(
                                         <Provider store={store}>
