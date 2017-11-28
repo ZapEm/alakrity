@@ -1,7 +1,7 @@
 ---
 buildDirectory: build
 rethinkdbdash:
-  password: ZworpWorpSchnodderaDorp
+  password: <ProductionPassword>
   servers:
   - host: rethinkdb
     port: 28015
@@ -13,6 +13,6 @@ express:
   api: /api/0/
 auth:
   jwtExpiresIn: 7d
-  jwtSecret: b9GnojlIVvIpqSwGLqm$%t2wSIH8oQYm
+  jwtSecret: <ComplicatedProductionSecret>
 client: # These Values are send to the client and are therefore not secure!
   apiUrl: https://alakrity.treehaus.space/api/0/
